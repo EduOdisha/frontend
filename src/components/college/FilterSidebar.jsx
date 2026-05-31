@@ -1,119 +1,174 @@
-import { X } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronDown, X, SlidersHorizontal } from 'lucide-react';
 
-const cities = ['Bhubaneswar', 'Cuttack', 'Berhampur', 'Rourkela', 'Sambalpur', 'Puri', 'Balasore'];
-const types = ['Government', 'Private', 'Deemed', 'Autonomous'];
-const categories = ['Engineering', 'Medical', 'Management', 'Arts & Science', 'Law', 'Pharmacy', 'Nursing'];
+const CITIES = ['Bhubaneswar', 'Cuttack', 'Rourkela', 'Berhampur', 'Sambalpur', 'Puri', 'Balasore', 'Baripada'];
+const TYPES = ['Government', 'Private', 'Deemed', 'Autonomous', 'Central'];
+const CATEGORIES = ['Engineering', 'Medical', 'Management', 'Arts & Science', 'Law', 'Pharmacy', 'Nursing', 'Polytechnic'];
+const NAAC = ['A++', 'A+', 'A', 'B++', 'B+'];
+
+function FilterSection({ title, children, defaultOpen = true }) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-b border-slate-100 pb-4 mb-4">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between py-1 group"
+      >
+        <span className="text-sm font-semibold text-slate-700">{title}</span>
+        <ChevronDown
+          size={15}
+          className={`text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+        />
+      </button>
+      {open && <div className="mt-3 space-y-1.5">{children}</div>}
+    </div>
+  );
+}
+
+function CheckItem({ label, checked, onChange }) {
+  return (
+    <label className="flex items-center gap-2.5 cursor-pointer group">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={onChange}
+        className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
+      />
+      <span className="text-sm text-slate-600 group-hover:text-slate-900 font-medium select-none">
+        {label}
+      </span>
+    </label>
+  );
+}
 
 export default function FilterSidebar({ filters, setFilters, onClose }) {
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-      const currentValues = filters[name] || [];
-      if (checked) {
-        setFilters({ ...filters, [name]: [...currentValues, value] });
-      } else {
-        setFilters({ ...filters, [name]: currentValues.filter(v => v !== value) });
-      }
-    } else {
-      setFilters({ ...filters, [name]: value });
-    }
+  const toggle = (key, val) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: prev[key].includes(val)
+        ? prev[key].filter(v => v !== val)
+        : [...prev[key], val],
+    }));
   };
 
-  const clearFilters = () => {
-    setFilters({ city: [], type: [], category: [], minFees: '', maxFees: '' });
+  const activeCount = [
+    ...filters.city,
+    ...filters.type,
+    ...filters.category,
+    filters.minFees ? 1 : 0,
+    filters.maxFees ? 1 : 0,
+  ].filter(Boolean).length;
+
+  const clearAll = () => {
+    setFilters({ city: [], type: [], category: [], minFees: '', maxFees: '', search: filters.search });
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="font-bold text-slate-800 dark:text-white">Filters</h3>
-        <button onClick={clearFilters} className="text-xs text-primary-600 font-bold hover:underline">Clear All</button>
-        {onClose && <button onClick={onClose} className="lg:hidden p-1 rounded-lg bg-slate-100 dark:bg-slate-800"><X className="w-4 h-4" /></button>}
+    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      {/* Header */}
+      <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal size={15} className="text-slate-500" />
+          <h2 className="text-sm font-bold text-slate-800">Filters</h2>
+          {activeCount > 0 && (
+            <span className="text-[10px] font-bold bg-primary-600 text-white px-2 py-0.5 rounded-full">
+              {activeCount}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          {activeCount > 0 && (
+            <button
+              onClick={clearAll}
+              className="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+            >
+              Clear all
+            </button>
+          )}
+          {onClose && (
+            <button onClick={onClose} className="p-1.5 hover:bg-slate-100 rounded-lg transition-colors">
+              <X size={16} className="text-slate-400" />
+            </button>
+          )}
+        </div>
       </div>
 
-      <div className="space-y-8">
-        {/* City Filter */}
-        <div>
-          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Location</h4>
-          <div className="space-y-2 max-h-48 overflow-y-auto scrollbar-hide">
-            {cities.map(city => (
-              <label key={city} className="flex items-center gap-3 cursor-pointer group">
-                <input 
-                  type="checkbox" 
-                  name="city" 
-                  value={city}
-                  checked={filters.city?.includes(city)}
-                  onChange={handleChange}
-                  className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500 transition-all"
-                />
-                <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{city}</span>
-              </label>
-            ))}
-          </div>
+      {/* Active filter chips */}
+      {activeCount > 0 && (
+        <div className="px-5 py-3 border-b border-slate-100 flex flex-wrap gap-1.5">
+          {[...filters.city, ...filters.type, ...filters.category].map(f => (
+            <span key={f} className="inline-flex items-center gap-1 bg-primary-50 border border-primary-100 text-primary-700 text-[11px] font-semibold px-2 py-1 rounded-md">
+              {f}
+              <button onClick={() => {
+                const key = filters.city.includes(f) ? 'city' : filters.type.includes(f) ? 'type' : 'category';
+                toggle(key, f);
+              }}>
+                <X size={10} />
+              </button>
+            </span>
+          ))}
         </div>
+      )}
 
-        {/* Type Filter */}
-        <div>
-          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">College Type</h4>
-          <div className="space-y-2">
-            {types.map(type => (
-              <label key={type} className="flex items-center gap-3 cursor-pointer group">
-                <input 
-                  type="checkbox" 
-                  name="type" 
-                  value={type}
-                  checked={filters.type?.includes(type)}
-                  onChange={handleChange}
-                  className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
-                />
-                <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">{type}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Category Filter */}
-        <div>
-          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Stream / Category</h4>
-          <div className="space-y-2">
-            {categories.map(cat => (
-              <label key={cat} className="flex items-center gap-3 cursor-pointer group">
-                <input 
-                  type="checkbox" 
-                  name="category" 
-                  value={cat}
-                  checked={filters.category?.includes(cat)}
-                  onChange={handleChange}
-                  className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
-                />
-                <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white">{cat}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        {/* Fees Range */}
-        <div>
-          <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Fees Range (Per Year)</h4>
-          <div className="grid grid-cols-2 gap-2">
-            <input 
-              type="number" 
-              name="minFees" 
-              placeholder="Min" 
-              value={filters.minFees}
-              onChange={handleChange}
-              className="input-field py-2 text-xs" 
+      {/* Filter Groups */}
+      <div className="p-5">
+        <FilterSection title="City">
+          {CITIES.map(c => (
+            <CheckItem
+              key={c}
+              label={c}
+              checked={filters.city.includes(c)}
+              onChange={() => toggle('city', c)}
             />
-            <input 
-              type="number" 
-              name="maxFees" 
-              placeholder="Max" 
-              value={filters.maxFees}
-              onChange={handleChange}
-              className="input-field py-2 text-xs" 
+          ))}
+        </FilterSection>
+
+        <FilterSection title="Type">
+          {TYPES.map(t => (
+            <CheckItem
+              key={t}
+              label={t}
+              checked={filters.type.includes(t)}
+              onChange={() => toggle('type', t)}
             />
+          ))}
+        </FilterSection>
+
+        <FilterSection title="Stream / Category">
+          {CATEGORIES.map(c => (
+            <CheckItem
+              key={c}
+              label={c}
+              checked={filters.category.includes(c)}
+              onChange={() => toggle('category', c)}
+            />
+          ))}
+        </FilterSection>
+
+        <FilterSection title="Annual Fees Range" defaultOpen={false}>
+          <div className="space-y-2.5">
+            <div>
+              <label className="label-base">Min Fees (₹)</label>
+              <input
+                type="number"
+                value={filters.minFees}
+                onChange={e => setFilters(p => ({ ...p, minFees: e.target.value }))}
+                placeholder="e.g. 50000"
+                className="input-base"
+              />
+            </div>
+            <div>
+              <label className="label-base">Max Fees (₹)</label>
+              <input
+                type="number"
+                value={filters.maxFees}
+                onChange={e => setFilters(p => ({ ...p, maxFees: e.target.value }))}
+                placeholder="e.g. 500000"
+                className="input-base"
+              />
+            </div>
           </div>
-        </div>
+        </FilterSection>
       </div>
     </div>
   );

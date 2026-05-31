@@ -1,72 +1,170 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import {
-  Search, BookOpen, Award, 
-  School, Users, Sparkles, ArrowRight,
-  Target,
+  Search, ArrowRight, Star, MapPin,
+  School, BookOpen, Award, Users, CheckCircle,
+  TrendingUp, Phone, ChevronRight, Calendar,
+  Quote
 } from 'lucide-react';
 import api from '../utils/api.js';
 import CollegeCard from '../components/college/CollegeCard.jsx';
 
-const stats = [
-  { label: 'Verified Colleges', val: '500+', icon: School },
-  { label: 'Popular Courses', val: '250+', icon: BookOpen },
-  { label: 'Active Scholarships', val: '120+', icon: Award },
-  { label: 'Expert Counselors', val: '50+', icon: Users },
+// ─── Constants ────────────────────────────────────────────
+const STATS = [
+  { value: '500+', label: 'Verified Colleges' },
+  { value: '250+', label: 'Programmes' },
+  { value: '120+', label: 'Scholarships' },
+  { value: '1L+', label: 'Students Helped' },
 ];
 
-const trendingSearches = ['B.Tech in Bhubaneswar', 'MBA Admission 2025', 'NEET Odisha Cutoff', 'OJEE 2025'];
+const STREAMS = [
+  { icon: '⚙️', label: 'Engineering', count: '180+ colleges', href: '/colleges?category=Engineering' },
+  { icon: '🏥', label: 'Medical', count: '60+ colleges', href: '/colleges?category=Medical' },
+  { icon: '📊', label: 'Management', count: '90+ colleges', href: '/colleges?category=Management' },
+  { icon: '⚖️', label: 'Law', count: '30+ colleges', href: '/colleges?category=Law' },
+  { icon: '💊', label: 'Pharmacy', count: '45+ colleges', href: '/colleges?category=Pharmacy' },
+  { icon: '🎨', label: 'Arts & Science', count: '95+ colleges', href: '/colleges?category=Arts+%26+Science' },
+];
 
+const POPULAR_TAGS = [
+  'B.Tech in Bhubaneswar',
+  'MBA Admission 2025',
+  'NEET Odisha Cutoff',
+  'OJEE 2025',
+  'BCA Colleges',
+  'Government Engineering',
+];
+
+const FEATURED_EXAMS = [
+  { name: 'OJEE 2025', type: 'State', date: 'May 2025', color: 'bg-primary-50 border-primary-200 text-primary-700' },
+  { name: 'JEE Main', type: 'National', date: 'Jan & Apr', color: 'bg-amber-50 border-amber-200 text-amber-700' },
+  { name: 'NEET UG', type: 'Medical', date: 'May 2025', color: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
+  { name: 'CUET UG', type: 'Central', date: 'May 2025', color: 'bg-purple-50 border-purple-200 text-purple-700' },
+  { name: 'CAT 2025', type: 'Management', date: 'Nov 2025', color: 'bg-rose-50 border-rose-200 text-rose-700' },
+  { name: 'OPSC OAS', type: 'Govt Job', date: 'Dec 2025', color: 'bg-slate-50 border-slate-200 text-slate-700' },
+];
+
+const WHY_US = [
+  {
+    icon: <CheckCircle size={22} className="text-primary-600" />,
+    title: 'Verified & Accurate Data',
+    desc: 'All college profiles are manually verified with up-to-date fees, rankings, and placement records.',
+  },
+  {
+    icon: <Phone size={22} className="text-primary-600" />,
+    title: 'Free Career Counselling',
+    desc: 'Talk to experienced counselors who specialize in Odisha colleges — no sales pitch, just honest advice.',
+  },
+  {
+    icon: <School size={22} className="text-primary-600" />,
+    title: 'Odisha-First Platform',
+    desc: 'Built specifically for Odisha students. We cover local colleges, state exams, and regional scholarships that national platforms miss.',
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    name: 'Subhashree Nayak',
+    college: 'KIIT University, Bhubaneswar',
+    course: 'B.Tech CSE',
+    rating: 5,
+    text: 'EduOdisha helped me compare KIIT, ITER, and SOA in detail. The placement data was spot on. Got admission in my first choice!',
+    avatar: 'S',
+    year: '2024',
+  },
+  {
+    name: 'Priyanshu Mohanty',
+    college: 'VSSUT Burla',
+    course: 'B.Tech EEE',
+    rating: 5,
+    text: 'I was confused between government and private colleges. The counsellor helped me understand fee structures and placement records clearly.',
+    avatar: 'P',
+    year: '2024',
+  },
+  {
+    name: 'Ankita Das',
+    college: 'Ravenshaw University',
+    course: 'MBA',
+    rating: 4,
+    text: 'Found the OPSC scholarship through EduOdisha and saved ₹1.2L in fees. Highly recommend this platform to every Odia student.',
+    avatar: 'A',
+    year: '2025',
+  },
+];
+
+// ─── Animated Counter ─────────────────────────────────────
 function AnimatedCounter({ value }) {
-  const [count, setCount] = useState('0');
+  const [display, setDisplay] = useState('0');
   const ref = useRef(null);
-  const hasAnimated = useRef(false);
+  const done = useRef(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated.current) {
-          hasAnimated.current = true;
-          const num = parseInt(value.replace(/[^0-9]/g, ''));
-          let start = 0;
-          const step = Math.ceil(num / 60);
-          const timer = setInterval(() => {
-            start += step;
-            if (start >= num) {
-              setCount(value);
-              clearInterval(timer);
-            } else {
-              setCount(start + '+');
-            }
+        if (entry.isIntersecting && !done.current) {
+          done.current = true;
+          const suffix = value.replace(/[0-9]/g, '');
+          const num = parseInt(value);
+          let n = 0;
+          const step = Math.max(1, Math.ceil(num / 50));
+          const t = setInterval(() => {
+            n = Math.min(n + step, num);
+            setDisplay(n + suffix);
+            if (n >= num) clearInterval(t);
           }, 20);
         }
       },
-      { threshold: 0.5 },
+      { threshold: 0.5 }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, [value]);
 
-  return <span ref={ref}>{count}</span>;
+  return <span ref={ref}>{display}</span>;
 }
 
-function FadeIn({ children, delay = 0, className = '' }) {
+// ─── Section Wrapper ──────────────────────────────────────
+function Section({ children, className = '' }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
+    <motion.section
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.5, delay }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.5 }}
       className={className}
     >
       {children}
-    </motion.div>
+    </motion.section>
   );
 }
 
+// ─── Section Header ───────────────────────────────────────
+function SectionHeader({ eyebrow, title, subtitle, action }) {
+  return (
+    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+      <div className="max-w-xl">
+        {eyebrow && (
+          <p className="section-eyebrow">
+            {eyebrow}
+          </p>
+        )}
+        <h2 className="section-title">{title}</h2>
+        {subtitle && <p className="section-subtitle">{subtitle}</p>}
+      </div>
+      {action && (
+        <Link to={action.href} className="btn-secondary group shrink-0">
+          {action.label}
+          <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
+        </Link>
+      )}
+    </div>
+  );
+}
+
+// ─── Main HomePage ────────────────────────────────────────
 export default function HomePage() {
   const navigate = useNavigate();
   const [searchQ, setSearchQ] = useState('');
@@ -74,7 +172,17 @@ export default function HomePage() {
 
   const { data: featuredColleges } = useQuery({
     queryKey: ['featured-colleges'],
-    queryFn: () => api.get('/colleges/featured').then((r) => r.data.data),
+    queryFn: () => api.get('/colleges/featured').then(r => r.data.data),
+  });
+
+  const { data: scholarships } = useQuery({
+    queryKey: ['featured-scholarships'],
+    queryFn: () => api.get('/scholarships?limit=3&isFeatured=true').then(r => r.data.data),
+  });
+
+  const { data: blogs } = useQuery({
+    queryKey: ['recent-blogs'],
+    queryFn: () => api.get('/blogs?limit=3&isPublished=true').then(r => r.data.data),
   });
 
   const handleSearch = (e) => {
@@ -87,175 +195,414 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>EduOdisha - Best Colleges, Courses & Exams in Odisha 2025</title>
-        <meta name="description" content="Odisha's premier education discovery platform. Compare 500+ verified colleges, courses, scholarships, and get free career counseling." />
+        <title>EduOdisha — Odisha's Most Trusted Education Platform</title>
+        <meta
+          name="description"
+          content="Compare 500+ verified colleges, explore courses & scholarships, and get free career counseling for Odisha students. Find the best B.Tech, MBA, NEET colleges."
+        />
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-hero-pattern pt-20">
-        <div className="absolute inset-0 bg-mesh-light opacity-50" />
-        
-        <div className="container-xl relative z-10 w-full py-12 lg:py-20">
-          <div className="max-w-4xl">
+      {/* ─── Hero ──────────────────────────────────────── */}
+      <section className="bg-dot-grid pt-24 pb-16 lg:pt-32 lg:pb-24">
+        <div className="container-xl">
+          <div className="max-w-3xl">
+            {/* Trust badge */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 px-4 py-1.5 rounded-full mb-8 text-xs font-bold uppercase tracking-wider border border-primary-100"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="inline-flex items-center gap-2 bg-primary-50 border border-primary-100 text-primary-700 text-xs font-bold px-3 py-1.5 rounded-full mb-6"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              Trusted by 50,000+ students in Odisha
+              <CheckCircle size={12} className="text-primary-600" />
+              Trusted by 1 Lakh+ Odisha Students
             </motion.div>
 
+            {/* Headline */}
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-7xl font-display font-extrabold text-slate-900 mb-6 leading-[1.1] tracking-tight"
+              transition={{ duration: 0.5, delay: 0.08 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-display font-extrabold text-slate-900 mb-5 leading-[1.1] tracking-tight"
             >
-              Find the Best <span className="text-primary-600">College</span>
+              Odisha's Most Trusted
               <br />
-              for Your Future in Odisha
+              <span className="text-primary-600">Education Platform</span>
             </motion.h1>
 
+            {/* Subtext */}
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg text-slate-500 mb-10 max-w-2xl font-normal leading-relaxed"
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="text-lg text-slate-500 mb-8 max-w-2xl leading-relaxed font-normal"
             >
-              Discover 500+ verified colleges, explore 250+ courses, 
-              compare rankings &amp; get personalized career counseling—all in one place.
+              Compare 500+ verified colleges, discover the right course, find scholarships,
+              and get free personalized counselling — all built for Odisha students.
             </motion.p>
 
             {/* Search Box */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="bg-white p-2 rounded-2xl shadow-2xl shadow-primary-900/10 border border-slate-100 max-w-3xl"
+              transition={{ duration: 0.5, delay: 0.22 }}
+              className="bg-white border border-slate-200 rounded-xl shadow-md p-2 max-w-2xl"
             >
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                <div className="flex bg-slate-50 p-1 rounded-xl shrink-0">
-                  {['colleges', 'courses', 'exams'].map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      onClick={() => setSearchType(type)}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold capitalize transition-all ${
-                        searchType === type
-                          ? 'bg-white text-primary-700 shadow-sm'
-                          : 'text-slate-500 hover:text-slate-800'
-                      }`}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-                <form onSubmit={handleSearch} className="flex-1 flex items-center px-3 gap-2">
-                  <Search className="text-slate-400 shrink-0" size={18} />
+              {/* Type Tabs */}
+              <div className="flex items-center gap-1 mb-2 px-1">
+                {['colleges', 'courses', 'exams', 'scholarships'].map(type => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setSearchType(type)}
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
+                      searchType === type
+                        ? 'bg-primary-600 text-white'
+                        : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    {type}
+                  </button>
+                ))}
+              </div>
+              {/* Input + Button */}
+              <form onSubmit={handleSearch} className="flex items-center gap-2">
+                <div className="flex-1 flex items-center gap-2 px-3">
+                  <Search size={16} className="text-slate-400 shrink-0" />
                   <input
                     type="text"
                     value={searchQ}
-                    onChange={(e) => setSearchQ(e.target.value)}
-                    placeholder={`Search 500+ ${searchType} in Odisha...`}
-                    className="w-full py-3 bg-transparent outline-none text-slate-700 font-medium text-sm placeholder:text-slate-400"
+                    onChange={e => setSearchQ(e.target.value)}
+                    placeholder={`Search ${searchType} in Odisha…`}
+                    id="hero-search"
+                    className="flex-1 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 bg-transparent outline-none font-medium"
                   />
-                </form>
-                <button
-                  type="submit"
-                  onClick={handleSearch}
-                  className="btn-primary py-3 px-8 rounded-xl text-sm whitespace-nowrap"
-                >
-                  Find Now
+                </div>
+                <button type="submit" className="btn-cta py-2.5 px-6 text-sm rounded-lg">
+                  Search
                 </button>
-              </div>
+              </form>
             </motion.div>
 
-            {/* Trending */}
+            {/* Popular Tags */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-8 flex flex-wrap items-center gap-3 text-xs"
+              transition={{ delay: 0.35 }}
+              className="mt-5 flex flex-wrap items-center gap-2"
             >
-              <span className="text-slate-400 font-bold uppercase tracking-wider">Trending:</span>
-              {trendingSearches.map((link) => (
+              <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
+                Popular:
+              </span>
+              {POPULAR_TAGS.map(tag => (
                 <button
-                  key={link}
-                  onClick={() => navigate(`/colleges?search=${encodeURIComponent(link)}`)}
-                  className="text-slate-600 hover:text-primary-700 transition-all font-semibold bg-slate-50 hover:bg-primary-50 px-3 py-1.5 rounded-lg border border-slate-100 hover:border-primary-100"
+                  key={tag}
+                  onClick={() => navigate(`/colleges?search=${encodeURIComponent(tag)}`)}
+                  className="text-xs font-medium text-slate-600 hover:text-primary-600 bg-white border border-slate-200 hover:border-primary-200 hover:bg-primary-50 px-3 py-1.5 rounded-lg transition-all"
                 >
-                  {link}
+                  {tag}
                 </button>
+              ))}
+            </motion.div>
+
+            {/* Trust row */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.45 }}
+              className="mt-8 flex flex-wrap items-center gap-6"
+            >
+              {['Free to use', 'No spam calls', 'Expert counsellors'].map(item => (
+                <div key={item} className="flex items-center gap-1.5 text-sm text-slate-500 font-medium">
+                  <CheckCircle size={14} className="text-emerald-500" />
+                  {item}
+                </div>
               ))}
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="relative z-20 -mt-10 mb-10">
-        <div className="container-xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.map((stat, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="bg-white rounded-xl p-6 border border-slate-100 shadow-sm flex items-center gap-4 hover:border-primary-100 hover:shadow-md transition-all"
-              >
-                <div className="w-12 h-12 rounded-lg bg-primary-50 flex items-center justify-center text-primary-600 shrink-0">
-                  <stat.icon size={24} />
+      {/* ─── Stats Bar ────────────────────────────────── */}
+      <div className="bg-white border-y border-slate-100">
+        <div className="container-xl py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-slate-100">
+            {STATS.map((s, i) => (
+              <div key={i} className="px-8 first:pl-0 last:pr-0 text-center py-2">
+                <div className="stat-value">
+                  <AnimatedCounter value={s.value} />
                 </div>
-                <div>
-                  <div className="text-2xl font-bold text-slate-900 leading-tight">
-                    <AnimatedCounter value={stat.val} />
-                  </div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">
-                    {stat.label}
-                  </div>
-                </div>
-              </motion.div>
+                <div className="stat-label">{s.label}</div>
+              </div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Featured Colleges */}
-      <section className="py-20 bg-slate-50/50">
+      {/* ─── Featured Colleges ────────────────────────── */}
+      <Section className="page-section bg-white">
         <div className="container-xl">
-          <FadeIn>
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-              <div className="max-w-2xl">
-                <div className="inline-flex items-center gap-1.5 text-primary-600 font-bold text-xs uppercase tracking-widest mb-3">
-                   <Target size={14} /> Top Rated Institutions
+          <SectionHeader
+            eyebrow="⭐ Top Rated"
+            title="Featured Colleges in Odisha"
+            subtitle="Handpicked institutions based on NIRF rankings, student reviews, and placement records."
+            action={{ label: 'Browse All Colleges', href: '/colleges' }}
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {(featuredColleges || Array(4).fill(null)).map((c, i) => (
+              <CollegeCard key={c?._id || i} college={c} loading={!featuredColleges} />
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── Browse by Stream ─────────────────────────── */}
+      <Section className="py-16 bg-slate-50">
+        <div className="container-xl">
+          <SectionHeader
+            eyebrow="📚 By Stream"
+            title="Find Colleges by Your Stream"
+            subtitle="Choose your field and we'll show you the best colleges in Odisha."
+          />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {STREAMS.map((stream) => (
+              <Link
+                key={stream.label}
+                to={stream.href}
+                className="bg-white border border-slate-200 hover:border-primary-200 hover:bg-primary-50 rounded-xl p-5 text-center transition-all duration-200 group"
+              >
+                <div className="text-3xl mb-3">{stream.icon}</div>
+                <h3 className="text-sm font-bold text-slate-800 group-hover:text-primary-600 transition-colors mb-1">
+                  {stream.label}
+                </h3>
+                <p className="text-[11px] text-slate-400 font-medium">{stream.count}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── Popular Exams ────────────────────────────── */}
+      <Section className="page-section bg-white">
+        <div className="container-xl">
+          <SectionHeader
+            eyebrow="📋 Exams"
+            title="Popular Entrance Exams"
+            subtitle="Stay ahead with important exam dates, eligibility, and cutoffs."
+            action={{ label: 'View All Exams', href: '/exams' }}
+          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            {FEATURED_EXAMS.map((exam) => (
+              <Link
+                key={exam.name}
+                to={`/exams?search=${encodeURIComponent(exam.name)}`}
+                className={`border rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 ${exam.color}`}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+                    {exam.type}
+                  </span>
+                  <ChevronRight size={13} className="opacity-50" />
                 </div>
-                <h2 className="section-title">Featured Colleges</h2>
-                <p className="section-subtitle">
-                  Explore the highest-rated institutions in Odisha based on student reviews, 
-                  placement records, and faculty excellence.
-                </p>
+                <h3 className="text-base font-bold mb-1">{exam.name}</h3>
+                <div className="flex items-center gap-1.5 text-[11px] font-medium opacity-70">
+                  <Calendar size={11} />
+                  {exam.date}
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── Scholarships ─────────────────────────────── */}
+      <Section className="py-16 bg-slate-50">
+        <div className="container-xl">
+          <SectionHeader
+            eyebrow="🎓 Scholarships"
+            title="Scholarships for Odisha Students"
+            subtitle="Government and private scholarships that can save you lakhs in fees."
+            action={{ label: 'View All Scholarships', href: '/scholarships' }}
+          />
+          {scholarships && scholarships.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {scholarships.map(s => (
+                <Link
+                  key={s._id}
+                  to={`/scholarships/${s.slug}`}
+                  className="bg-white border border-slate-200 hover:border-primary-200 rounded-xl p-6 transition-all duration-200 hover:shadow-md group"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="badge badge-green">{s.category}</span>
+                    {s.amount?.value && (
+                      <span className="text-sm font-bold text-emerald-600">
+                        ₹{(s.amount.value / 1000).toFixed(0)}K
+                      </span>
+                    )}
+                  </div>
+                  <h3 className="text-base font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                    {s.name}
+                  </h3>
+                  <p className="text-xs text-slate-500 font-medium mb-3">{s.provider}</p>
+                  {s.lastDate && (
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                      <Calendar size={12} />
+                      Deadline: {new Date(s.lastDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </div>
+                  )}
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {['Pre Matric Scholarship', 'Post Matric (SC/ST)', 'OPSC Merit Scholarship'].map((name, i) => (
+                <Link
+                  key={i}
+                  to="/scholarships"
+                  className="bg-white border border-slate-200 hover:border-primary-200 rounded-xl p-6 transition-all duration-200 hover:shadow-md group"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="badge badge-green">{['Government', 'SC/ST', 'Merit'][i]}</span>
+                    <span className="text-sm font-bold text-emerald-600">{['₹10K', '₹25K', '₹15K'][i]}</span>
+                  </div>
+                  <h3 className="text-base font-bold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors">{name}</h3>
+                  <p className="text-xs text-slate-500 mb-3">Government of Odisha</p>
+                  <span className="text-xs font-semibold text-primary-600 group-hover:underline">View Details →</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      </Section>
+
+      {/* ─── Why EduOdisha ────────────────────────────── */}
+      <Section className="page-section bg-white">
+        <div className="container-xl">
+          <div className="max-w-xl mb-10">
+            <p className="section-eyebrow">✅ Why EduOdisha</p>
+            <h2 className="section-title">Built for Odisha Students</h2>
+            <p className="section-subtitle">
+              Not a generic national platform. We focus exclusively on Odisha's education ecosystem.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {WHY_US.map((item, i) => (
+              <div key={i} className="border border-slate-200 rounded-xl p-6">
+                <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center mb-4">
+                  {item.icon}
+                </div>
+                <h3 className="text-base font-bold text-slate-900 mb-2">{item.title}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
               </div>
-              <Link to="/colleges" className="btn-secondary group">
-                View All Colleges
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── Testimonials ─────────────────────────────── */}
+      <Section className="py-16 bg-slate-50">
+        <div className="container-xl">
+          <SectionHeader
+            eyebrow="💬 Student Stories"
+            title="What Students Say About Us"
+            subtitle="Real experiences from students who found their college through EduOdisha."
+          />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="bg-white border border-slate-200 rounded-xl p-6">
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(t.rating)].map((_, j) => (
+                    <Star key={j} size={14} className="text-amber-400 fill-amber-400" />
+                  ))}
+                </div>
+                <Quote size={20} className="text-slate-200 mb-3" />
+                <p className="text-sm text-slate-600 leading-relaxed mb-5">{t.text}</p>
+                <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
+                  <div className="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-sm">
+                    {t.avatar}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-900">{t.name}</p>
+                    <p className="text-[11px] text-slate-400 font-medium">{t.course} · {t.year}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      {/* ─── Blog Articles ────────────────────────────── */}
+      {blogs && blogs.length > 0 && (
+        <Section className="page-section bg-white">
+          <div className="container-xl">
+            <SectionHeader
+              eyebrow="📰 Insights"
+              title="Latest Articles & Guides"
+              subtitle="Career advice, exam updates, and admission tips for Odisha students."
+              action={{ label: 'View All Articles', href: '/blogs' }}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {blogs.map(blog => (
+                <Link
+                  key={blog._id}
+                  to={`/blogs/${blog.slug}`}
+                  className="group bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-xl overflow-hidden transition-all duration-200"
+                >
+                  {blog.image?.url && (
+                    <div className="h-44 overflow-hidden">
+                      <img
+                        src={blog.image.url}
+                        alt={blog.title}
+                        className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
+                  <div className="p-5">
+                    <span className="badge badge-blue mb-3">{blog.category}</span>
+                    <h3 className="text-sm font-bold text-slate-900 line-clamp-2 mb-2 group-hover:text-primary-600 transition-colors">
+                      {blog.title}
+                    </h3>
+                    {blog.excerpt && (
+                      <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">
+                        {blog.excerpt}
+                      </p>
+                    )}
+                    <p className="text-[11px] text-slate-400 font-medium">
+                      {new Date(blog.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </Section>
+      )}
+
+      {/* ─── CTA Strip ────────────────────────────────── */}
+      <section className="bg-primary-900 py-14">
+        <div className="container-xl">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <h2 className="text-2xl font-display font-bold text-white mb-2">
+                Not sure which college is right for you?
+              </h2>
+              <p className="text-primary-200 text-sm font-medium">
+                Talk to our experienced counselors — free, no spam, just honest guidance.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <a href="tel:+911800001234" className="btn-cta py-3 px-6 text-sm gap-2">
+                <Phone size={15} />
+                Call Free: 1800-001-234
+              </a>
+              <Link to="/colleges" className="btn-secondary py-3 px-6 text-sm bg-white/10 border-white/20 text-white hover:bg-white/20">
+                Browse Colleges
               </Link>
             </div>
-          </FadeIn>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {(featuredColleges || Array(4).fill(null)).map((c, i) => (
-              <FadeIn key={c?._id || i} delay={i * 0.1}>
-                <CollegeCard college={c} loading={!featuredColleges} />
-              </FadeIn>
-            ))}
           </div>
         </div>
       </section>
-      
     </div>
   );
 }

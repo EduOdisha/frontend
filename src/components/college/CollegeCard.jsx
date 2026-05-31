@@ -1,88 +1,215 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Star, ArrowRight, Building2, CheckCircle } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCompare, removeFromCompare } from '../../store/slices/compareSlice';
+import { toast } from 'react-hot-toast';
+import api from '../../utils/api';
+import { updateUserSaved } from '../../store/slices/authSlice';
+import {
+  MapPin, Star, Heart, GitCompare,
+  CheckCircle, IndianRupee, TrendingUp
+} from 'lucide-react';
+
+// Skeleton loader
+function CollegeCardSkeleton() {
+  return (
+    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+      <div className="skeleton h-44 w-full" />
+      <div className="p-4 space-y-3">
+        <div className="skeleton h-3.5 w-20 rounded-full" />
+        <div className="skeleton h-5 w-4/5 rounded" />
+        <div className="skeleton h-4 w-1/2 rounded" />
+        <div className="skeleton h-px w-full" />
+        <div className="flex gap-4">
+          <div className="skeleton h-4 w-20 rounded" />
+          <div className="skeleton h-4 w-20 rounded" />
+        </div>
+        <div className="skeleton h-9 w-full rounded-lg" />
+      </div>
+    </div>
+  );
+}
 
 export default function CollegeCard({ college, loading }) {
-  if (loading) {
-    return (
-      <div className="card animate-pulse border-slate-100">
-        <div className="bg-slate-200 h-44 w-full" />
-        <div className="p-4 space-y-3">
-          <div className="h-4 bg-slate-200 rounded w-3/4" />
-          <div className="h-3 bg-slate-200 rounded w-1/2" />
-        </div>
-      </div>
-    );
-  }
+  const dispatch = useDispatch();
+  const { colleges: compareList } = useSelector(state => state.compare);
+  const { user, isAuthenticated } = useSelector(state => state.auth);
+  
+  const isCurrentlySaved = user?.savedColleges?.some(id => 
+    typeof id === 'object' ? id._id === college?._id : id === college?._id
+  );
+  
+  const [isBookmarked, setIsBookmarked] = useState(isCurrentlySaved || false);
+
+  useEffect(() => {
+    setIsBookmarked(isCurrentlySaved || false);
+  }, [isCurrentlySaved]);
+
+  if (loading) return <CollegeCardSkeleton />;
+  if (!college) return null;
+
+  const isCompared = compareList.some(c => c._id === college._id);
+
+  const handleCompare = (e) => {
+    e.preventDefault();
+    if (isCompared) {
+      dispatch(removeFromCompare(college._id));
+    } else {
+      if (compareList.length >= 4) {
+        toast.error('Maximum 4 colleges can be compared');
+        return;
+      }
+      dispatch(addToCompare(college));
+      toast.success('Added to compare');
+    }
+  };
+
+  const handleBookmark = async (e) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      toast.error('Please log in to save colleges');
+      return;
+    }
+    try {
+      const { data } = await api.post(`/users/save-college/${college._id}`);
+      setIsBookmarked(data.saved);
+      dispatch(updateUserSaved({ savedColleges: data.savedColleges }));
+      toast.success(data.saved ? 'College saved to wishlist' : 'Removed from saved');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update saved colleges');
+    }
+  };
+
+  const rating = college.rating?.average || 0;
+  const ratingCount = college.rating?.count || 0;
+  const avgFees = college.fees?.min;
+  const highestLPA = college.placements?.highestPackage;
+  const nirfRank = college.nirfRanking;
 
   return (
-    <div className="card group border-slate-200/60 hover:border-primary-200 transition-all duration-300">
-      <div className="relative h-44 overflow-hidden">
+    <div className="group bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col">
+      {/* Image */}
+      <div className="relative h-44 overflow-hidden bg-slate-100 shrink-0">
         <img
-          src={college.banner?.url || 'https://images.unsplash.com/photo-1541339907198-e08759dfc3ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}
-          alt={college.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          src={
+            college.banner?.url ||
+            `https://images.unsplash.com/photo-1562774053-701939374585?w=600&q=80&auto=format&fit=crop`
+          }
+          alt={`${college.name} campus`}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
-        <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-md shadow-sm border border-slate-100">
-          <Star className="w-3 h-3 text-secondary-500 fill-secondary-500" />
-          <span className="text-[11px] font-bold text-slate-800">{college.rating?.average || '4.2'}</span>
+
+        {/* Overlay Badges */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+
+        {/* Top badges */}
+        <div className="absolute top-3 left-3 flex items-center gap-1.5">
+          {college.isFeatured && (
+            <span className="bg-accent-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm">
+              Featured
+            </span>
+          )}
+          {college.isVerified && (
+            <span className="bg-white/95 text-primary-700 text-[10px] font-bold px-2 py-0.5 rounded-md shadow-sm flex items-center gap-1">
+              <CheckCircle size={10} className="text-primary-600" /> Verified
+            </span>
+          )}
         </div>
-        {college.isFeatured && (
-          <div className="absolute top-3 left-3 bg-secondary-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-sm">
-            Top Rated
+
+        {/* Bookmark */}
+        <button
+          onClick={handleBookmark}
+          aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark college'}
+          className="absolute top-3 right-3 w-8 h-8 bg-white/95 hover:bg-white rounded-lg flex items-center justify-center shadow-sm transition-all"
+        >
+          <Heart
+            size={15}
+            className={`transition-colors ${isBookmarked ? 'fill-red-500 text-red-500' : 'text-slate-400'}`}
+          />
+        </button>
+
+        {/* Rating */}
+        {rating > 0 && (
+          <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-white/95 px-2 py-1 rounded-md shadow-sm">
+            <Star size={12} className="text-amber-400 fill-amber-400" />
+            <span className="text-xs font-bold text-slate-800">{rating.toFixed(1)}</span>
+            {ratingCount > 0 && (
+              <span className="text-[10px] text-slate-500 font-medium">({ratingCount})</span>
+            )}
           </div>
         )}
-        <div className="absolute -bottom-1 right-3 w-12 h-12 bg-white rounded-lg shadow-md border border-slate-100 p-1 flex items-center justify-center overflow-hidden">
-          <img src={college.logo?.url || '/placeholder-logo.png'} alt="Logo" className="w-full h-full object-contain" />
-        </div>
       </div>
 
-      <div className="p-4">
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-4">
+        {/* Type + Location row */}
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider bg-primary-50 px-2 py-0.5 rounded">
-            {college.category}
-          </span>
-          <div className="flex items-center gap-1 text-slate-400 text-[10px] font-semibold">
+          <span className="badge badge-blue text-[10px]">{college.category}</span>
+          <div className="flex items-center gap-1 text-slate-400 text-[10px] font-medium">
             <MapPin size={10} />
             <span>{college.location?.city}</span>
           </div>
         </div>
 
-        <Link to={`/colleges/${college.slug}`}>
-          <h3 className="font-display font-bold text-slate-900 text-base mb-3 line-clamp-2 min-h-[3rem] group-hover:text-primary-600 transition-colors leading-tight">
+        {/* College Name */}
+        <Link
+          to={`/colleges/${college.slug}`}
+          className="block mb-1"
+        >
+          <h3 className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug hover:text-primary-600 transition-colors min-h-[2.5rem]">
             {college.name}
           </h3>
         </Link>
 
-        <div className="grid grid-cols-2 gap-3 py-3 border-y border-slate-50 mb-4">
-          <div>
-            <p className="text-[10px] text-slate-400 font-semibold mb-0.5">Avg Fees</p>
-            <p className="text-sm font-bold text-slate-800">₹{college.fees?.min?.toLocaleString() || '65K'}</p>
+        {/* Affiliation */}
+        {college.affiliation && (
+          <p className="text-[11px] text-slate-400 font-medium mb-3 line-clamp-1">
+            {college.affiliation}
+          </p>
+        )}
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-3 gap-0 border border-slate-100 rounded-lg overflow-hidden mb-3 mt-auto">
+          <div className="text-center py-2.5 px-2">
+            <p className="text-[10px] font-semibold text-slate-400 uppercase mb-0.5">Fees</p>
+            <p className="text-xs font-bold text-slate-800">
+              {avgFees ? `₹${(avgFees / 1000).toFixed(0)}K` : 'N/A'}
+            </p>
           </div>
-          <div className="border-l border-slate-100 pl-3">
-            <p className="text-[10px] text-slate-400 font-semibold mb-0.5">Highest Lpa</p>
-            <p className="text-sm font-bold text-emerald-600">₹{college.placements?.highestPackage || '12'} LPA</p>
+          <div className="text-center py-2.5 px-2 border-x border-slate-100">
+            <p className="text-[10px] font-semibold text-slate-400 uppercase mb-0.5">Pkg</p>
+            <p className="text-xs font-bold text-emerald-600">
+              {highestLPA ? `₹${highestLPA}L` : 'N/A'}
+            </p>
+          </div>
+          <div className="text-center py-2.5 px-2">
+            <p className="text-[10px] font-semibold text-slate-400 uppercase mb-0.5">NIRF</p>
+            <p className="text-xs font-bold text-slate-800">
+              {nirfRank ? `#${nirfRank}` : '—'}
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-             <div className="flex items-center gap-1 text-[10px] font-semibold text-slate-500">
-                <Building2 size={12} className="text-slate-400" />
-                <span>{college.type}</span>
-             </div>
-             {college.isVerified && (
-               <div className="flex items-center gap-0.5 text-[10px] font-bold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded">
-                 <CheckCircle size={10} /> Verified
-               </div>
-             )}
-          </div>
+        {/* Actions */}
+        <div className="flex items-center gap-2">
           <Link
             to={`/colleges/${college.slug}`}
-            className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-primary-600 hover:text-white transition-all duration-300 shadow-sm"
+            className="flex-1 text-center btn-primary py-2 text-xs"
           >
-            <ArrowRight size={14} />
+            View Details
           </Link>
+          <button
+            onClick={handleCompare}
+            title={isCompared ? 'Remove from compare' : 'Add to compare'}
+            className={`p-2 rounded-lg border transition-all ${
+              isCompared
+                ? 'bg-primary-50 border-primary-200 text-primary-600'
+                : 'border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600'
+            }`}
+          >
+            <GitCompare size={15} />
+          </button>
         </div>
       </div>
     </div>

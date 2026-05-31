@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router-dom';
 import api from '../../utils/api';
 import { 
   Plus, 
@@ -18,7 +19,15 @@ const CourseManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (searchParams.get('add') === 'true') {
+      handleAddCourse();
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-courses', searchTerm],

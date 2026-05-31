@@ -48,6 +48,13 @@ const authSlice = createSlice({
   reducers: {
     clearError: (state) => {
       state.error = null;
+    },
+    updateUserSaved: (state, action) => {
+      if (state.user) {
+        if (action.payload.savedColleges) state.user.savedColleges = action.payload.savedColleges;
+        if (action.payload.savedCourses) state.user.savedCourses = action.payload.savedCourses;
+        if (action.payload.examReminders) state.user.examReminders = action.payload.examReminders;
+      }
     }
   },
   extraReducers: (builder) => {
@@ -103,5 +110,5 @@ const authSlice = createSlice({
   }
 });
 
-export const { clearError } = authSlice.actions;
+export const { clearError, updateUserSaved } = authSlice.actions;
 export default authSlice.reducer;
