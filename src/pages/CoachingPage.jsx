@@ -1,0 +1,145 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Helmet } from 'react-helmet-async';
+import { Search, ChevronRight, Users } from 'lucide-react';
+import api from '../utils/api.js';
+import CoachingCard from '../components/coaching/CoachingCard.jsx';
+
+const cities = ['Bhubaneswar', 'Cuttack', 'Berhampur', 'Rourkela', 'Sambalpur'];
+const categories = ['JEE/NEET', 'UPSC/OPSC', 'Banking/SSC', 'Spoken English', 'Computer Training'];
+
+export default function CoachingPage() {
+  const [filters, setFilters] = useState({
+    city: [],
+    category: [],
+    search: '',
+  });
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['coaching', filters],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      if (filters.search) params.append('search', filters.search);
+      if (filters.city.length) params.append('city', filters.city.join(','));
+      if (filters.category.length) params.append('category', filters.category.join(','));
+      
+      return api.get(`/coaching?${params.toString()}`).then(r => r.data);
+    },
+  });
+
+  const handleFilterChange = (type, value) => {
+    setFilters(prev => {
+      const current = prev[type];
+      const next = current.includes(value) 
+        ? current.filter(v => v !== value) 
+        : [...current, value];
+      return { ...prev, [type]: next };
+    });
+  };
+
+  return (
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen py-10">
+      <Helmet>
+        <title>Best Coaching Centers in Odisha - JEE, NEET, UPSC, Banking | EduOdisha</title>
+      </Helmet>
+
+      <div className="container-xl">
+        <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-8">
+          <span>Home</span>
+          <ChevronRight className="w-3 h-3" />
+          <span className="text-primary-600">Coaching Centers</span>
+        </div>
+
+        <div className="mb-10">
+          <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
+            Coaching & Training
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 max-w-3xl">
+            Find top-rated coaching institutes for competitive exams and professional training in Odisha. Compare reviews, fees, and results.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Sidebar Filters */}
+          <aside className="space-y-8">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+              <h3 className="font-bold text-slate-800 dark:text-white mb-6">Filters</h3>
+              
+              <div className="space-y-6">
+                <div>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Location</h4>
+                  <div className="space-y-2">
+                    {cities.map(city => (
+                      <label key={city} className="flex items-center gap-3 cursor-pointer group">
+                        <input 
+                          type="checkbox" 
+                          checked={filters.city.includes(city)}
+                          onChange={() => handleFilterChange('city', city)}
+                          className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{city}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Category</h4>
+                  <div className="space-y-2">
+                    {categories.map(cat => (
+                      <label key={cat} className="flex items-center gap-3 cursor-pointer group">
+                        <input 
+                          type="checkbox" 
+                          checked={filters.category.includes(cat)}
+                          onChange={() => handleFilterChange('category', cat)}
+                          className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                        />
+                        <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{cat}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <div className="lg:col-span-3">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 mb-6 shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input 
+                  type="text"
+                  placeholder="Search coaching centers..."
+                  className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
+                  value={filters.search}
+                  onChange={(e) => setFilters({ ...filters, search: e.target.value })}
+                />
+              </div>
+            </div>
+
+            {isLoading ? (
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {Array(6).fill(0).map((_, i) => <CoachingCard key={i} loading={true} />)}
+              </div>
+            ) : data?.data?.length > 0 ? (
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                {data.data.map(coaching => (
+                  <CoachingCard key={coaching._id} coaching={coaching} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800">
+                <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
+                  <Users className="w-10 h-10" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">No coaching centers found</h3>
+                <p className="text-slate-500 dark:text-slate-400">Try adjusting your filters or search terms.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
