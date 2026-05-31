@@ -57,7 +57,7 @@ export default function CareerGuidancePage() {
         
         <div className="container mx-auto px-4 relative z-10 text-center">
           <GraduationCap className="w-16 h-16 text-primary-400 mx-auto mb-6" />
-          <h1 className="text-4xl md:text-6xl font-display font-bold mb-6">Career Guidance</h1>
+          <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-6">Career Guidance</h1>
           <p className="text-primary-100 max-w-2xl mx-auto text-xl leading-relaxed">
             Not sure which path to take? Explore comprehensive career maps designed for students after 10th and 12th in Odisha.
           </p>

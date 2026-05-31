@@ -50,7 +50,7 @@ export default function BlogsPage() {
         </div>
         
         <div className="container mx-auto px-4 relative z-10 text-center">
-          <h1 className="text-4xl md:text-5xl font-display font-bold mb-4">EduOdisha Blog</h1>
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-4">EduOdisha Blog</h1>
           <p className="text-primary-100 max-w-2xl mx-auto text-lg">
             Stay updated with the latest exam news, career advice, and admission alerts from across Odisha.
           </p>

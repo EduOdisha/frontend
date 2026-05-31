@@ -36,6 +36,23 @@ const FACILITY_ICONS = {
   gym: '💪',
 };
 
+const capitalizeWords = (str) => {
+  if (!str) return '';
+  return str.split(' ').map(w => {
+    const lower = w.toLowerCase();
+    if (['for', 'of', 'in', 'and', 'to', 'with', 'by'].includes(lower)) {
+      return lower;
+    }
+    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+  }).join(' ').replace(/^\w/, c => c.toUpperCase());
+};
+
+const formatAffiliation = (str) => {
+  if (!str) return '';
+  if (str.toLowerCase() === 'bput') return 'BPUT';
+  return capitalizeWords(str);
+};
+
 // ─── Loading Skeleton ─────────────────────────────────────
 function DetailSkeleton() {
   return (
@@ -185,35 +202,48 @@ export default function CollegeDetailPage() {
   return (
     <div className="min-h-screen bg-slate-50 pb-16">
       <Helmet>
-        <title>{college.name} — Fees, Courses, Placements | EduOdisha</title>
-        <meta name="description" content={college.about?.substring(0, 155) || `Explore ${college.name} — fees, courses, placements, rankings and admission process.`} />
+        <title>{capitalizeWords(college.name)} — Fees, Courses, Placements | EduOdisha</title>
+        <meta name="description" content={college.about?.substring(0, 155) || `Explore ${capitalizeWords(college.name)} — fees, courses, placements, rankings and admission process.`} />
       </Helmet>
 
       {/* ─── Banner ────────────────────────────────────── */}
       <div className="relative h-52 md:h-64 lg:h-72 w-full overflow-hidden bg-slate-200">
         <img
           src={college.banner?.url || 'https://images.unsplash.com/photo-1562774053-701939374585?w=1400&q=80&auto=format&fit=crop'}
-          alt={`${college.name} campus`}
+          alt={`${capitalizeWords(college.name)} campus`}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        
+        {/* Breadcrumbs overlaid on the banner */}
+        <div className="absolute top-4 left-0 right-0 z-20">
+          <div className="container-xl">
+            <nav className="flex items-center gap-1.5 text-xs text-slate-200/95 font-semibold px-4 lg:px-0">
+              <Link to="/" className="hover:text-white transition-colors">Home</Link>
+              <ChevronRight size={11} className="text-slate-400" />
+              <Link to="/colleges" className="hover:text-white transition-colors">Colleges</Link>
+              <ChevronRight size={11} className="text-slate-400" />
+              <span className="text-white font-bold">{capitalizeWords(college.shortName || college.name)}</span>
+            </nav>
+          </div>
+        </div>
       </div>
 
       {/* ─── College Hero ──────────────────────────────── */}
       <div className="bg-white border-b border-slate-200 relative z-10">
         <div className="container-xl">
-          {/* College info row */}
-          <div className="flex flex-col lg:flex-row gap-6 items-start -mt-14 mb-5 relative z-10">
+          {/* College info row: aligned to baseline of the logo */}
+          <div className="flex flex-col lg:flex-row gap-6 items-start lg:items-end mb-6 relative z-10 pt-4">
             {/* Logo */}
-            <div className="w-28 h-28 bg-white rounded-xl shadow-lg border-2 border-white flex items-center justify-center overflow-hidden shrink-0 ml-4 lg:ml-0">
+            <div className="w-28 h-28 bg-white rounded-xl shadow-lg border-2 border-white flex items-center justify-center overflow-hidden shrink-0 -mt-16 ml-4 lg:ml-0 relative z-20">
               {college.logo?.url ? (
-                <img src={college.logo.url} alt={`${college.name} logo`} className="w-full h-full object-contain p-2" />
+                <img src={college.logo.url} alt={`${capitalizeWords(college.name)} logo`} className="w-full h-full object-contain p-2" />
               ) : (
-                <span className="text-3xl font-black text-primary-600">{college.name[0]}</span>
+                <span className="text-3xl font-black text-primary-600">{college.name[0]?.toUpperCase()}</span>
               )}
             </div>
 
-            <div className="flex-1 pt-2 lg:pt-16 px-4 lg:px-0">
+            <div className="flex-1 px-4 lg:px-0">
               {/* Tags */}
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <span className="badge badge-blue">{college.type}</span>
@@ -232,10 +262,10 @@ export default function CollegeDetailPage() {
               </div>
 
               <h1 className="text-2xl lg:text-3xl font-display font-extrabold text-slate-900 mb-2 tracking-tight">
-                {college.name}
+                {capitalizeWords(college.name)}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 mb-4">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500 mb-2">
                 <span className="flex items-center gap-1.5 font-medium">
                   <MapPin size={14} className="text-primary-500" />
                   {college.location?.city}, {college.location?.state}
@@ -243,7 +273,7 @@ export default function CollegeDetailPage() {
                 {college.affiliation && (
                   <span className="flex items-center gap-1.5 font-medium">
                     <Award size={14} className="text-amber-500" />
-                    {college.affiliation}
+                    {formatAffiliation(college.affiliation)}
                   </span>
                 )}
                 {college.established && (
@@ -299,31 +329,22 @@ export default function CollegeDetailPage() {
               </div>
             </div>
 
-            {/* CTA Buttons */}
-            <div className="flex lg:flex-col gap-3 w-full lg:w-auto px-4 lg:px-0 lg:pt-20 shrink-0">
+            {/* CTA Buttons aligned to the bottom of the row */}
+            <div className="flex lg:flex-col gap-3 w-full lg:w-auto px-4 lg:px-0 shrink-0 pb-1">
               <button
                 onClick={() => college.brochure?.url ? window.open(college.brochure.url, '_blank') : toast.error('Brochure unavailable')}
-                className="flex-1 lg:flex-none btn-secondary py-2.5 text-sm"
+                className="flex-1 lg:flex-none btn-secondary py-2.5 text-sm rounded-xl"
               >
                 <Download size={15} /> Brochure
               </button>
               <button
                 onClick={() => switchTab('contact')}
-                className="flex-1 lg:flex-none btn-cta py-2.5 text-sm"
+                className="flex-1 lg:flex-none btn-cta py-2.5 text-sm rounded-xl"
               >
                 Apply Now
               </button>
             </div>
           </div>
-
-          {/* Breadcrumbs */}
-          <nav className="flex items-center gap-1.5 text-xs text-slate-400 font-medium mb-0 pb-3 px-4 lg:px-0">
-            <Link to="/" className="hover:text-primary-600 transition-colors">Home</Link>
-            <ChevronRight size={11} />
-            <Link to="/colleges" className="hover:text-primary-600 transition-colors">Colleges</Link>
-            <ChevronRight size={11} />
-            <span className="text-slate-600">{college.shortName || college.name}</span>
-          </nav>
 
           {/* ─── Tabs ─── */}
           <div ref={tabsRef} className="flex items-center gap-0 border-t border-slate-100 overflow-x-auto scrollbar-hide -mx-4 lg:mx-0 px-4 lg:px-0">
@@ -377,7 +398,7 @@ export default function CollegeDetailPage() {
 
                     {/* About */}
                     <div className="bg-white border border-slate-200 rounded-xl p-6">
-                      <h2 className="text-xl font-bold text-slate-900 mb-4">About {college.name}</h2>
+                      <h2 className="text-xl font-bold text-slate-900 mb-4">About {capitalizeWords(college.name)}</h2>
                       <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-line">
                         {college.about || 'Detailed information about this college will be updated shortly.'}
                       </p>
@@ -597,7 +618,7 @@ export default function CollegeDetailPage() {
                   <div className="bg-white border border-slate-200 rounded-xl p-6 text-center py-16">
                     <MessageSquare size={40} className="mx-auto mb-3 text-slate-200" />
                     <h2 className="text-xl font-bold text-slate-800 mb-2">Student Reviews</h2>
-                    <p className="text-sm text-slate-500 mb-5">Be the first to share your experience at {college.name}.</p>
+                    <p className="text-sm text-slate-500 mb-5">Be the first to share your experience at {capitalizeWords(college.name)}.</p>
                     <button className="btn-primary py-2.5 px-6">Write a Review</button>
                   </div>
                 )}

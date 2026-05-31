@@ -49,6 +49,7 @@ export default function App() {
   const { theme } = useSelector(state => state.ui);
 
   const isAdminPath = pathname.startsWith('/admin');
+  const isDashboardOrAdmin = isAdminPath || pathname.startsWith('/dashboard');
 
   // Check auth on load
   useEffect(() => {
@@ -130,7 +131,7 @@ export default function App() {
         </Routes>
       </main>
 
-      {!isAdminPath && (
+      {!isDashboardOrAdmin && (
         <>
           <CompareWidget />
           <Footer />

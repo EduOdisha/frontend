@@ -38,7 +38,7 @@ export default function ExamsPage() {
   };
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen py-10">
+    <div className="bg-slate-50 min-h-screen py-10">
       <Helmet>
         <title>Upcoming Entrance Exams 2024 - Dates, Syllabus & Pattern | EduOdisha</title>
       </Helmet>
@@ -51,10 +51,10 @@ export default function ExamsPage() {
         </div>
 
         <div className="mb-10">
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
+          <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">
             Entrance Exams
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 max-w-3xl">
+          <p className="text-slate-500 max-w-3xl">
             Stay updated with the latest entrance exams in Odisha and India. Get detailed information about registration dates, eligibility, and syllabus.
           </p>
         </div>
@@ -62,8 +62,8 @@ export default function ExamsPage() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar Filters */}
           <aside className="space-y-8">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
-              <h3 className="font-bold text-slate-800 dark:text-white mb-6">Filters</h3>
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+              <h3 className="font-bold text-slate-800 mb-6">Filters</h3>
               
               <div className="space-y-6">
                 <div>
@@ -77,7 +77,7 @@ export default function ExamsPage() {
                           onChange={() => handleFilterChange('type', type)}
                           className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
                         />
-                        <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{type}</span>
+                        <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">{type}</span>
                       </label>
                     ))}
                   </div>
@@ -94,7 +94,7 @@ export default function ExamsPage() {
                           onChange={() => handleFilterChange('level', level)}
                           className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
                         />
-                        <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{level}</span>
+                        <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">{level}</span>
                       </label>
                     ))}
                   </div>
@@ -105,13 +105,13 @@ export default function ExamsPage() {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 mb-6 shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-4">
+            <div className="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-slate-100 flex items-center gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input 
                   type="text"
                   placeholder="Search exams (e.g. OJEE, JEE Main)..."
-                  className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
                   value={filters.search}
                   onChange={(e) => setFilters({ ...filters, search: e.target.value })}
                 />
@@ -129,12 +129,12 @@ export default function ExamsPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800">
-                <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
+              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-100">
+                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
                   <Award className="w-10 h-10" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">No exams found</h3>
-                <p className="text-slate-500 dark:text-slate-400">Try adjusting your filters or search terms.</p>
+                <h3 className="text-xl font-bold text-slate-800 mb-2">No exams found</h3>
+                <p className="text-slate-500">Try adjusting your filters or search terms.</p>
               </div>
             )}
           </div>

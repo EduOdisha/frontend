@@ -169,6 +169,35 @@ export default function HomePage() {
   const navigate = useNavigate();
   const [searchQ, setSearchQ] = useState('');
   const [searchType, setSearchType] = useState('colleges');
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  const slides = [
+    {
+      image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&q=80',
+      title: 'IIT Bhubaneswar Campus',
+      tag: 'NIRF Rank 47',
+      desc: 'Top-tier technology institute offering world-class engineering programmes.'
+    },
+    {
+      image: 'https://media.collegedekho.com/media/img/institute/crawled_images/None/DJI_0011.00_07_04_19.Still018.jpg',
+      title: 'NIT Rourkela Library',
+      tag: 'Top Engineering College',
+      desc: 'Renowned national institute for academic excellence and high placement packages.'
+    },
+    {
+      image: 'https://image-static.collegedunia.com/public/college_data/images/appImage/14878534504.jpg',
+      title: 'Ravenshaw Heritage Hall',
+      tag: 'Heritage Campus',
+      desc: 'Established in 1868, offering rich legacy in arts, science and management.'
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide(curr => (curr + 1) % slides.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
   const { data: featuredColleges } = useQuery({
     queryKey: ['featured-colleges'],
@@ -203,15 +232,46 @@ export default function HomePage() {
       </Helmet>
 
       {/* ─── Hero ──────────────────────────────────────── */}
-      <section className="bg-dot-grid pt-24 pb-16 lg:pt-32 lg:pb-24">
-        <div className="container-xl">
-          <div className="max-w-3xl">
+      <section className="relative pt-24 pb-16 lg:pt-32 lg:pb-24 overflow-hidden bg-slate-50 border-b border-slate-100">
+        {/* Background Slideshow Layer */}
+        <div className="absolute inset-0 z-0 overflow-hidden bg-slate-50">
+          {slides.map((slide, idx) => (
+            <div
+              key={idx}
+              className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
+              style={{ opacity: activeSlide === idx ? 0.42 : 0 }}
+            >
+              <img
+                src={slide.image}
+                alt=""
+                className="w-full h-full object-cover select-none"
+              />
+            </div>
+          ))}
+          {/* Dotted Grid Pattern Overlay directly over images */}
+          <div className="absolute inset-0 bg-dot-grid opacity-100" />
+
+          {/* Subtle gradient overlay to blend images and dot grid into the slate-50 background smoothly, with fully transparent center for maximum dot visibility */}
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-transparent to-slate-50" />
+        </div>
+
+        {/* Slide Indicator Badge */}
+        <div className="absolute bottom-4 right-4 z-20 hidden sm:flex items-center gap-2 bg-white/70 backdrop-blur-md border border-slate-200/60 px-3 py-1.5 rounded-full shadow-xs text-[11px] text-slate-600 select-none">
+          <span className="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse" />
+          <span className="font-semibold text-slate-700">{slides[activeSlide].title}</span>
+          <span className="text-slate-300">•</span>
+          <span className="text-slate-500 font-medium">{slides[activeSlide].tag}</span>
+        </div>
+
+        {/* Content (relative z-10) */}
+        <div className="container-xl relative z-10">
+          <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
             {/* Trust badge */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="inline-flex items-center gap-2 bg-primary-50 border border-primary-100 text-primary-700 text-xs font-bold px-3 py-1.5 rounded-full mb-6"
+              className="inline-flex items-center gap-2 bg-primary-50/90 backdrop-blur-sm border border-primary-100 text-primary-700 text-xs font-bold px-3 py-1.5 rounded-full mb-6"
             >
               <CheckCircle size={12} className="text-primary-600" />
               Trusted by 1 Lakh+ Odisha Students
@@ -222,7 +282,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.08 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-display font-extrabold text-slate-900 mb-5 leading-[1.1] tracking-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-display font-extrabold text-slate-900 mb-5 leading-[1.15] tracking-tight text-center"
             >
               Odisha's Most Trusted
               <br />
@@ -234,7 +294,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
-              className="text-lg text-slate-500 mb-8 max-w-2xl leading-relaxed font-normal"
+              className="text-base sm:text-lg text-slate-700 mb-8 max-w-2xl leading-relaxed font-medium text-center"
             >
               Compare 500+ verified colleges, discover the right course, find scholarships,
               and get free personalized counselling — all built for Odisha students.
@@ -245,7 +305,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.22 }}
-              className="bg-white border border-slate-200 rounded-xl shadow-md p-2 max-w-2xl"
+              className="bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl shadow-md p-2 w-full max-w-2xl"
             >
               {/* Type Tabs */}
               <div className="flex items-center gap-1 mb-2 px-1">
@@ -254,11 +314,10 @@ export default function HomePage() {
                     key={type}
                     type="button"
                     onClick={() => setSearchType(type)}
-                    className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${
-                      searchType === type
-                        ? 'bg-primary-600 text-white'
-                        : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
-                    }`}
+                    className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all ${searchType === type
+                      ? 'bg-primary-600 text-white'
+                      : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
+                      }`}
                   >
                     {type}
                   </button>
@@ -288,7 +347,7 @@ export default function HomePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.35 }}
-              className="mt-5 flex flex-wrap items-center gap-2"
+              className="mt-5 flex flex-wrap items-center justify-center gap-2"
             >
               <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
                 Popular:
@@ -309,7 +368,7 @@ export default function HomePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.45 }}
-              className="mt-8 flex flex-wrap items-center gap-6"
+              className="mt-8 flex flex-wrap items-center justify-center gap-6"
             >
               {['Free to use', 'No spam calls', 'Expert counsellors'].map(item => (
                 <div key={item} className="flex items-center gap-1.5 text-sm text-slate-500 font-medium">
@@ -318,6 +377,26 @@ export default function HomePage() {
                 </div>
               ))}
             </motion.div>
+
+            {/* Subtle Carousel Indicator (Bottom Center) */}
+            <div className="mt-12 flex items-center gap-2 bg-white/70 backdrop-blur-sm px-3.5 py-2 rounded-full border border-slate-200/50 shadow-sm">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Showing:</span>
+              <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider">
+                {slides[activeSlide].title} ({slides[activeSlide].tag})
+              </span>
+              <div className="flex gap-1 ml-2">
+                {slides.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveSlide(idx)}
+                    className={`w-1.5 h-1.5 rounded-full transition-all ${activeSlide === idx ? 'bg-primary-600 w-3' : 'bg-slate-300'
+                      }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+
           </div>
         </div>
       </section>
