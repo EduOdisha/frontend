@@ -6,6 +6,7 @@ import { SlidersHorizontal, Search, ChevronRight, Grid, List as ListIcon, X, Arr
 import api from '../utils/api.js';
 import CollegeCard from '../components/college/CollegeCard.jsx';
 import FilterSidebar from '../components/college/FilterSidebar.jsx';
+import { formatLPA } from '../utils/format';
 
 const SORT_OPTIONS = [
   { value: '', label: 'Relevance' },
@@ -236,7 +237,7 @@ function CollegeListRow({ college }) {
             Fees: <strong className="text-slate-800">₹{college.fees?.min?.toLocaleString() || 'N/A'}</strong>
           </span>
           <span className="text-emerald-600 font-medium">
-            Pkg: <strong>₹{college.placements?.highestPackage || 'N/A'} LPA</strong>
+            Pkg: <strong>{formatLPA(college.placements?.highestPackage)}</strong>
           </span>
           {college.nirfRanking && (
             <span className="text-slate-600 font-medium">NIRF: <strong>#{college.nirfRanking}</strong></span>

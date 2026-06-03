@@ -5,27 +5,56 @@ import api from '../../utils/api';
 import { Plus, Search, Edit2, Trash2, Eye, CheckCircle, XCircle, AlertCircle, FileText } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-const EXAM_TYPES = ['Engineering', 'Medical', 'Management', 'Government Job', 'Banking', 'Other'];
+function toDateStr(val) {
+  return val ? new Date(val).toISOString().split('T')[0] : '';
+}
 
 function ExamFormModal({ exam, onClose, onSubmit, loading }) {
   const [form, setForm] = useState({
     name: exam?.name || '',
-    fullName: exam?.fullName || '',
-    type: exam?.type || 'Engineering',
-    conductingBody: exam?.conductingBody || '',
+    shortName: exam?.shortName || exam?.fullName || '',
+    type: exam?.type || 'State',
+    level: exam?.level || 'UG',
+    conductedBy: exam?.conductedBy || exam?.conductingBody || '',
     description: exam?.description || '',
-    eligibility: exam?.eligibility || '',
-    applicationStartDate: exam?.applicationStartDate?.split('T')[0] || '',
-    applicationEndDate: exam?.applicationEndDate?.split('T')[0] || '',
-    examDate: exam?.examDate?.split('T')[0] || '',
+    eligibility: typeof exam?.eligibility === 'object' ? {
+      age: exam?.eligibility?.age || '',
+      qualification: exam?.eligibility?.qualification || '',
+      percentage: exam?.eligibility?.percentage || '',
+      domicile: exam?.eligibility?.domicile || '',
+    } : {
+      age: '',
+      qualification: typeof exam?.eligibility === 'string' ? exam.eligibility : '',
+      percentage: '',
+      domicile: '',
+    },
     officialWebsite: exam?.officialWebsite || '',
+    image: { url: exam?.image?.url || '' },
+    applicationFee: {
+      general: exam?.applicationFee?.general || 0,
+      sc_st: exam?.applicationFee?.sc_st || 0,
+    },
+    applicationLink: exam?.applicationLink || '',
+    syllabusLink: exam?.syllabusLink || '',
+    examDates: {
+      applicationStart: toDateStr(exam?.examDates?.applicationStart || exam?.applicationStartDate),
+      applicationEnd: toDateStr(exam?.examDates?.applicationEnd || exam?.applicationEndDate),
+      examDate: toDateStr(exam?.examDates?.examDate || exam?.examDate),
+    },
     isActive: exam?.isActive !== false,
+    isFeatured: exam?.isFeatured || false,
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.name) return toast.error('Exam name is required');
-    onSubmit(form);
+    onSubmit({
+      ...form,
+      applicationFee: {
+        general: Number(form.applicationFee.general) || 0,
+        sc_st: Number(form.applicationFee.sc_st) || 0,
+      }
+    });
   };
 
   return (
@@ -39,54 +68,117 @@ function ExamFormModal({ exam, onClose, onSubmit, loading }) {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="label-base">Short Name *</label>
-              <input className="input-base" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. OJEE" required />
+              <label className="label-base">Exam Name *</label>
+              <input className="input-base" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="e.g. OJEE 2026" required />
             </div>
+            <div>
+              <label className="label-base">Short Name</label>
+              <input className="input-base" value={form.shortName} onChange={e => setForm(f => ({ ...f, shortName: e.target.value }))} placeholder="e.g. OJEE" />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="label-base">Type</label>
               <select className="input-base" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
-                {EXAM_TYPES.map(t => <option key={t}>{t}</option>)}
+                {['State', 'National', 'University', 'Government Job', 'Banking', 'Other'].map(t => <option key={t}>{t}</option>)}
               </select>
             </div>
-          </div>
-          <div>
-            <label className="label-base">Full Name</label>
-            <input className="input-base" value={form.fullName} onChange={e => setForm(f => ({ ...f, fullName: e.target.value }))} placeholder="Odisha Joint Entrance Examination" />
-          </div>
-          <div>
-            <label className="label-base">Conducting Body</label>
-            <input className="input-base" value={form.conductingBody} onChange={e => setForm(f => ({ ...f, conductingBody: e.target.value }))} placeholder="OJEE Board" />
+            <div>
+              <label className="label-base">Level</label>
+              <select className="input-base" value={form.level} onChange={e => setForm(f => ({ ...f, level: e.target.value }))}>
+                {['10th', '12th', 'UG', 'PG', 'Diploma', 'Any'].map(l => <option key={l}>{l}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="label-base">Conducting Body</label>
+              <input className="input-base" value={form.conductedBy} onChange={e => setForm(f => ({ ...f, conductedBy: e.target.value }))} placeholder="OJEE Board" />
+            </div>
           </div>
           <div>
             <label className="label-base">Description</label>
             <textarea className="input-base" rows={3} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
           </div>
-          <div>
-            <label className="label-base">Eligibility</label>
-            <input className="input-base" value={form.eligibility} onChange={e => setForm(f => ({ ...f, eligibility: e.target.value }))} placeholder="10+2 with PCM" />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label-base">Exam Logo/Image URL</label>
+              <input type="url" className="input-base" value={form.image?.url || ''} onChange={e => setForm(f => ({ ...f, image: { ...f.image, url: e.target.value } }))} placeholder="https://example.com/logo.png" />
+            </div>
+            {form.image?.url && (
+              <div className="flex items-end">
+                <div className="w-16 h-16 rounded-xl border border-slate-200 p-1 bg-slate-50 flex items-center justify-center overflow-hidden mb-1">
+                  <img src={form.image.url} alt="Exam Logo Preview" className="w-full h-full object-contain" onError={(e) => { e.target.style.display = 'none'; }} />
+                </div>
+              </div>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label-base">Eligibility - Qualification</label>
+              <input className="input-base" value={form.eligibility.qualification} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, qualification: e.target.value } }))} placeholder="e.g. 10+2 with PCM" />
+            </div>
+            <div>
+              <label className="label-base">Eligibility - Age Limit</label>
+              <input className="input-base" value={form.eligibility.age} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, age: e.target.value } }))} placeholder="e.g. Min 17 years" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label-base">Eligibility - Min Percentage</label>
+              <input className="input-base" value={form.eligibility.percentage} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, percentage: e.target.value } }))} placeholder="e.g. 50% for General" />
+            </div>
+            <div>
+              <label className="label-base">Eligibility - Domicile</label>
+              <input className="input-base" value={form.eligibility.domicile} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, domicile: e.target.value } }))} placeholder="e.g. Odisha" />
+            </div>
           </div>
           <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="label-base">App. Start</label>
-              <input type="date" className="input-base" value={form.applicationStartDate} onChange={e => setForm(f => ({ ...f, applicationStartDate: e.target.value }))} />
+              <input type="date" className="input-base" value={form.examDates.applicationStart} onChange={e => setForm(f => ({ ...f, examDates: { ...f.examDates, applicationStart: e.target.value } }))} />
             </div>
             <div>
               <label className="label-base">App. End</label>
-              <input type="date" className="input-base" value={form.applicationEndDate} onChange={e => setForm(f => ({ ...f, applicationEndDate: e.target.value }))} />
+              <input type="date" className="input-base" value={form.examDates.applicationEnd} onChange={e => setForm(f => ({ ...f, examDates: { ...f.examDates, applicationEnd: e.target.value } }))} />
             </div>
             <div>
               <label className="label-base">Exam Date</label>
-              <input type="date" className="input-base" value={form.examDate} onChange={e => setForm(f => ({ ...f, examDate: e.target.value }))} />
+              <input type="date" className="input-base" value={form.examDates.examDate} onChange={e => setForm(f => ({ ...f, examDates: { ...f.examDates, examDate: e.target.value } }))} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label-base">Application Fee (General/OBC)</label>
+              <input type="number" className="input-base" value={form.applicationFee.general} onChange={e => setForm(f => ({ ...f, applicationFee: { ...f.applicationFee, general: e.target.value } }))} placeholder="1000" min="0" />
+            </div>
+            <div>
+              <label className="label-base">Application Fee (SC/ST/PWD)</label>
+              <input type="number" className="input-base" value={form.applicationFee.sc_st} onChange={e => setForm(f => ({ ...f, applicationFee: { ...f.applicationFee, sc_st: e.target.value } }))} placeholder="500" min="0" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label-base">Application Link (Apply Now)</label>
+              <input type="url" className="input-base" value={form.applicationLink} onChange={e => setForm(f => ({ ...f, applicationLink: e.target.value }))} placeholder="https://ojee.nic.in/apply" />
+            </div>
+            <div>
+              <label className="label-base">Syllabus PDF Link</label>
+              <input type="url" className="input-base" value={form.syllabusLink} onChange={e => setForm(f => ({ ...f, syllabusLink: e.target.value }))} placeholder="https://ojee.nic.in/syllabus.pdf" />
             </div>
           </div>
           <div>
             <label className="label-base">Official Website</label>
             <input type="url" className="input-base" value={form.officialWebsite} onChange={e => setForm(f => ({ ...f, officialWebsite: e.target.value }))} placeholder="https://ojee.nic.in" />
           </div>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" checked={form.isActive} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))} className="w-4 h-4 rounded border-slate-300 text-primary-600" />
-            <span className="text-sm font-medium text-slate-700">Mark as Active</span>
-          </label>
+          <div className="flex gap-6 items-center pt-1">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={form.isActive} onChange={e => setForm(f => ({ ...f, isActive: e.target.checked }))} className="w-4 h-4 rounded border-slate-300 text-primary-600" />
+              <span className="text-sm font-medium text-slate-700">Mark as Active</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={form.isFeatured} onChange={e => setForm(f => ({ ...f, isFeatured: e.target.checked }))} className="w-4 h-4 rounded border-slate-300 text-primary-600" />
+              <span className="text-sm font-medium text-slate-700">Mark as Featured (Important)</span>
+            </label>
+          </div>
           <div className="flex gap-3 pt-2">
             <button type="submit" disabled={loading} className="btn-primary py-2.5 px-6 flex-1">
               {loading ? 'Saving…' : exam ? 'Update Exam' : 'Add Exam'}
@@ -116,7 +208,7 @@ export default function ExamManagement() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-exams', search],
-    queryFn: () => api.get(`/exams?search=${search}&limit=100`).then(r => r.data),
+    queryFn: () => api.get(`/exams?search=${search}&limit=100&admin=true`).then(r => r.data),
   });
 
   const createMutation = useMutation({
@@ -138,8 +230,14 @@ export default function ExamManagement() {
   });
 
   const handleSubmit = (form) => {
-    if (selected) updateMutation.mutate({ ...form, _id: selected._id });
-    else createMutation.mutate(form);
+    const cleaned = {
+      ...form,
+      examDates: Object.fromEntries(
+        Object.entries(form.examDates || {}).filter(([, v]) => v !== '')
+      ),
+    };
+    if (selected) updateMutation.mutate({ ...cleaned, _id: selected._id });
+    else createMutation.mutate(cleaned);
   };
 
   return (
@@ -175,16 +273,22 @@ export default function ExamManagement() {
                 <tr key={exam._id}>
                   <td>
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center"><FileText size={14} className="text-primary-600" /></div>
+                      <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-slate-100">
+                        {exam.image?.url ? (
+                          <img src={exam.image.url} alt={exam.name} className="w-full h-full object-contain p-1" />
+                        ) : (
+                          <FileText size={14} className="text-primary-600" />
+                        )}
+                      </div>
                       <div>
                         <p className="font-bold text-sm text-slate-900">{exam.name}</p>
-                        <p className="text-xs text-slate-400">{exam.fullName}</p>
+                        <p className="text-xs text-slate-400">{exam.shortName || exam.fullName}</p>
                       </div>
                     </div>
                   </td>
                   <td><span className="badge badge-blue">{exam.type}</span></td>
-                  <td className="text-slate-600 text-sm">{exam.conductingBody || '—'}</td>
-                  <td className="text-slate-600 text-sm">{exam.examDate ? new Date(exam.examDate).toLocaleDateString('en-IN') : '—'}</td>
+                  <td className="text-slate-600 text-sm">{exam.conductedBy || exam.conductingBody || '—'}</td>
+                  <td className="text-slate-600 text-sm">{exam.examDates?.examDate ? new Date(exam.examDates.examDate).toLocaleDateString('en-IN') : (exam.examDate ? new Date(exam.examDate).toLocaleDateString('en-IN') : '—')}</td>
                   <td>
                     {exam.isActive !== false
                       ? <span className="flex items-center gap-1 text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full w-fit"><CheckCircle size={11} /> Active</span>

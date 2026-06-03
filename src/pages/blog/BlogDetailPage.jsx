@@ -99,7 +99,7 @@ export default function BlogDetailPage() {
 
           <div className="mb-12 rounded-3xl overflow-hidden shadow-2xl shadow-primary-900/10">
             <img 
-              src={blog.image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'} 
+              src={blog.image?.url || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'} 
               alt={blog.title}
               className="w-full h-auto object-cover max-h-[500px]"
             />
@@ -148,7 +148,7 @@ export default function BlogDetailPage() {
                       blog.relatedBlogs.map(related => (
                         <Link key={related._id} to={`/blogs/${related.slug}`} className="group flex gap-4">
                           <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100">
-                            <img src={related.image} alt={related.title} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                            <img src={related.image?.url || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} alt={related.title} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
                           </div>
                           <div>
                             <span className="text-[10px] font-bold uppercase text-primary-600 mb-1 block">{related.category}</span>

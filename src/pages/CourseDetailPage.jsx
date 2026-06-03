@@ -1,32 +1,63 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useDispatch, useSelector } from 'react-redux';
 import { 
   Clock, Award, BookOpen, GraduationCap, 
   IndianRupee, Briefcase, ChevronRight,
   CheckCircle2, Star, TrendingUp, Users,
-  Building2, ArrowRight
+  Building2, ArrowRight, Heart
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import api from '../utils/api';
 import LeadForm from '../components/common/LeadForm';
+import { updateUserSaved } from '../store/slices/authSlice';
+import { toast } from 'react-hot-toast';
+import { formatLPA } from '../utils/format';
 
 export default function CourseDetailPage() {
   const { slug } = useParams();
+  const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector(state => state.auth);
 
   const { data: course, isLoading, error } = useQuery({
     queryKey: ['course', slug],
     queryFn: async () => {
       const { data } = await api.get(`/courses/${slug}`);
-      return data;
+      return data.data;
     },
   });
+
+  const isCurrentlySaved = user?.savedCourses?.some(id => 
+    typeof id === 'object' ? id._id === course?._id : id === course?._id
+  );
+  
+  const [isBookmarked, setIsBookmarked] = useState(isCurrentlySaved || false);
+
+  useEffect(() => {
+    setIsBookmarked(isCurrentlySaved || false);
+  }, [isCurrentlySaved, course]);
+
+  const handleBookmark = async () => {
+    if (!isAuthenticated) {
+      toast.error('Please log in to save courses');
+      return;
+    }
+    try {
+      const { data } = await api.post(`/users/save-course/${course._id}`);
+      setIsBookmarked(data.saved);
+      dispatch(updateUserSaved({ savedCourses: data.savedCourses }));
+      toast.success(data.saved ? 'Course saved to wishlist' : 'Removed from saved');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update saved courses');
+    }
+  };
 
   const { data: similarCourses } = useQuery({
     queryKey: ['similar-courses', course?.stream],
     queryFn: async () => {
       const { data } = await api.get(`/courses?stream=${course?.stream}&limit=4`);
-      return data.courses.filter(c => c._id !== course?._id);
+      return data.data.filter(c => c._id !== course?._id);
     },
     enabled: !!course,
   });
@@ -49,10 +80,22 @@ export default function CourseDetailPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
             <div className="lg:col-span-2">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <span className="badge badge-blue">{course.level}</span>
-                <span className="badge badge-purple">{course.stream}</span>
-                {course.isFeatured && <span className="badge badge-orange">Trending</span>}
+              <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="badge badge-blue">{course.level}</span>
+                  <span className="badge badge-purple">{course.stream}</span>
+                  {course.isFeatured && <span className="badge badge-orange">Trending</span>}
+                </div>
+                <button
+                  onClick={handleBookmark}
+                  className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold shadow-xs hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all cursor-pointer"
+                >
+                  <Heart
+                    size={14}
+                    className={`transition-colors ${isBookmarked ? 'fill-red-500 text-red-500' : 'text-slate-400'}`}
+                  />
+                  {isBookmarked ? 'Saved' : 'Save Course'}
+                </button>
               </div>
               <h1 className="text-4xl lg:text-5xl font-display font-bold text-slate-900 dark:text-white mb-6">
                 {course.name} ({course.shortName})
@@ -80,7 +123,7 @@ export default function CourseDetailPage() {
                   <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">Avg. Salary</span>
                   <div className="flex items-center gap-2 text-slate-900 dark:text-white font-bold">
                     <TrendingUp className="w-4 h-4 text-emerald-500" />
-                    ₹{course.averageSalary?.entry?.toLocaleString()} - {course.averageSalary?.mid?.toLocaleString()}
+                    {course.averageSalary?.entry ? `${formatLPA(course.averageSalary.entry)} - ${formatLPA(course.averageSalary.mid)}` : 'N/A'}
                   </div>
                 </div>
                 <div className="flex flex-col">
@@ -205,12 +248,6 @@ export default function CourseDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            <div className="card p-6 sticky top-28">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Expert Career Guidance</h3>
-              <p className="text-sm text-slate-500 mb-6">Want to know if {course.shortName} is right for you? Talk to our experts.</p>
-              <LeadForm source="Course Page" />
-            </div>
-
             <div className="card p-6">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4">Career Scope</h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
@@ -224,6 +261,18 @@ export default function CourseDetailPage() {
                   </span>
                 ))}
               </div>
+              {course.skills?.length > 0 && (
+                <>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-6 mb-3">Skills Learned</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {course.skills.map(skill => (
+                      <span key={skill} className="px-3 py-1 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 text-xs font-bold rounded-full">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             {similarCourses?.length > 0 && (
@@ -239,6 +288,12 @@ export default function CourseDetailPage() {
                 </div>
               </div>
             )}
+
+            <div className="card p-6 sticky top-28 shadow-sm">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Expert Career Guidance</h3>
+              <p className="text-sm text-slate-500 mb-6">Want to know if {course.shortName} is right for you? Talk to our experts.</p>
+              <LeadForm source="Course Page" compact />
+            </div>
           </div>
         </div>
       </div>

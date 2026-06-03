@@ -1,5 +1,7 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react';
+import api from '../../utils/api';
 
 const FOOTER_LINKS = [
   {
@@ -9,7 +11,7 @@ const FOOTER_LINKS = [
       { name: 'Popular Courses', href: '/courses' },
       { name: 'Entrance Exams', href: '/exams' },
       { name: 'Scholarships', href: '/scholarships' },
-      { name: 'Coaching Centers', href: '/coaching' },
+      { name: 'Compare Colleges', href: '/compare' },
     ],
   },
   {
@@ -18,8 +20,10 @@ const FOOTER_LINKS = [
       { name: 'Engineering', href: '/colleges?category=Engineering' },
       { name: 'Medical', href: '/colleges?category=Medical' },
       { name: 'Management', href: '/colleges?category=Management' },
+      { name: 'Arts & Science', href: '/colleges?category=Arts+%26+Science' },
       { name: 'Law', href: '/colleges?category=Law' },
       { name: 'Pharmacy', href: '/colleges?category=Pharmacy' },
+      { name: 'Nursing', href: '/colleges?category=Nursing' },
     ],
   },
   {
@@ -52,8 +56,62 @@ const SOCIAL_LINKS = [
 ];
 
 export default function Footer() {
+  const [stats, setStats] = useState({
+    colleges: 10,
+    courses: 6,
+    exams: 7,
+    scholarships: 6
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchStats = async () => {
+      try {
+        const { data } = await api.get('/colleges/public-stats');
+        if (isMounted && data?.success && data?.data) {
+          setStats({
+            colleges: data.data.colleges ?? 10,
+            courses: data.data.courses ?? 6,
+            exams: data.data.exams ?? 7,
+            scholarships: data.data.scholarships ?? 6
+          });
+        }
+      } catch (err) {
+        // Fallback to defaults already configured in state
+      }
+    };
+    fetchStats();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <footer className="bg-slate-900 text-slate-400">
+      {/* Stats Bar */}
+      <div className="border-b border-slate-800/80 bg-slate-950/30">
+        <div className="container-xl py-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-white tracking-tight">{stats.colleges}</span>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Verified Colleges</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-white tracking-tight">{stats.courses}</span>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Professional Courses</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-white tracking-tight">{stats.exams}</span>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Entrance Exams</p>
+            </div>
+            <div className="space-y-1">
+              <span className="text-2xl font-black text-white tracking-tight">{stats.scholarships}</span>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Scholarship Schemes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Top Section */}
       <div className="container-xl pt-14 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-10">
@@ -74,11 +132,11 @@ export default function Footer() {
 
             {/* Contact mini-cards */}
             <div className="space-y-3">
-              <a href="tel:+911800001234" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
+              <a href="tel:+917205402554" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
                 <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 group-hover:border-primary-700 group-hover:text-primary-400 transition-all shrink-0">
                   <Phone size={14} />
                 </div>
-                1800-001-234 (Free)
+                +91 7205402554
               </a>
               <a href="mailto:hello@eduodisha.in" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
                 <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 group-hover:border-primary-700 group-hover:text-primary-400 transition-all shrink-0">
@@ -132,13 +190,13 @@ export default function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-slate-800">
-        <div className="container-xl py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="container-xl py-5 flex flex-col md:flex-row items-center justify-center gap-4">
           <p className="text-xs text-slate-500 font-medium">
             © {new Date().getFullYear()} EduOdisha Technologies Pvt. Ltd. All rights reserved.
           </p>
 
           <div className="flex items-center gap-4">
-            <span className="text-xs text-slate-600 font-medium">🏫 Made with ❤️ in Odisha</span>
+
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-white transition-colors"

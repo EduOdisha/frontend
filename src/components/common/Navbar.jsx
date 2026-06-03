@@ -7,7 +7,7 @@ import {
   School, BookOpen, GraduationCap, Award,
   Briefcase, FileText, BookMarked, ArrowRight,
   User, LogOut, LayoutDashboard, Phone,
-  Mail, MapPin
+  Mail, MapPin, GitCompare
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -46,7 +46,7 @@ const collegesMegaMenu = {
       ],
     },
   ],
-  cta: { label: 'View All 500+ Colleges', href: '/colleges' },
+  cta: { label: 'View All Colleges', href: '/colleges' },
 };
 
 const examsMegaMenu = {
@@ -84,7 +84,7 @@ const examsMegaMenu = {
 const simpleNavLinks = [
   { name: 'Courses', href: '/courses' },
   { name: 'Scholarships', href: '/scholarships' },
-  { name: 'Coaching', href: '/coaching' },
+  { name: 'Compare', href: '/compare' },
   { name: 'Blogs', href: '/blogs' },
 ];
 
@@ -172,9 +172,8 @@ function SearchModal({ onClose }) {
             <button
               key={t}
               onClick={() => setType(t)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
-                type === t ? 'bg-primary-600 text-white' : 'text-slate-500 hover:bg-slate-100'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${type === t ? 'bg-primary-600 text-white' : 'text-slate-500 hover:bg-slate-100'
+                }`}
             >
               {t}
             </button>
@@ -252,19 +251,18 @@ export default function Navbar() {
       >
         {/* Top Subheader Bar */}
         <div
-          className={`bg-[#0b0f19] text-slate-300 border-b border-slate-800/80 text-xs transition-all duration-200 origin-top overflow-hidden hidden md:block w-full ${
-            isScrolled ? 'h-0 py-0 border-none opacity-0' : 'h-[38px] py-2'
-          }`}
+          className={`bg-[#0b0f19] text-slate-300 border-b border-slate-800/80 text-xs transition-all duration-200 origin-top overflow-hidden hidden md:block w-full ${isScrolled ? 'h-0 py-0 border-none opacity-0' : 'h-[38px] py-2'
+            }`}
         >
           <div className="container-xl flex items-center justify-between">
             {/* Contact details */}
             <div className="flex items-center gap-6">
               <a
-                href="tel:+911800001234"
+                href="tel:+917205402554"
                 className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors text-[11px] font-medium"
               >
                 <Phone size={12} className="text-slate-500" />
-                <span>1800-001-234 (Toll Free)</span>
+                <span>+91 7205402554</span>
               </a>
               <a
                 href="mailto:hello@eduodisha.in"
@@ -336,238 +334,234 @@ export default function Navbar() {
 
         {/* Main Navbar */}
         <nav
-          className={`transition-all duration-200 ${
-            isScrolled
+          className={`transition-all duration-200 ${isScrolled
               ? 'bg-white border-b border-slate-200 shadow-sm'
               : 'bg-white border-b border-slate-100'
-          }`}
+            }`}
         >
-        <div className="container-xl">
-          <div className="flex items-center h-16 gap-8">
+          <div className="container-xl">
+            <div className="flex items-center h-16 gap-8">
 
-            {/* ─ Logo ─ */}
-            <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label="EduOdisha Home">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <GraduationCap size={18} className="text-white" />
-              </div>
-              <span className="font-display font-extrabold text-lg text-slate-900 tracking-tight">
-                Edu<span className="text-primary-600">Odisha</span>
-              </span>
-            </Link>
+              {/* ─ Logo ─ */}
+              <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label="EduOdisha Home">
+                <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+                  <GraduationCap size={18} className="text-white" />
+                </div>
+                <span className="font-display font-extrabold text-lg text-slate-900 tracking-tight">
+                  Edu<span className="text-primary-600">Odisha</span>
+                </span>
+              </Link>
 
-            {/* ─ Desktop Nav ─ */}
-            <div className="hidden lg:flex items-center gap-1 flex-1">
-              {/* Colleges — Mega */}
-              <div className="relative">
-                <button
-                  onMouseEnter={() => setActiveMega('colleges')}
-                  onMouseLeave={() => setActiveMega(null)}
-                  onClick={() => setActiveMega(activeMega === 'colleges' ? null : 'colleges')}
-                  className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
-                    isActive('/colleges') || activeMega === 'colleges'
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  Colleges
-                  <ChevronDown
-                    size={14}
-                    className={`transition-transform duration-200 ${activeMega === 'colleges' ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                {activeMega === 'colleges' && (
-                  <div onMouseEnter={() => setActiveMega('colleges')} onMouseLeave={() => setActiveMega(null)}>
-                    <MegaMenuPanel data={collegesMegaMenu} onClose={() => setActiveMega(null)} align="left-0" />
-                  </div>
-                )}
-              </div>
-
-              {/* Exams — Mega */}
-              <div className="relative">
-                <button
-                  onMouseEnter={() => setActiveMega('exams')}
-                  onMouseLeave={() => setActiveMega(null)}
-                  onClick={() => setActiveMega(activeMega === 'exams' ? null : 'exams')}
-                  className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
-                    isActive('/exams') || activeMega === 'exams'
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  Exams
-                  <ChevronDown
-                    size={14}
-                    className={`transition-transform duration-200 ${activeMega === 'exams' ? 'rotate-180' : ''}`}
-                  />
-                </button>
-                {activeMega === 'exams' && (
-                  <div onMouseEnter={() => setActiveMega('exams')} onMouseLeave={() => setActiveMega(null)}>
-                    <MegaMenuPanel data={examsMegaMenu} onClose={() => setActiveMega(null)} align="-left-24" />
-                  </div>
-                )}
-              </div>
-
-              {/* Simple Links */}
-              {simpleNavLinks.map(link => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
-                    isActive(link.href)
-                      ? 'text-primary-600 bg-primary-50'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
-
-            {/* ─ Right Actions ─ */}
-            <div className="flex items-center gap-2 ml-auto">
-              {/* Search */}
-              <button
-                onClick={() => setIsSearchOpen(true)}
-                id="navbar-search-btn"
-                className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all"
-                aria-label="Open search"
-              >
-                <Search size={18} />
-              </button>
-
-              {/* Counselling CTA — visible md+ */}
-              <a
-                href="tel:+911800001234"
-                className="hidden md:flex items-center gap-1.5 btn-cta py-2 px-4 text-xs"
-              >
-                <Phone size={13} />
-                Free Counselling
-              </a>
-
-              {isAuthenticated ? (
+              {/* ─ Desktop Nav ─ */}
+              <div className="hidden lg:flex items-center gap-1 flex-1">
+                {/* Colleges — Mega */}
                 <div className="relative">
                   <button
-                    onClick={() => setIsUserOpen(!isUserOpen)}
-                    id="navbar-user-btn"
-                    className="flex items-center gap-2 p-1 pr-3 rounded-full border border-slate-200 hover:border-slate-300 bg-white transition-all"
+                    onMouseEnter={() => setActiveMega('colleges')}
+                    onMouseLeave={() => setActiveMega(null)}
+                    onClick={() => setActiveMega(activeMega === 'colleges' ? null : 'colleges')}
+                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${isActive('/colleges') || activeMega === 'colleges'
+                        ? 'text-primary-600 bg-primary-50'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      }`}
                   >
-                    <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-xs">
-                      {user?.name?.[0]?.toUpperCase() || 'U'}
-                    </div>
-                    <span className="text-sm font-semibold text-slate-700 hidden sm:block">
-                      {user?.name?.split(' ')[0]}
-                    </span>
-                    <ChevronDown size={13} className={`text-slate-400 transition-transform ${isUserOpen ? 'rotate-180' : ''}`} />
+                    Colleges
+                    <ChevronDown
+                      size={14}
+                      className={`transition-transform duration-200 ${activeMega === 'colleges' ? 'rotate-180' : ''}`}
+                    />
                   </button>
-
-                  {isUserOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-slate-200 rounded-xl shadow-lg animate-slide-down overflow-hidden z-50">
-                      <div className="px-4 py-3 border-b border-slate-100">
-                        <p className="text-sm font-semibold text-slate-800">{user?.name}</p>
-                        <p className="text-xs text-slate-500 truncate">{user?.email}</p>
-                      </div>
-                      <div className="p-1.5 space-y-0.5">
-                        {user?.role === 'admin' && (
-                          <Link to="/admin" onClick={() => setIsUserOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-primary-700 bg-primary-50 hover:bg-primary-100 transition-colors font-semibold">
-                            <LayoutDashboard size={15} /> Admin Panel
-                          </Link>
-                        )}
-                        <Link to="/dashboard" onClick={() => setIsUserOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors font-medium">
-                          <User size={15} /> Student Dashboard
-                        </Link>
-                        <button onClick={() => { handleLogout(); setIsUserOpen(false); }} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors font-medium">
-                          <LogOut size={15} /> Sign Out
-                        </button>
-                      </div>
+                  {activeMega === 'colleges' && (
+                    <div onMouseEnter={() => setActiveMega('colleges')} onMouseLeave={() => setActiveMega(null)}>
+                      <MegaMenuPanel data={collegesMegaMenu} onClose={() => setActiveMega(null)} align="left-0" />
                     </div>
                   )}
                 </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <Link to="/login" className="hidden sm:block text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-2 rounded-lg hover:bg-slate-50 transition-all">
-                    Log In
-                  </Link>
-                  <Link to="/register" className="btn-primary py-2 px-4 text-xs">
-                    Join Free
-                  </Link>
+
+                {/* Exams — Mega */}
+                <div className="relative">
+                  <button
+                    onMouseEnter={() => setActiveMega('exams')}
+                    onMouseLeave={() => setActiveMega(null)}
+                    onClick={() => setActiveMega(activeMega === 'exams' ? null : 'exams')}
+                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${isActive('/exams') || activeMega === 'exams'
+                        ? 'text-primary-600 bg-primary-50'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      }`}
+                  >
+                    Exams
+                    <ChevronDown
+                      size={14}
+                      className={`transition-transform duration-200 ${activeMega === 'exams' ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  {activeMega === 'exams' && (
+                    <div onMouseEnter={() => setActiveMega('exams')} onMouseLeave={() => setActiveMega(null)}>
+                      <MegaMenuPanel data={examsMegaMenu} onClose={() => setActiveMega(null)} align="-left-24" />
+                    </div>
+                  )}
                 </div>
-              )}
 
-              {/* Mobile Hamburger */}
-              <button
-                onClick={() => setIsMobileOpen(!isMobileOpen)}
-                className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-all"
-                aria-label="Toggle mobile menu"
-              >
-                {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
-          </div>
-        </div>
+                {/* Simple Links */}
+                {simpleNavLinks.map(link => (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${isActive(link.href)
+                        ? 'text-primary-600 bg-primary-50'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      }`}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
 
-        {/* ─ Mobile Drawer ─ */}
-        {isMobileOpen && (
-          <>
-            <div className="fixed inset-0 bg-slate-900/30 z-40 lg:hidden" onClick={() => setIsMobileOpen(false)} />
-            <div className="fixed top-16 left-0 right-0 bottom-0 bg-white z-50 lg:hidden overflow-y-auto animate-slide-down">
-              <div className="px-4 py-6 space-y-1">
+              {/* ─ Right Actions ─ */}
+              <div className="flex items-center gap-2 ml-auto">
                 {/* Search */}
                 <button
-                  onClick={() => { setIsMobileOpen(false); setIsSearchOpen(true); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 text-sm font-medium mb-4"
+                  onClick={() => setIsSearchOpen(true)}
+                  id="navbar-search-btn"
+                  className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all"
+                  aria-label="Open search"
                 >
-                  <Search size={16} />
-                  Search colleges, exams, courses…
+                  <Search size={18} />
                 </button>
 
-                <Link to="/colleges" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
-                  <School size={18} /> Colleges
-                </Link>
-                <Link to="/courses" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
-                  <BookOpen size={18} /> Courses
-                </Link>
-                <Link to="/exams" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
-                  <FileText size={18} /> Exams
-                </Link>
-                <Link to="/scholarships" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
-                  <Award size={18} /> Scholarships
-                </Link>
-                <Link to="/coaching" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
-                  <Briefcase size={18} /> Coaching
-                </Link>
-                <Link to="/blogs" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
-                  <BookMarked size={18} /> Blogs
-                </Link>
+                {/* Counselling CTA — visible md+ */}
+                <a
+                  href="tel:+917205402554"
+                  className="hidden md:flex items-center gap-1.5 btn-cta py-2 px-4 text-xs"
+                >
+                  <Phone size={13} />
+                  Free Counselling
+                </a>
 
-                <div className="pt-4 border-t border-slate-100 mt-4 space-y-2">
-                  {isAuthenticated ? (
-                    <>
-                      <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl text-primary-600 bg-primary-50 font-semibold">
-                        <User size={18} /> My Dashboard
-                      </Link>
-                      <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 font-semibold transition-all">
-                        <LogOut size={18} /> Sign Out
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <Link to="/login" className="block text-center w-full btn-secondary py-3">Log In</Link>
-                      <Link to="/register" className="block text-center w-full btn-cta py-3">Join Free — It's Free</Link>
-                    </>
-                  )}
-                </div>
+                {isAuthenticated ? (
+                  <div className="relative">
+                    <button
+                      onClick={() => setIsUserOpen(!isUserOpen)}
+                      id="navbar-user-btn"
+                      className="flex items-center gap-2 p-1 pr-3 rounded-full border border-slate-200 hover:border-slate-300 bg-white transition-all"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-xs">
+                        {user?.name?.[0]?.toUpperCase() || 'U'}
+                      </div>
+                      <span className="text-sm font-semibold text-slate-700 hidden sm:block">
+                        {user?.name?.split(' ')[0]}
+                      </span>
+                      <ChevronDown size={13} className={`text-slate-400 transition-transform ${isUserOpen ? 'rotate-180' : ''}`} />
+                    </button>
 
-                <div className="pt-4">
-                  <a href="tel:+911800001234" className="flex items-center justify-center gap-2 w-full py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700">
-                    <Phone size={15} /> Free Counselling: 1800-001-234
-                  </a>
-                </div>
+                    {isUserOpen && (
+                      <div className="absolute right-0 top-full mt-2 w-52 bg-white border border-slate-200 rounded-xl shadow-lg animate-slide-down overflow-hidden z-50">
+                        <div className="px-4 py-3 border-b border-slate-100">
+                          <p className="text-sm font-semibold text-slate-800">{user?.name}</p>
+                          <p className="text-xs text-slate-500 truncate">{user?.email}</p>
+                        </div>
+                        <div className="p-1.5 space-y-0.5">
+                          {user?.role === 'admin' && (
+                            <Link to="/admin" onClick={() => setIsUserOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-primary-700 bg-primary-50 hover:bg-primary-100 transition-colors font-semibold">
+                              <LayoutDashboard size={15} /> Admin Panel
+                            </Link>
+                          )}
+                          <Link to="/dashboard" onClick={() => setIsUserOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors font-medium">
+                            <User size={15} /> Student Dashboard
+                          </Link>
+                          <button onClick={() => { handleLogout(); setIsUserOpen(false); }} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-red-600 hover:bg-red-50 transition-colors font-medium">
+                            <LogOut size={15} /> Sign Out
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <Link to="/login" className="hidden sm:block text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-2 rounded-lg hover:bg-slate-50 transition-all">
+                      Log In
+                    </Link>
+                    <Link to="/register" className="btn-primary py-2 px-4 text-xs">
+                      Join Free
+                    </Link>
+                  </div>
+                )}
+
+                {/* Mobile Hamburger */}
+                <button
+                  onClick={() => setIsMobileOpen(!isMobileOpen)}
+                  className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-all"
+                  aria-label="Toggle mobile menu"
+                >
+                  {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
+                </button>
               </div>
             </div>
-          </>
-        )}
-      </nav>
-    </header>
+          </div>
+
+          {/* ─ Mobile Drawer ─ */}
+          {isMobileOpen && (
+            <>
+              <div className="fixed inset-0 bg-slate-900/30 z-40 lg:hidden" onClick={() => setIsMobileOpen(false)} />
+              <div className="fixed top-16 left-0 right-0 bottom-0 bg-white z-50 lg:hidden overflow-y-auto animate-slide-down">
+                <div className="px-4 py-6 space-y-1">
+                  {/* Search */}
+                  <button
+                    onClick={() => { setIsMobileOpen(false); setIsSearchOpen(true); }}
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-500 text-sm font-medium mb-4"
+                  >
+                    <Search size={16} />
+                    Search colleges, exams, courses…
+                  </button>
+
+                  <Link to="/colleges" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
+                    <School size={18} /> Colleges
+                  </Link>
+                  <Link to="/courses" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
+                    <BookOpen size={18} /> Courses
+                  </Link>
+                  <Link to="/exams" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
+                    <FileText size={18} /> Exams
+                  </Link>
+                  <Link to="/scholarships" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
+                    <Award size={18} /> Scholarships
+                  </Link>
+                  <Link to="/compare" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
+                    <GitCompare size={18} /> Compare Colleges
+                  </Link>
+                  <Link to="/blogs" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all">
+                    <BookMarked size={18} /> Blogs
+                  </Link>
+
+                  <div className="pt-4 border-t border-slate-100 mt-4 space-y-2">
+                    {isAuthenticated ? (
+                      <>
+                        <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl text-primary-600 bg-primary-50 font-semibold">
+                          <User size={18} /> My Dashboard
+                        </Link>
+                        <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 font-semibold transition-all">
+                          <LogOut size={18} /> Sign Out
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link to="/login" className="block text-center w-full btn-secondary py-3">Log In</Link>
+                        <Link to="/register" className="block text-center w-full btn-cta py-3">Join Free — It's Free</Link>
+                      </>
+                    )}
+                  </div>
+
+                  <div className="pt-4">
+                    <a href="tel:+917205402554" className="flex items-center justify-center gap-2 w-full py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700">
+                      <Phone size={15} /> Free Counselling: +91 7205402554
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </nav>
+      </header>
 
       {/* Search Modal */}
       {isSearchOpen && <SearchModal onClose={() => setIsSearchOpen(false)} />}

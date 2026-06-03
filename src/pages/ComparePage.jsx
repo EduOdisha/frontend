@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { X, Star, MapPin, Building, GraduationCap, IndianRupee, Briefcase, Award } from 'lucide-react';
 import { removeFromCompare } from '../store/slices/compareSlice';
+import { formatLPA } from '../utils/format';
 
 export default function ComparePage() {
   const { colleges } = useSelector((state) => state.compare);
@@ -12,8 +13,8 @@ export default function ComparePage() {
     { label: 'Location', key: 'location', icon: MapPin, getValue: (c) => `${c.location?.city}, Odisha` },
     { label: 'Affiliation', key: 'affiliation', icon: Award, getValue: (c) => c.affiliation },
     { label: 'Fees (Approx)', key: 'fees', icon: IndianRupee, getValue: (c) => `₹${c.fees?.min?.toLocaleString()} - ₹${c.fees?.max?.toLocaleString()}` },
-    { label: 'Highest Package', key: 'placements', icon: Briefcase, getValue: (c) => `₹${c.placements?.highestPackage} LPA` },
-    { label: 'Avg Package', key: 'placements_avg', icon: Briefcase, getValue: (c) => `₹${c.placements?.averagePackage} LPA` },
+    { label: 'Highest Package', key: 'placements', icon: Briefcase, getValue: (c) => formatLPA(c.placements?.highestPackage) },
+    { label: 'Avg Package', key: 'placements_avg', icon: Briefcase, getValue: (c) => formatLPA(c.placements?.averagePackage) },
     { label: 'NAAC Grade', key: 'naac', icon: GraduationCap, getValue: (c) => c.naacGrade || 'A+' },
     { label: 'Hostel', key: 'hostel', icon: Building, getValue: (c) => c.facilities?.hostel ? 'Yes' : 'No' },
     { label: 'Facilities', key: 'facilities', icon: Building, getValue: (c) => {

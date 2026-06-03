@@ -5,6 +5,7 @@ import { addToCompare, removeFromCompare } from '../../store/slices/compareSlice
 import { toast } from 'react-hot-toast';
 import api from '../../utils/api';
 import { updateUserSaved } from '../../store/slices/authSlice';
+import { formatLakhs } from '../../utils/format';
 import {
   MapPin, Star, Heart, GitCompare,
   CheckCircle, IndianRupee, TrendingUp
@@ -180,7 +181,7 @@ export default function CollegeCard({ college, loading }) {
           <div className="text-center py-2.5 px-2 border-x border-slate-100">
             <p className="text-[10px] font-semibold text-slate-400 uppercase mb-0.5">Pkg</p>
             <p className="text-xs font-bold text-emerald-600">
-              {highestLPA ? `₹${highestLPA}L` : 'N/A'}
+              {formatLakhs(highestLPA)}
             </p>
           </div>
           <div className="text-center py-2.5 px-2">

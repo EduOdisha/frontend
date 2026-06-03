@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { Send, CheckCircle } from 'lucide-react';
 import api from '../../utils/api.js';
 
-export default function LeadForm({ source = 'General', collegeId = null }) {
+export default function LeadForm({ source = 'General', collegeId = null, compact = false }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -16,8 +16,15 @@ export default function LeadForm({ source = 'General', collegeId = null }) {
 
   const mutation = useMutation({
     mutationFn: (data) => api.post('/leads', { ...data, source, college: collegeId }),
-    onSuccess: () => {
+    onSuccess: (response, variables) => {
       toast.success('Thank you! Our counselor will contact you shortly.');
+      
+      const whatsappNumber = "917205402554";
+      const message = `Hi, I just submitted an inquiry on EduOdisha.\n\n*Name:* ${variables.name}\n*Phone:* ${variables.phone}\n*Email:* ${variables.email || 'N/A'}\n*Course:* ${variables.interestedCourse || 'N/A'}\n*Source:* ${source || 'General'}\n*Message:* ${variables.message || 'N/A'}`;
+      const encodedMsg = encodeURIComponent(message);
+      const url = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+      window.open(url, '_blank');
+
       setFormData({ name: '', phone: '', email: '', interestedCourse: '', preferredCity: '', message: '' });
     },
     onError: (err) => {
@@ -57,7 +64,7 @@ export default function LeadForm({ source = 'General', collegeId = null }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={`grid grid-cols-1 ${compact ? '' : 'md:grid-cols-2'} gap-4`}>
         <div>
           <label className="block text-xs font-bold text-slate-400 uppercase mb-1.5 ml-1">Full Name *</label>
           <input
@@ -84,7 +91,7 @@ export default function LeadForm({ source = 'General', collegeId = null }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className={`grid grid-cols-1 ${compact ? '' : 'md:grid-cols-2'} gap-4`}>
         <div>
           <label className="block text-xs font-bold text-slate-400 uppercase mb-1.5 ml-1">Email Address</label>
           <input

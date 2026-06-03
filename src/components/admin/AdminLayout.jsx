@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   LayoutDashboard, School, BookOpen, FileText,
   GraduationCap, Users, MessageSquare, FileEdit,
-  Menu, X, LogOut, ChevronRight, ExternalLink
+  Menu, X, LogOut, ChevronRight, ExternalLink, Star
 } from 'lucide-react';
 import { logoutUser } from '../../store/slices/authSlice';
 import { toast } from 'react-hot-toast';
@@ -17,6 +17,7 @@ const MENU_ITEMS = [
   { name: 'Scholarships', icon: GraduationCap, path: '/admin/scholarships' },
   { name: 'Leads', icon: MessageSquare, path: '/admin/leads' },
   { name: 'Blogs', icon: FileEdit, path: '/admin/blogs' },
+  { name: 'Reviews', icon: Star, path: '/admin/reviews' },
   { name: 'Users', icon: Users, path: '/admin/users' },
 ];
 

@@ -4,7 +4,7 @@ import api from '../../utils/api';
 import {
   Users, School, BookOpen, MessageSquare,
   TrendingUp, TrendingDown, Clock, ArrowRight,
-  Activity, Plus, GraduationCap, FileText, FileEdit
+  Activity, Plus, GraduationCap, FileText, FileEdit, AlertCircle
 } from 'lucide-react';
 
 function StatCard({ name, value, icon: Icon, trend, color }) {
@@ -35,7 +35,7 @@ const STATUS_COLOR = {
 };
 
 export default function AdminDashboard() {
-  const { data: analytics, isLoading } = useQuery({
+  const { data: analytics, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['admin-analytics'],
     queryFn: async () => {
       const { data } = await api.get('/admin/analytics');
@@ -44,10 +44,10 @@ export default function AdminDashboard() {
   });
 
   const stats = [
-    { name: 'Total Colleges', value: analytics?.stats?.totalColleges || 0, icon: School, trend: 12, color: 'bg-primary-50 text-primary-600' },
-    { name: 'Total Courses', value: analytics?.stats?.totalCourses || 0, icon: BookOpen, trend: 8, color: 'bg-purple-50 text-purple-600' },
-    { name: 'Active Leads', value: analytics?.stats?.activeLeads || 0, icon: MessageSquare, trend: 24, color: 'bg-emerald-50 text-emerald-600' },
-    { name: 'Total Users', value: analytics?.stats?.totalUsers || 0, icon: Users, trend: -3, color: 'bg-amber-50 text-amber-600' },
+    { name: 'Total Colleges', value: analytics?.data?.stats?.totalColleges || 0, icon: School, trend: 12, color: 'bg-primary-50 text-primary-600' },
+    { name: 'Total Courses', value: analytics?.data?.stats?.totalCourses || 0, icon: BookOpen, trend: 8, color: 'bg-purple-50 text-purple-600' },
+    { name: 'Active Leads', value: analytics?.data?.stats?.totalLeads || 0, icon: MessageSquare, trend: 24, color: 'bg-emerald-50 text-emerald-600' },
+    { name: 'Total Users', value: analytics?.data?.stats?.totalUsers || 0, icon: Users, trend: -3, color: 'bg-amber-50 text-amber-600' },
   ];
 
   if (isLoading) {
@@ -60,6 +60,21 @@ export default function AdminDashboard() {
           <div className="skeleton h-80 rounded-xl" />
           <div className="skeleton h-80 rounded-xl" />
         </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-2xl p-6 text-center max-w-xl mx-auto my-12 shadow-sm">
+        <AlertCircle size={40} className="mx-auto text-red-500 mb-3" />
+        <h3 className="text-base font-bold text-red-800 mb-1">Failed to load Dashboard data</h3>
+        <p className="text-xs text-red-600 mb-4">
+          {error.response?.data?.message || error.message || 'Please check your connection or log in again.'}
+        </p>
+        <button onClick={() => refetch()} className="btn-primary py-2 px-4 text-xs font-bold bg-primary-600 hover:bg-primary-700 active:bg-primary-800 text-white rounded-lg transition-all shadow-sm cursor-pointer">
+          Try Again
+        </button>
       </div>
     );
   }
@@ -140,8 +155,8 @@ export default function AdminDashboard() {
             </Link>
           </div>
           <div className="divide-y divide-slate-100">
-            {analytics?.recentLeads?.length > 0 ? (
-              analytics.recentLeads.map(lead => (
+            {analytics?.data?.recentLeads?.length > 0 ? (
+              analytics.data.recentLeads.map(lead => (
                 <div key={lead._id} className="px-5 py-3.5 flex items-center gap-3">
                   <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold text-xs shrink-0">
                     {lead.name?.[0]?.toUpperCase()}
@@ -181,8 +196,8 @@ export default function AdminDashboard() {
             </Link>
           </div>
           <div className="p-5 space-y-4">
-            {analytics?.topColleges?.length > 0 ? (
-              analytics.topColleges.map((college, idx) => (
+            {analytics?.data?.topColleges?.length > 0 ? (
+              analytics.data.topColleges.map((college, idx) => (
                 <div key={college._id} className="flex items-center gap-3">
                   <span className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-500 shrink-0">
                     {idx + 1}

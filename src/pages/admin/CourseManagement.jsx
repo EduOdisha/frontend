@@ -2,90 +2,102 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import api from '../../utils/api';
-import { 
-  Plus, 
-  Search, 
-  Edit2, 
-  Trash2, 
-  Eye, 
-  CheckCircle,
-  XCircle,
-  AlertCircle
+import {
+  Plus, Search, Edit2, Trash2, Eye,
+  CheckCircle, XCircle, AlertCircle,
+  GraduationCap, BookOpen, TrendingUp,
+  Star, Filter, X,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import CourseForm from '../../components/admin/CourseForm';
 
+// ─── Badge helpers ──────────────────────────────────────────────────────────
+const LEVEL_COLORS = {
+  UG:          'bg-blue-50 text-blue-700 border-blue-200',
+  PG:          'bg-purple-50 text-purple-700 border-purple-200',
+  '12th':      'bg-amber-50 text-amber-700 border-amber-200',
+  '10th':      'bg-orange-50 text-orange-700 border-orange-200',
+  Diploma:     'bg-teal-50 text-teal-700 border-teal-200',
+  Certificate: 'bg-rose-50 text-rose-700 border-rose-200',
+  Other:       'bg-slate-50 text-slate-600 border-slate-200',
+};
+
+const STREAM_COLORS = {
+  Technology: 'bg-indigo-50 text-indigo-600',
+  Medical:    'bg-emerald-50 text-emerald-600',
+  Commerce:   'bg-amber-50 text-amber-600',
+  Arts:       'bg-pink-50 text-pink-600',
+  Science:    'bg-cyan-50 text-cyan-600',
+  Law:        'bg-violet-50 text-violet-600',
+  Design:     'bg-rose-50 text-rose-600',
+  Vocational: 'bg-orange-50 text-orange-600',
+  Other:      'bg-slate-50 text-slate-500',
+};
+
+// ─── Main Component ─────────────────────────────────────────────────────────
 const CourseManagement = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm]         = useState('');
+  const [filterLevel, setFilterLevel]       = useState('');
+  const [filterStream, setFilterStream]     = useState('');
+  const [showModal, setShowModal]           = useState(false);
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams]     = useSearchParams();
   const queryClient = useQueryClient();
 
+  // Auto-open modal if ?add=true
   useEffect(() => {
     if (searchParams.get('add') === 'true') {
-      handleAddCourse();
+      setSelectedCourse(null);
+      setShowModal(true);
       setSearchParams({}, { replace: true });
     }
   }, [searchParams]);
 
+  // ── Queries ────────────────────────────────────────────────────────────────
   const { data, isLoading } = useQuery({
-    queryKey: ['admin-courses', searchTerm],
+    queryKey: ['admin-courses', searchTerm, filterLevel, filterStream],
     queryFn: async () => {
-      const { data } = await api.get(`/courses?search=${searchTerm}&limit=100`);
+      const params = new URLSearchParams({ limit: 200 });
+      if (searchTerm)   params.append('search', searchTerm);
+      if (filterLevel)  params.append('level',  filterLevel);
+      if (filterStream) params.append('stream', filterStream);
+      const { data } = await api.get(`/courses?${params}`);
       return data;
-    }
+    },
   });
 
+  // ── Mutations ──────────────────────────────────────────────────────────────
   const createMutation = useMutation({
-    mutationFn: (newCourse) => api.post('/courses', newCourse),
+    mutationFn: (payload) => api.post('/courses', payload),
     onSuccess: () => {
-      queryClient.invalidateQueries(['admin-courses']);
-      toast.success('Course created successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
+      toast.success('Course created successfully!');
       handleCloseModal();
     },
-    onError: (err) => {
-      toast.error(err.response?.data?.message || 'Failed to create course');
-    }
+    onError: (err) => toast.error(err.response?.data?.message || 'Failed to create course'),
   });
 
   const updateMutation = useMutation({
-    mutationFn: (updatedCourse) => api.put(`/courses/${updatedCourse._id}`, updatedCourse),
+    mutationFn: ({ _id, ...payload }) => api.put(`/courses/${_id}`, payload),
     onSuccess: () => {
-      queryClient.invalidateQueries(['admin-courses']);
-      toast.success('Course updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
+      toast.success('Course updated successfully!');
       handleCloseModal();
     },
-    onError: (err) => {
-      toast.error(err.response?.data?.message || 'Failed to update course');
-    }
+    onError: (err) => toast.error(err.response?.data?.message || 'Failed to update course'),
   });
 
   const deleteMutation = useMutation({
     mutationFn: (id) => api.delete(`/courses/${id}`),
     onSuccess: () => {
-      queryClient.invalidateQueries(['admin-courses']);
-      toast.success('Course deleted successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin-courses'] });
+      toast.success('Course deleted');
     },
-    onError: (err) => {
-      toast.error(err.response?.data?.message || 'Failed to delete course');
-    }
+    onError: (err) => toast.error(err.response?.data?.message || 'Failed to delete course'),
   });
 
-  const handleAddCourse = () => {
-    setSelectedCourse(null);
-    setShowModal(true);
-  };
-
-  const handleEditCourse = (course) => {
-    setSelectedCourse(course);
-    setShowModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedCourse(null);
-  };
+  // ── Handlers ───────────────────────────────────────────────────────────────
+  const handleCloseModal = () => { setShowModal(false); setSelectedCourse(null); };
 
   const handleSubmit = (formData) => {
     if (selectedCourse) {
@@ -101,105 +113,218 @@ const CourseManagement = () => {
     }
   };
 
+  const courses = data?.data || [];
+  const isMutating = createMutation.isPending || updateMutation.isPending;
+
   return (
     <div className="space-y-6">
+
+      {/* ─── Header ─────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Course Management</h1>
-          <p className="text-slate-500 text-sm">Manage educational courses available in Odisha.</p>
+          <h1 className="text-xl font-bold text-slate-900">Course Management</h1>
+          <p className="text-sm text-slate-500 mt-0.5">
+            {data?.total ?? courses.length} courses found
+          </p>
         </div>
-        <button 
-          onClick={handleAddCourse}
-          className="btn-primary flex items-center gap-2"
+        <button
+          onClick={() => { setSelectedCourse(null); setShowModal(true); }}
+          className="flex items-center gap-2 text-sm font-bold text-white bg-primary-600 hover:bg-primary-700
+            px-5 py-2.5 rounded-xl transition-all shadow-md shadow-primary-600/20"
         >
-          <Plus size={20} />
-          Add Course
+          <Plus size={16} /> Add Course
         </button>
       </div>
 
-      {/* Filters & Search */}
-      <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search courses by name or stream..." 
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:ring-2 ring-primary-500/20 transition-all"
+      {/* ─── Filters ────────────────────────────────────── */}
+      <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-wrap gap-3 items-center">
+        {/* Search */}
+        <div className="relative flex-1 min-w-[200px]">
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            placeholder="Search by name, stream..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-9 py-2.5 text-sm border border-slate-200 rounded-xl bg-slate-50
+              focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all"
           />
+          {searchTerm && (
+            <button onClick={() => setSearchTerm('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+              <X size={14} />
+            </button>
+          )}
         </div>
+
+        {/* Level filter */}
+        <select
+          value={filterLevel} onChange={e => setFilterLevel(e.target.value)}
+          className="px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl bg-white
+            focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all appearance-none"
+        >
+          <option value="">All Levels</option>
+          {['10th', '12th', 'UG', 'PG', 'Diploma', 'Certificate', 'Other'].map(l => (
+            <option key={l} value={l}>{l}</option>
+          ))}
+        </select>
+
+        {/* Stream filter */}
+        <select
+          value={filterStream} onChange={e => setFilterStream(e.target.value)}
+          className="px-3.5 py-2.5 text-sm border border-slate-200 rounded-xl bg-white
+            focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all appearance-none"
+        >
+          <option value="">All Streams</option>
+          {['Science', 'Commerce', 'Arts', 'Technology', 'Medical', 'Law', 'Design', 'Vocational', 'Other'].map(s => (
+            <option key={s} value={s}>{s}</option>
+          ))}
+        </select>
+
+        {(filterLevel || filterStream) && (
+          <button
+            onClick={() => { setFilterLevel(''); setFilterStream(''); }}
+            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-red-600 px-3 py-2 rounded-lg border border-slate-200 hover:border-red-200 hover:bg-red-50 transition-all"
+          >
+            <X size={12} /> Clear Filters
+          </button>
+        )}
       </div>
 
-      {/* Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+      {/* ─── Table ──────────────────────────────────────── */}
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Course Name</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Level & Stream</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Duration</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th>
+              <tr className="bg-slate-50 border-b border-slate-100">
+                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Course</th>
+                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Level & Stream</th>
+                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Duration</th>
+                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Fees (₹/yr)</th>
+                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Avg Salary</th>
+                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                <th className="px-5 py-3.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+            <tbody className="divide-y divide-slate-100">
               {isLoading ? (
-                [1, 2, 3].map((i) => (
+                [1, 2, 3, 4].map(i => (
                   <tr key={i} className="animate-pulse">
-                    <td className="px-6 py-4"><div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-48"></div></td>
-                    <td className="px-6 py-4"><div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-24"></div></td>
-                    <td className="px-6 py-4"><div className="h-4 bg-slate-100 dark:bg-slate-800 rounded w-20"></div></td>
-                    <td className="px-6 py-4"><div className="h-6 bg-slate-100 dark:bg-slate-800 rounded-full w-16"></div></td>
-                    <td className="px-6 py-4"><div className="h-8 bg-slate-100 dark:bg-slate-800 rounded w-24"></div></td>
+                    {[1, 2, 3, 4, 5, 6, 7].map(j => (
+                      <td key={j} className="px-5 py-4">
+                        <div className="h-4 bg-slate-100 rounded-lg w-full" />
+                      </td>
+                    ))}
                   </tr>
                 ))
-              ) : data?.data?.length > 0 ? (
-                data.data.map((course) => (
-                  <tr key={course._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                    <td className="px-6 py-4">
-                      <p className="font-bold text-sm">{course.name}</p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex flex-col">
-                        <span className="text-xs font-medium text-slate-700 dark:text-slate-300">{course.level}</span>
-                        <span className="text-[10px] text-slate-500">{course.stream}</span>
+              ) : courses.length > 0 ? (
+                courses.map(course => (
+                  <tr key={course._id} className="hover:bg-slate-50/60 transition-colors group">
+
+                    {/* Course name + image */}
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl border border-slate-100 bg-slate-50 flex items-center justify-center overflow-hidden shrink-0">
+                          {course.image?.url ? (
+                            <img src={course.image.url} alt={course.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <BookOpen size={18} className="text-slate-300" />
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-slate-800 truncate max-w-[200px]">{course.name}</p>
+                          {course.shortName && (
+                            <p className="text-[11px] text-slate-400 font-semibold">{course.shortName}</p>
+                          )}
+                        </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm text-slate-600 dark:text-slate-400">{course.duration}</p>
+
+                    {/* Level + Stream */}
+                    <td className="px-5 py-4">
+                      <div className="flex flex-col gap-1">
+                        <span className={`inline-flex w-fit text-[10px] font-bold px-2 py-0.5 rounded-full border ${LEVEL_COLORS[course.level] || LEVEL_COLORS.Other}`}>
+                          {course.level}
+                        </span>
+                        <span className={`inline-flex w-fit text-[10px] font-semibold px-2 py-0.5 rounded-full ${STREAM_COLORS[course.stream] || STREAM_COLORS.Other}`}>
+                          {course.stream}
+                        </span>
+                      </div>
                     </td>
-                    <td className="px-6 py-4">
-                      {course.isActive !== false ? (
-                        <span className="flex items-center gap-1.5 text-xs font-bold text-green-600 bg-green-50 dark:bg-green-900/20 px-2.5 py-1 rounded-full w-fit">
-                          <CheckCircle size={12} />
-                          Active
-                        </span>
+
+                    {/* Duration */}
+                    <td className="px-5 py-4">
+                      <p className="text-sm text-slate-600 font-medium">{course.duration || '—'}</p>
+                    </td>
+
+                    {/* Fees */}
+                    <td className="px-5 py-4">
+                      {course.fees?.min || course.fees?.max ? (
+                        <div className="text-sm font-semibold text-slate-700">
+                          {course.fees?.min ? `₹${(course.fees.min / 1000).toFixed(0)}K` : '—'}
+                          {course.fees?.max ? ` – ₹${(course.fees.max / 1000).toFixed(0)}K` : ''}
+                        </div>
                       ) : (
-                        <span className="flex items-center gap-1.5 text-xs font-bold text-slate-400 bg-slate-50 dark:bg-slate-800 px-2.5 py-1 rounded-full w-fit">
-                          <XCircle size={12} />
-                          Inactive
-                        </span>
+                        <span className="text-slate-300 text-sm">—</span>
                       )}
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <a href={`/courses/${course.slug}`} target="_blank" rel="noreferrer" className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-colors" title="View">
-                          <Eye size={18} />
-                        </a>
-                        <button 
-                          onClick={() => handleEditCourse(course)}
-                          className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors" title="Edit"
+
+                    {/* Avg Salary */}
+                    <td className="px-5 py-4">
+                      {course.averageSalary?.entry ? (
+                        <div className="flex items-center gap-1 text-sm font-bold text-emerald-600">
+                          <TrendingUp size={12} />
+                          {course.averageSalary.entry} LPA+
+                        </div>
+                      ) : (
+                        <span className="text-slate-300 text-sm">—</span>
+                      )}
+                    </td>
+
+                    {/* Status */}
+                    <td className="px-5 py-4">
+                      <div className="flex flex-col gap-1">
+                        {course.isActive ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full w-fit">
+                            <CheckCircle size={10} /> Active
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-400 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full w-fit">
+                            <XCircle size={10} /> Inactive
+                          </span>
+                        )}
+                        {course.isFeatured && (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full w-fit">
+                            <Star size={9} className="fill-amber-400 text-amber-400" /> Featured
+                          </span>
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-1.5 justify-end">
+                        <a
+                          href={`/courses/${course.slug}`}
+                          target="_blank" rel="noreferrer"
+                          className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+                          title="View on site"
                         >
-                          <Edit2 size={18} />
+                          <Eye size={15} />
+                        </a>
+                        <button
+                          onClick={() => { setSelectedCourse(course); setShowModal(true); }}
+                          className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                          title="Edit"
+                        >
+                          <Edit2 size={15} />
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleDelete(course._id)}
-                          className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors" 
+                          disabled={deleteMutation.isPending}
+                          className="w-8 h-8 flex items-center justify-center text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all disabled:opacity-40"
                           title="Delete"
                         >
-                          <Trash2 size={18} />
+                          <Trash2 size={15} />
                         </button>
                       </div>
                     </td>
@@ -207,10 +332,17 @@ const CourseManagement = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="5" className="px-6 py-12 text-center text-slate-500 italic">
-                    <div className="flex flex-col items-center gap-2">
-                      <AlertCircle size={40} className="text-slate-300" />
-                      <p>No courses found.</p>
+                  <td colSpan={7} className="px-6 py-16 text-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="w-14 h-14 bg-slate-100 rounded-full flex items-center justify-center">
+                        <GraduationCap size={28} className="text-slate-300" />
+                      </div>
+                      <p className="text-sm font-bold text-slate-500">No courses found</p>
+                      <p className="text-xs text-slate-400">
+                        {searchTerm || filterLevel || filterStream
+                          ? 'Try adjusting your filters'
+                          : 'Click "Add Course" to create the first one'}
+                      </p>
                     </div>
                   </td>
                 </tr>
@@ -220,16 +352,16 @@ const CourseManagement = () => {
         </div>
       </div>
 
-      {/* Modal */}
+      {/* ─── Add / Edit Modal ────────────────────────────── */}
       {showModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={handleCloseModal} />
-          <div className="relative w-full max-w-2xl h-[80vh] animate-in zoom-in duration-200">
-            <CourseForm 
-              course={selectedCourse} 
-              onSubmit={handleSubmit} 
+          <div className="relative w-full max-w-3xl h-[88vh]">
+            <CourseForm
+              course={selectedCourse}
+              onSubmit={handleSubmit}
               onClose={handleCloseModal}
-              loading={createMutation.isPending || updateMutation.isPending}
+              loading={isMutating}
             />
           </div>
         </div>

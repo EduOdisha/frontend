@@ -20,7 +20,6 @@ import ExamsPage from './pages/ExamsPage';
 import ExamDetailPage from './pages/ExamDetailPage';
 import ScholarshipsPage from './pages/ScholarshipsPage';
 import ScholarshipDetailPage from './pages/ScholarshipDetailPage';
-import CoachingPage from './pages/CoachingPage';
 import BlogsPage from './pages/blog/BlogsPage';
 import BlogDetailPage from './pages/blog/BlogDetailPage';
 import CareerGuidancePage from './pages/CareerGuidancePage';
@@ -42,6 +41,7 @@ import ScholarshipManagement from './pages/admin/ScholarshipManagement';
 import LeadManagement from './pages/admin/LeadManagement';
 import BlogManagement from './pages/admin/BlogManagement';
 import UserManagement from './pages/admin/UserManagement';
+import ReviewManagement from './pages/admin/ReviewManagement';
 
 export default function App() {
   const { pathname } = useLocation();
@@ -81,6 +81,7 @@ export default function App() {
             <Route path="leads" element={<LeadManagement />} />
             <Route path="blogs" element={<BlogManagement />} />
             <Route path="users" element={<UserManagement />} />
+            <Route path="reviews" element={<ReviewManagement />} />
           </Route>
         </Routes>
       </div>
@@ -104,7 +105,6 @@ export default function App() {
           <Route path="/exams/:slug" element={<ExamDetailPage />} />
           <Route path="/scholarships" element={<ScholarshipsPage />} />
           <Route path="/scholarships/:slug" element={<ScholarshipDetailPage />} />
-          <Route path="/coaching" element={<CoachingPage />} />
           <Route path="/blogs" element={<BlogsPage />} />
           <Route path="/blogs/:slug" element={<BlogDetailPage />} />
           <Route path="/career-guidance" element={<CareerGuidancePage />} />

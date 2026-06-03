@@ -6,7 +6,7 @@ import api from '../utils/api.js';
 import ExamCard from '../components/exam/ExamCard.jsx';
 
 const types = ['National', 'State', 'University'];
-const levels = ['Undergraduate', 'Postgraduate', 'PhD', 'Diploma'];
+const levels = ['UG', 'PG', 'Diploma', '12th', '10th', 'Any'];
 
 export default function ExamsPage() {
   const [filters, setFilters] = useState({

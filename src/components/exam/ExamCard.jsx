@@ -1,7 +1,42 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Award, ChevronRight } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Calendar, Award, ChevronRight, Bell } from 'lucide-react';
+import { updateUserSaved } from '../../store/slices/authSlice';
+import { toast } from 'react-hot-toast';
+import api from '../../utils/api';
 
 export default function ExamCard({ exam, loading }) {
+  const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector(state => state.auth);
+
+  const isCurrentlyReminded = user?.examReminders?.some(id => 
+    typeof id === 'object' ? id._id === exam?._id : id === exam?._id
+  );
+
+  const [isReminded, setIsReminded] = useState(isCurrentlyReminded || false);
+
+  useEffect(() => {
+    setIsReminded(isCurrentlyReminded || false);
+  }, [isCurrentlyReminded, exam]);
+
+  const handleReminder = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) {
+      toast.error('Please log in to set exam reminders');
+      return;
+    }
+    try {
+      const { data } = await api.post(`/users/exam-reminder/${exam._id}`);
+      setIsReminded(data.reminded);
+      dispatch(updateUserSaved({ examReminders: data.examReminders }));
+      toast.success(data.reminded ? 'Reminder set successfully' : 'Reminder removed');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update exam reminder');
+    }
+  };
+
   if (loading) {
     return (
       <div className="card animate-pulse p-6">
@@ -12,8 +47,9 @@ export default function ExamCard({ exam, loading }) {
     );
   }
 
-  const examDate = exam.examDates?.examDate
-    ? new Date(exam.examDates.examDate).toLocaleDateString('en-IN', {
+  const rawDate = exam.examDates?.examDate || exam.examDate;
+  const examDate = rawDate
+    ? new Date(rawDate).toLocaleDateString('en-IN', {
         day: 'numeric',
         month: 'short',
         year: 'numeric',
@@ -21,18 +57,35 @@ export default function ExamCard({ exam, loading }) {
     : 'To be announced';
 
   return (
-    <div className="card p-6 group">
+    <div className="card p-6 group relative">
       <div className="flex items-start justify-between mb-4">
         <div>
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1.5">
             {exam.type || 'Entrance Exam'}
           </span>
-          <h3 className="text-xl font-display font-extrabold text-slate-900">
+          <h3 className="text-xl font-display font-extrabold text-slate-900 group-hover:text-violet-700 transition-colors">
             {exam.shortName || exam.name}
           </h3>
         </div>
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-50 to-violet-100 flex items-center justify-center text-violet-600 ring-1 ring-violet-200/50 shrink-0 group-hover:scale-110 group-hover:from-violet-500 group-hover:to-violet-600 group-hover:text-white transition-all duration-300">
-          <Award className="w-6 h-6" />
+        
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={handleReminder}
+            aria-label={isReminded ? 'Remove reminder' : 'Set reminder'}
+            className="w-8 h-8 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200/50 dark:border-slate-700 rounded-lg flex items-center justify-center shadow-xs transition-all cursor-pointer relative z-10"
+          >
+            <Bell
+              size={14}
+              className={`transition-colors ${isReminded ? 'fill-amber-500 text-amber-500' : 'text-slate-400'}`}
+            />
+          </button>
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-50 to-violet-100 flex items-center justify-center text-violet-600 ring-1 ring-violet-200/50 shrink-0 group-hover:scale-110 group-hover:from-violet-500 group-hover:to-violet-600 group-hover:text-white transition-all duration-300 overflow-hidden">
+            {exam.image?.url ? (
+              <img src={exam.image.url} alt={exam.name} className="w-full h-full object-contain p-1.5" />
+            ) : (
+              <Award className="w-6 h-6" />
+            )}
+          </div>
         </div>
       </div>
 

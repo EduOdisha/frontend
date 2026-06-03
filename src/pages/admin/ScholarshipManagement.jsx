@@ -5,15 +5,29 @@ import api from '../../utils/api';
 import { Plus, Search, Edit2, Trash2, Eye, CheckCircle, XCircle, AlertCircle, Award } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-const CATEGORIES = ['Government', 'Private', 'Merit', 'SC/ST', 'OBC', 'Minority', 'Sports', 'Disability', 'Other'];
+const SCHOLARSHIP_TYPES = ['Government', 'Private', 'NGO', 'University', 'International'];
+const SCHOLARSHIP_CATEGORIES = ['Merit', 'SC/ST', 'OBC', 'Minority', 'Disability', 'Girls', 'Post Matric', 'Pre Matric', 'Other'];
 
 function ScholarshipFormModal({ scholarship, onClose, onSubmit, loading }) {
   const [form, setForm] = useState({
     name: scholarship?.name || '',
     provider: scholarship?.provider || '',
-    category: scholarship?.category || 'Government',
+    type: scholarship?.type || 'Government',
+    category: scholarship?.category || 'Merit',
     description: scholarship?.description || '',
-    eligibility: scholarship?.eligibility || '',
+    eligibility: typeof scholarship?.eligibility === 'object' ? {
+      income: scholarship?.eligibility?.income || '',
+      percentage: scholarship?.eligibility?.percentage || '',
+      category: Array.isArray(scholarship?.eligibility?.category) ? scholarship.eligibility.category.join(', ') : '',
+      state: scholarship?.eligibility?.state || 'Odisha',
+      course: Array.isArray(scholarship?.eligibility?.course) ? scholarship.eligibility.course.join(', ') : '',
+    } : {
+      income: '',
+      percentage: '',
+      category: '',
+      state: 'Odisha',
+      course: '',
+    },
     amount: scholarship?.amount?.value || '',
     lastDate: scholarship?.lastDate?.split('T')[0] || '',
     officialWebsite: scholarship?.officialWebsite || '',
@@ -24,7 +38,20 @@ function ScholarshipFormModal({ scholarship, onClose, onSubmit, loading }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!form.name || !form.provider) return toast.error('Name and Provider are required');
-    onSubmit({ ...form, amount: { value: Number(form.amount) } });
+    
+    const formattedEligibility = {
+      income: form.eligibility.income,
+      percentage: form.eligibility.percentage,
+      category: form.eligibility.category ? form.eligibility.category.split(',').map(s => s.trim()).filter(Boolean) : [],
+      state: form.eligibility.state || 'Odisha',
+      course: form.eligibility.course ? form.eligibility.course.split(',').map(s => s.trim()).filter(Boolean) : [],
+    };
+
+    onSubmit({ 
+      ...form, 
+      eligibility: formattedEligibility,
+      amount: { value: Number(form.amount) } 
+    });
   };
 
   return (
@@ -40,15 +67,21 @@ function ScholarshipFormModal({ scholarship, onClose, onSubmit, loading }) {
             <label className="label-base">Scholarship Name *</label>
             <input className="input-base" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} placeholder="Post Matric Scholarship" required />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="label-base">Provider *</label>
               <input className="input-base" value={form.provider} onChange={e => setForm(f => ({ ...f, provider: e.target.value }))} placeholder="Government of Odisha" required />
             </div>
             <div>
+              <label className="label-base">Type</label>
+              <select className="input-base" value={form.type} onChange={e => setForm(f => ({ ...f, type: e.target.value }))}>
+                {SCHOLARSHIP_TYPES.map(t => <option key={t}>{t}</option>)}
+              </select>
+            </div>
+            <div>
               <label className="label-base">Category</label>
               <select className="input-base" value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
-                {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+                {SCHOLARSHIP_CATEGORIES.map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
@@ -56,9 +89,29 @@ function ScholarshipFormModal({ scholarship, onClose, onSubmit, loading }) {
             <label className="label-base">Description</label>
             <textarea className="input-base" rows={3} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
           </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label-base">Eligibility - Family Income</label>
+              <input className="input-base" value={form.eligibility.income} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, income: e.target.value } }))} placeholder="e.g. < 2.5 LPA" />
+            </div>
+            <div>
+              <label className="label-base">Eligibility - Min Percentage</label>
+              <input className="input-base" value={form.eligibility.percentage} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, percentage: e.target.value } }))} placeholder="e.g. 60% in 10th" />
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-2">
+              <label className="label-base">Eligible Categories (comma separated)</label>
+              <input className="input-base" value={form.eligibility.category} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, category: e.target.value } }))} placeholder="SC, ST, OBC" />
+            </div>
+            <div>
+              <label className="label-base">State</label>
+              <input className="input-base" value={form.eligibility.state} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, state: e.target.value } }))} placeholder="Odisha" />
+            </div>
+          </div>
           <div>
-            <label className="label-base">Eligibility</label>
-            <input className="input-base" value={form.eligibility} onChange={e => setForm(f => ({ ...f, eligibility: e.target.value }))} placeholder="SC/ST students with 60%+ in Class 10" />
+            <label className="label-base">Eligible Courses (comma separated)</label>
+            <input className="input-base" value={form.eligibility.course} onChange={e => setForm(f => ({ ...f, eligibility: { ...f.eligibility, course: e.target.value } }))} placeholder="B.Tech, MBBS, B.Sc" />
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -113,7 +166,7 @@ export default function ScholarshipManagement() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-scholarships', search],
-    queryFn: () => api.get(`/scholarships?search=${search}&limit=100`).then(r => r.data),
+    queryFn: () => api.get(`/scholarships?search=${search}&limit=100&admin=true`).then(r => r.data),
   });
 
   const createMutation = useMutation({

@@ -5,11 +5,14 @@ import BlogCard from '../../components/blog/BlogCard';
 
 const CATEGORIES = [
   'All',
-  'Exam Updates',
   'Career Guidance',
-  'Admission Alerts',
-  'College News',
-  'Scholarships'
+  'Exam Updates',
+  'Odisha Education News',
+  'Scholarship Updates',
+  'Placement News',
+  'College Reviews',
+  'Study Tips',
+  'Other'
 ];
 
 export default function BlogsPage() {

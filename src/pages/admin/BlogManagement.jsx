@@ -5,15 +5,25 @@ import api from '../../utils/api';
 import { Plus, Search, Edit2, Trash2, AlertCircle, FileEdit, Eye } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-const BLOG_CATEGORIES = ['Admission', 'Exams', 'Scholarships', 'Career', 'Campus Life', 'Rankings', 'Coaching', 'General'];
+const BLOG_CATEGORIES = [
+  'Career Guidance',
+  'Exam Updates',
+  'Odisha Education News',
+  'Scholarship Updates',
+  'Placement News',
+  'College Reviews',
+  'Study Tips',
+  'Other'
+];
 
 function BlogFormModal({ blog, onClose, onSubmit, loading }) {
   const [form, setForm] = useState({
     title: blog?.title || '',
-    category: blog?.category || 'General',
+    category: blog?.category || 'Career Guidance',
     excerpt: blog?.excerpt || '',
     content: blog?.content || '',
     tags: blog?.tags?.join(', ') || '',
+    image: { url: blog?.image?.url || '' },
     isPublished: blog?.isPublished || false,
     isFeatured: blog?.isFeatured || false,
   });
@@ -48,6 +58,19 @@ function BlogFormModal({ blog, onClose, onSubmit, loading }) {
               <label className="label-base">Tags (comma separated)</label>
               <input className="input-base" value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} placeholder="OJEE, Engineering, 2025" />
             </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="label-base">Blog Cover Image URL</label>
+              <input type="url" className="input-base" value={form.image?.url || ''} onChange={e => setForm(f => ({ ...f, image: { ...f.image, url: e.target.value } }))} placeholder="https://example.com/blog-cover.jpg" />
+            </div>
+            {form.image?.url && (
+              <div className="flex items-end">
+                <div className="aspect-video w-24 rounded-xl border border-slate-200 p-1 bg-slate-50 flex items-center justify-center overflow-hidden mb-1">
+                  <img src={form.image.url} alt="Cover Preview" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+                </div>
+              </div>
+            )}
           </div>
           <div>
             <label className="label-base">Excerpt / Summary</label>
@@ -96,7 +119,7 @@ export default function BlogManagement() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-blogs', search],
-    queryFn: () => api.get(`/blogs?search=${search}&limit=100`).then(r => r.data),
+    queryFn: () => api.get(`/blogs?search=${search}&limit=100&admin=true`).then(r => r.data),
   });
 
   const createMutation = useMutation({
@@ -148,7 +171,13 @@ export default function BlogManagement() {
                 <tr key={blog._id}>
                   <td>
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center"><FileEdit size={14} className="text-purple-600" /></div>
+                      <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-slate-100">
+                        {blog.image?.url ? (
+                          <img src={blog.image.url} alt={blog.title} className="w-full h-full object-cover" />
+                        ) : (
+                          <FileEdit size={14} className="text-purple-600" />
+                        )}
+                      </div>
                       <div>
                         <p className="font-bold text-sm text-slate-900 max-w-xs truncate">{blog.title}</p>
                         {blog.isFeatured && <span className="text-[10px] text-accent-600 font-bold">★ Featured</span>}

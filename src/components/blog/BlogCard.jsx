@@ -20,7 +20,7 @@ export default function BlogCard({ blog, loading }) {
     <div className="card group hover:shadow-card-hover transition-all duration-300 flex flex-col h-full">
       <div className="relative overflow-hidden h-48 rounded-t-2xl">
         <img 
-          src={blog.image || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} 
+          src={blog.image?.url || 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'} 
           alt={blog.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />

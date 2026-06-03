@@ -1,35 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useDispatch, useSelector } from 'react-redux';
 import { 
   Calendar, Link as LinkIcon, BookOpen, 
   Lightbulb, ChevronRight, Download,
   ExternalLink, Info, CheckCircle2,
-  AlertCircle, Clock, FileText
+  AlertCircle, Clock, FileText, Bell
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import api from '../utils/api';
 import LeadForm from '../components/common/LeadForm';
+import { updateUserSaved } from '../store/slices/authSlice';
+import { toast } from 'react-hot-toast';
 
 export default function ExamDetailPage() {
   const { slug } = useParams();
+  const dispatch = useDispatch();
+  const { user, isAuthenticated } = useSelector(state => state.auth);
 
   const { data: exam, isLoading, error } = useQuery({
     queryKey: ['exam', slug],
     queryFn: async () => {
       const { data } = await api.get(`/exams/${slug}`);
-      return data;
+      return data.data;
     },
   });
+
+  const isCurrentlyReminded = user?.examReminders?.some(id => 
+    typeof id === 'object' ? id._id === exam?._id : id === exam?._id
+  );
+
+  const [isReminded, setIsReminded] = useState(isCurrentlyReminded || false);
+
+  useEffect(() => {
+    setIsReminded(isCurrentlyReminded || false);
+  }, [isCurrentlyReminded, exam]);
+
+  const handleReminder = async () => {
+    if (!isAuthenticated) {
+      toast.error('Please log in to set exam reminders');
+      return;
+    }
+    try {
+      const { data } = await api.post(`/users/exam-reminder/${exam._id}`);
+      setIsReminded(data.reminded);
+      dispatch(updateUserSaved({ examReminders: data.examReminders }));
+      toast.success(data.reminded ? 'Reminder set successfully' : 'Reminder removed');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to update exam reminder');
+    }
+  };
 
   if (isLoading) return <div className="min-h-screen pt-24 bg-slate-50 dark:bg-slate-950"></div>;
   if (error) return <div className="min-h-screen pt-24 flex items-center justify-center">Exam not found</div>;
 
   const examDates = [
     { label: 'Notification', date: exam.examDates?.notification },
-    { label: 'Application Start', date: exam.examDates?.applicationStart },
-    { label: 'Application End', date: exam.examDates?.applicationEnd },
-    { label: 'Exam Date', date: exam.examDates?.examDate },
+    { label: 'Application Start', date: exam.examDates?.applicationStart || exam.applicationStartDate },
+    { label: 'Application End', date: exam.examDates?.applicationEnd || exam.applicationEndDate },
+    { label: 'Exam Date', date: exam.examDates?.examDate || exam.examDate },
     { label: 'Result Date', date: exam.examDates?.result },
   ].filter(d => d.date);
 
@@ -57,13 +87,23 @@ export default function ExamDetailPage() {
                 {exam.isFeatured && <span className="badge badge-orange">Important</span>}
               </div>
               <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-900 dark:text-white mb-2">
-                {exam.name} ({exam.shortName})
+                {exam.name} ({exam.shortName || exam.fullName})
               </h1>
               <p className="text-slate-600 dark:text-slate-400 font-medium flex items-center gap-2">
-                Conducted by: <span className="text-slate-900 dark:text-slate-200">{exam.conductedBy}</span>
+                Conducted by: <span className="text-slate-900 dark:text-slate-200">{exam.conductedBy || exam.conductingBody}</span>
               </p>
             </div>
             <div className="flex flex-col gap-3 w-full lg:w-auto">
+              <button
+                onClick={handleReminder}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold shadow-xs hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-all cursor-pointer w-full lg:w-auto"
+              >
+                <Bell
+                  size={16}
+                  className={`transition-colors ${isReminded ? 'fill-amber-500 text-amber-500' : 'text-slate-400'}`}
+                />
+                {isReminded ? 'Reminder Set' : 'Set Reminder'}
+              </button>
               {exam.applicationLink && (
                 <a href={exam.applicationLink} target="_blank" rel="noreferrer" className="btn-primary flex items-center justify-center gap-2">
                   Apply Now <ExternalLink className="w-4 h-4" />
@@ -194,12 +234,6 @@ export default function ExamDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            <div className="card p-6 sticky top-28">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Get Exam Alerts</h3>
-              <p className="text-sm text-slate-500 mb-6">Never miss an update for {exam.shortName}. Sign up for free alerts.</p>
-              <LeadForm source="Exam Page" />
-            </div>
-
             <div className="card p-6">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 text-primary-500" />
@@ -231,6 +265,12 @@ export default function ExamDetailPage() {
                 <button className="text-primary-600 font-bold text-sm mt-4 hover:underline">View all FAQs</button>
               </div>
             )}
+
+            <div className="card p-6 sticky top-28 shadow-sm">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Get Exam Alerts</h3>
+              <p className="text-sm text-slate-500 mb-6">Never miss an update for {exam.shortName}. Sign up for free alerts.</p>
+              <LeadForm source="Exam Page" compact />
+            </div>
           </div>
         </div>
       </div>

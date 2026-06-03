@@ -18,7 +18,7 @@ export default function ScholarshipDetailPage() {
     queryKey: ['scholarship', slug],
     queryFn: async () => {
       const { data } = await api.get(`/scholarships/${slug}`);
-      return data;
+      return data.data;
     },
   });
 
@@ -184,12 +184,6 @@ export default function ScholarshipDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            <div className="card p-6 sticky top-28">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Scholarship Support</h3>
-              <p className="text-sm text-slate-500 mb-6">Need help with the application? Our counselors can guide you.</p>
-              <LeadForm source="Scholarship Page" />
-            </div>
-
             <div className="card p-6">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
                 <AlertCircle className="w-5 h-5 text-primary-500" />
@@ -213,6 +207,12 @@ export default function ScholarshipDetailPage() {
                 </div>
               </div>
             )}
+
+            <div className="card p-6 sticky top-28 shadow-sm">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-1">Scholarship Support</h3>
+              <p className="text-sm text-slate-500 mb-6">Need help with the application? Our counselors can guide you.</p>
+              <LeadForm source="Scholarship Page" compact />
+            </div>
           </div>
         </div>
       </div>

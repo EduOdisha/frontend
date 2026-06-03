@@ -5,9 +5,9 @@ import { Search, ChevronRight, GraduationCap } from 'lucide-react';
 import api from '../utils/api.js';
 import ScholarshipCard from '../components/scholarship/ScholarshipCard.jsx';
 
-const categories = ['Merit-based', 'Need-based', 'Minority', 'OBC/SC/ST', 'Girl Child'];
-const types = ['Government', 'Private', 'International'];
-const levels = ['School', 'Undergraduate', 'Postgraduate', 'PhD'];
+const categories = ['Merit', 'SC/ST', 'OBC', 'Minority', 'Disability', 'Girls', 'Post Matric', 'Pre Matric', 'Other'];
+const types = ['Government', 'Private', 'NGO', 'University', 'International'];
+const levels = ['10th', '12th', 'UG', 'PG', 'Diploma', 'PhD', 'Any'];
 
 export default function ScholarshipsPage() {
   const [filters, setFilters] = useState({
