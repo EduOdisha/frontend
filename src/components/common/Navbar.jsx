@@ -151,7 +151,7 @@ export default function Navbar() {
           }`}
         >
           <div className="container-xl">
-            <div className="flex items-center h-16 gap-8">
+            <div className="flex items-center h-16 gap-4 xl:gap-8">
 
               {/* ─ Logo ─ */}
               <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label="EduOdisha Home">
@@ -164,14 +164,14 @@ export default function Navbar() {
               </Link>
 
               {/* ─ Desktop Nav ─ */}
-              <div className="hidden lg:flex items-center gap-1 flex-1">
+              <div className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 flex-grow justify-center">
                 {/* Colleges — Mega */}
                 <div className="relative">
                   <button
                     onMouseEnter={() => setActiveMega('colleges')}
                     onMouseLeave={() => setActiveMega(null)}
                     onClick={() => setActiveMega(activeMega === 'colleges' ? null : 'colleges')}
-                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
                       isActive('/colleges') || activeMega === 'colleges'
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -196,7 +196,7 @@ export default function Navbar() {
                     onMouseEnter={() => setActiveMega('exams')}
                     onMouseLeave={() => setActiveMega(null)}
                     onClick={() => setActiveMega(activeMega === 'exams' ? null : 'exams')}
-                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
                       isActive('/exams') || activeMega === 'exams'
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -220,7 +220,7 @@ export default function Navbar() {
                   <Link
                     key={link.name}
                     to={link.href}
-                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    className={`px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
                       isActive(link.href)
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
