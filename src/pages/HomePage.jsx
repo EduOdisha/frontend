@@ -13,61 +13,7 @@ import {
 } from 'lucide-react';
 import api from '../utils/api.js';
 import CollegeCard from '../components/college/CollegeCard.jsx';
-
-// ─── Constants ────────────────────────────────────────────
-const STATS = [
-  { value: '500+', label: 'Verified Colleges' },
-  { value: '250+', label: 'Programmes' },
-  { value: '120+', label: 'Scholarships' },
-  { value: '1L+', label: 'Students Helped' },
-];
-
-const STREAMS = [
-  { icon: '⚙️', label: 'Engineering', count: '180+ colleges', href: '/colleges?category=Engineering' },
-  { icon: '🏥', label: 'Medical', count: '60+ colleges', href: '/colleges?category=Medical' },
-  { icon: '📊', label: 'Management', count: '90+ colleges', href: '/colleges?category=Management' },
-  { icon: '⚖️', label: 'Law', count: '30+ colleges', href: '/colleges?category=Law' },
-  { icon: '💊', label: 'Pharmacy', count: '45+ colleges', href: '/colleges?category=Pharmacy' },
-  { icon: '🎨', label: 'Arts & Science', count: '95+ colleges', href: '/colleges?category=Arts+%26+Science' },
-];
-
-const POPULAR_TAGS = [
-  'B.Tech in Bhubaneswar',
-  'MBA Admission 2025',
-  'NEET Odisha Cutoff',
-  'OJEE 2025',
-  'BCA Colleges',
-  'Government Engineering',
-];
-
-const FEATURED_EXAMS = [
-  { name: 'OJEE 2025', type: 'State', date: 'May 2025', color: 'bg-primary-50 border-primary-200 text-primary-700' },
-  { name: 'JEE Main', type: 'National', date: 'Jan & Apr', color: 'bg-amber-50 border-amber-200 text-amber-700' },
-  { name: 'NEET UG', type: 'Medical', date: 'May 2025', color: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
-  { name: 'CUET UG', type: 'Central', date: 'May 2025', color: 'bg-purple-50 border-purple-200 text-purple-700' },
-  { name: 'CAT 2025', type: 'Management', date: 'Nov 2025', color: 'bg-rose-50 border-rose-200 text-rose-700' },
-  { name: 'OPSC OAS', type: 'Govt Job', date: 'Dec 2025', color: 'bg-slate-50 border-slate-200 text-slate-700' },
-];
-
-const WHY_US = [
-  {
-    icon: <CheckCircle size={22} className="text-primary-600" />,
-    title: 'Verified & Accurate Data',
-    desc: 'All college profiles are manually verified with up-to-date fees, rankings, and placement records.',
-  },
-  {
-    icon: <Phone size={22} className="text-primary-600" />,
-    title: 'Free Career Counselling',
-    desc: 'Talk to experienced counselors who specialize in Odisha colleges — no sales pitch, just honest advice.',
-  },
-  {
-    icon: <School size={22} className="text-primary-600" />,
-    title: 'Odisha-First Platform',
-    desc: 'Built specifically for Odisha students. We cover local colleges, state exams, and regional scholarships that national platforms miss.',
-  },
-];
-
-
+import { useLanguage } from '../context/LanguageContext';
 
 // ─── Animated Counter ─────────────────────────────────────
 function AnimatedCounter({ value }) {
@@ -345,6 +291,7 @@ function SectionHeader({ eyebrow, title, subtitle, action }) {
 export default function HomePage() {
   const navigate = useNavigate();
   const { user } = useSelector(state => state.auth);
+  const { t } = useLanguage();
   const [searchQ, setSearchQ] = useState('');
   const [searchType, setSearchType] = useState('colleges');
   const [activeSlide, setActiveSlide] = useState(0);
@@ -370,6 +317,32 @@ export default function HomePage() {
       desc: 'Established in 1868, offering rich legacy in arts, science and management.'
     }
   ];
+
+  // Derived from translations
+  const STATS = [
+    { value: '500+', label: t('home.statsLabels.colleges') },
+    { value: '250+', label: t('home.statsLabels.programmes') },
+    { value: '120+', label: t('home.statsLabels.scholarships') },
+    { value: '1L+',  label: t('home.statsLabels.studentsHelped') },
+  ];
+
+  const STREAMS = [
+    { icon: '⚙️', label: t('home.streams.engineering'), count: '180+ colleges', href: '/colleges?category=Engineering' },
+    { icon: '🏥', label: t('home.streams.medical'),     count: '60+ colleges',  href: '/colleges?category=Medical' },
+    { icon: '📊', label: t('home.streams.management'), count: '90+ colleges',  href: '/colleges?category=Management' },
+    { icon: '⚖️', label: t('home.streams.law'),        count: '30+ colleges',  href: '/colleges?category=Law' },
+    { icon: '💊', label: t('home.streams.pharmacy'),   count: '45+ colleges',  href: '/colleges?category=Pharmacy' },
+    { icon: '🎨', label: t('home.streams.artsScience'),count: '95+ colleges',  href: '/colleges?category=Arts+%26+Science' },
+  ];
+
+  const WHY_US_ITEMS = t('home.whyUs.items');
+  const WHY_US_ICONS = [
+    <CheckCircle size={22} className="text-primary-600" />,
+    <Phone size={22} className="text-primary-600" />,
+    <School size={22} className="text-primary-600" />,
+  ];
+
+  const POPULAR_TAGS = t('home.popularTags');
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -442,7 +415,7 @@ export default function HomePage() {
           {/* Dotted Grid Pattern Overlay directly over images */}
           <div className="absolute inset-0 bg-dot-grid opacity-100" />
 
-          {/* Subtle gradient overlay to blend images and dot grid into the slate-50 background smoothly, with fully transparent center for maximum dot visibility */}
+          {/* Subtle gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-transparent to-slate-50" />
         </div>
 
@@ -465,7 +438,7 @@ export default function HomePage() {
               className="inline-flex items-center gap-2 bg-primary-50/90 backdrop-blur-sm border border-primary-100 text-primary-700 text-xs font-bold px-3 py-1.5 rounded-full mb-6"
             >
               <CheckCircle size={12} className="text-primary-600" />
-              Trusted by 1 Lakh+ Odisha Students
+              {t('home.trustBadge')}
             </motion.div>
 
             {/* Headline */}
@@ -475,9 +448,9 @@ export default function HomePage() {
               transition={{ duration: 0.5, delay: 0.08 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-display font-extrabold text-slate-900 mb-5 leading-[1.15] tracking-tight text-center"
             >
-              Odisha's Most Trusted
+              {t('home.heroTitle1')}
               <br />
-              <span className="text-primary-600">Education Platform</span>
+              <span className="text-primary-600">{t('home.heroTitle2')}</span>
             </motion.h1>
 
             {/* Subtext */}
@@ -487,8 +460,7 @@ export default function HomePage() {
               transition={{ duration: 0.5, delay: 0.15 }}
               className="text-base sm:text-lg text-slate-700 mb-8 max-w-2xl leading-relaxed font-medium text-center"
             >
-              Compare 500+ verified colleges, discover the right course, find scholarships,
-              and get free personalized counselling — all built for Odisha students.
+              {t('home.heroSubtitle')}
             </motion.p>
 
             {/* Search Box */}
@@ -510,7 +482,7 @@ export default function HomePage() {
                       : 'text-slate-500 hover:text-slate-700 hover:bg-slate-100'
                       }`}
                   >
-                    {type}
+                    {t(`navbar.${type}`)}
                   </button>
                 ))}
               </div>
@@ -522,13 +494,13 @@ export default function HomePage() {
                     type="text"
                     value={searchQ}
                     onChange={e => setSearchQ(e.target.value)}
-                    placeholder={`Search ${searchType} in Odisha…`}
+                    placeholder={t('home.searchPlaceholder').replace('{type}', searchType)}
                     id="hero-search"
                     className="flex-1 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 bg-transparent outline-none font-medium"
                   />
                 </div>
                 <button type="submit" className="btn-cta py-2.5 px-6 text-sm rounded-lg">
-                  Search
+                  {t('home.searchBtn')}
                 </button>
               </form>
             </motion.div>
@@ -541,9 +513,9 @@ export default function HomePage() {
               className="mt-5 flex flex-wrap items-center justify-center gap-2"
             >
               <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">
-                Popular:
+                {t('home.popularLabel')}
               </span>
-              {POPULAR_TAGS.map(tag => (
+              {(Array.isArray(POPULAR_TAGS) ? POPULAR_TAGS : []).map(tag => (
                 <button
                   key={tag}
                   onClick={() => navigate(`/colleges?search=${encodeURIComponent(tag)}`)}
@@ -561,7 +533,7 @@ export default function HomePage() {
               transition={{ delay: 0.45 }}
               className="mt-8 flex flex-wrap items-center justify-center gap-6"
             >
-              {['Free to use', 'No spam calls', 'Expert counsellors'].map(item => (
+              {[t('home.freeToUse'), t('home.noSpam'), t('home.expertCounsellors')].map(item => (
                 <div key={item} className="flex items-center gap-1.5 text-sm text-slate-500 font-medium">
                   <CheckCircle size={14} className="text-emerald-500" />
                   {item}
@@ -569,9 +541,9 @@ export default function HomePage() {
               ))}
             </motion.div>
 
-            {/* Subtle Carousel Indicator (Bottom Center) */}
+            {/* Subtle Carousel Indicator */}
             <div className="mt-12 flex items-center gap-2 bg-white/70 backdrop-blur-sm px-3.5 py-2 rounded-full border border-slate-200/50 shadow-sm">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Showing:</span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t('home.showing')}</span>
               <span className="text-[10px] font-bold text-primary-600 uppercase tracking-wider">
                 {slides[activeSlide].title} ({slides[activeSlide].tag})
               </span>
@@ -612,10 +584,10 @@ export default function HomePage() {
       <Section className="page-section bg-white">
         <div className="container-xl">
           <SectionHeader
-            eyebrow="⭐ Top Rated"
-            title="Featured Colleges in Odisha"
-            subtitle="Handpicked institutions based on NIRF rankings, student reviews, and placement records."
-            action={{ label: 'Browse All Colleges', href: '/colleges' }}
+            eyebrow={t('home.featuredColleges.eyebrow')}
+            title={t('home.featuredColleges.title')}
+            subtitle={t('home.featuredColleges.subtitle')}
+            action={{ label: t('home.featuredColleges.action'), href: '/colleges' }}
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {(featuredColleges || Array(4).fill(null)).map((c, i) => (
@@ -629,14 +601,14 @@ export default function HomePage() {
       <Section className="py-16 bg-slate-50">
         <div className="container-xl">
           <SectionHeader
-            eyebrow="📚 By Stream"
-            title="Find Colleges by Your Stream"
-            subtitle="Choose your field and we'll show you the best colleges in Odisha."
+            eyebrow={t('home.byStream.eyebrow')}
+            title={t('home.byStream.title')}
+            subtitle={t('home.byStream.subtitle')}
           />
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {STREAMS.map((stream) => (
               <Link
-                key={stream.label}
+                key={stream.href}
                 to={stream.href}
                 className="bg-white border border-slate-200 hover:border-primary-200 hover:bg-primary-50 rounded-xl p-5 text-center transition-all duration-200 group"
               >
@@ -655,13 +627,20 @@ export default function HomePage() {
       <Section className="page-section bg-white">
         <div className="container-xl">
           <SectionHeader
-            eyebrow="📋 Exams"
-            title="Popular Entrance Exams"
-            subtitle="Stay ahead with important exam dates, eligibility, and cutoffs."
-            action={{ label: 'View All Exams', href: '/exams' }}
+            eyebrow={t('home.exams.eyebrow')}
+            title={t('home.exams.title')}
+            subtitle={t('home.exams.subtitle')}
+            action={{ label: t('home.exams.action'), href: '/exams' }}
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            {FEATURED_EXAMS.map((exam) => (
+            {[
+              { name: 'OJEE 2025', type: 'State',      date: 'May 2025', color: 'bg-primary-50 border-primary-200 text-primary-700' },
+              { name: 'JEE Main',  type: 'National',   date: 'Jan & Apr', color: 'bg-amber-50 border-amber-200 text-amber-700' },
+              { name: 'NEET UG',   type: 'Medical',    date: 'May 2025', color: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
+              { name: 'CUET UG',   type: 'Central',    date: 'May 2025', color: 'bg-purple-50 border-purple-200 text-purple-700' },
+              { name: 'CAT 2025',  type: 'Management', date: 'Nov 2025', color: 'bg-rose-50 border-rose-200 text-rose-700' },
+              { name: 'OPSC OAS',  type: 'Govt Job',   date: 'Dec 2025', color: 'bg-slate-50 border-slate-200 text-slate-700' },
+            ].map((exam) => (
               <Link
                 key={exam.name}
                 to={`/exams?search=${encodeURIComponent(exam.name)}`}
@@ -688,10 +667,10 @@ export default function HomePage() {
       <Section className="py-16 bg-slate-50">
         <div className="container-xl">
           <SectionHeader
-            eyebrow="🎓 Scholarships"
-            title="Scholarships for Odisha Students"
-            subtitle="Government and private scholarships that can save you lakhs in fees."
-            action={{ label: 'View All Scholarships', href: '/scholarships' }}
+            eyebrow={t('home.scholarships.eyebrow')}
+            title={t('home.scholarships.title')}
+            subtitle={t('home.scholarships.subtitle')}
+            action={{ label: t('home.scholarships.action'), href: '/scholarships' }}
           />
           {scholarships && scholarships.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -716,7 +695,7 @@ export default function HomePage() {
                   {s.lastDate && (
                     <div className="flex items-center gap-1.5 text-xs text-slate-400">
                       <Calendar size={12} />
-                      Deadline: {new Date(s.lastDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      {t('home.scholarships.deadline')} {new Date(s.lastDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </div>
                   )}
                 </Link>
@@ -736,7 +715,7 @@ export default function HomePage() {
                   </div>
                   <h3 className="text-base font-bold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors">{name}</h3>
                   <p className="text-xs text-slate-500 mb-3">Government of Odisha</p>
-                  <span className="text-xs font-semibold text-primary-600 group-hover:underline">View Details →</span>
+                  <span className="text-xs font-semibold text-primary-600 group-hover:underline">{t('home.scholarships.viewDetails')}</span>
                 </Link>
               ))}
             </div>
@@ -748,17 +727,15 @@ export default function HomePage() {
       <Section className="page-section bg-white">
         <div className="container-xl">
           <div className="max-w-xl mb-10">
-            <p className="section-eyebrow">✅ Why EduOdisha</p>
-            <h2 className="section-title">Built for Odisha Students</h2>
-            <p className="section-subtitle">
-              Not a generic national platform. We focus exclusively on Odisha's education ecosystem.
-            </p>
+            <p className="section-eyebrow">{t('home.whyUs.eyebrow')}</p>
+            <h2 className="section-title">{t('home.whyUs.title')}</h2>
+            <p className="section-subtitle">{t('home.whyUs.subtitle')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {WHY_US.map((item, i) => (
+            {(Array.isArray(WHY_US_ITEMS) ? WHY_US_ITEMS : []).map((item, i) => (
               <div key={i} className="border border-slate-200 rounded-xl p-6">
                 <div className="w-10 h-10 bg-primary-50 rounded-lg flex items-center justify-center mb-4">
-                  {item.icon}
+                  {WHY_US_ICONS[i]}
                 </div>
                 <h3 className="text-base font-bold text-slate-900 mb-2">{item.title}</h3>
                 <p className="text-sm text-slate-500 leading-relaxed">{item.desc}</p>
@@ -773,11 +750,9 @@ export default function HomePage() {
         <div className="container-xl">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
             <div className="max-w-xl">
-              <p className="section-eyebrow">💬 Student Stories</p>
-              <h2 className="section-title">What Students Say About Us</h2>
-              <p className="section-subtitle">
-                Real experiences from students and parents who used EduOdisha's platform, counselling services, and scholarship guidance.
-              </p>
+              <p className="section-eyebrow">{t('home.testimonials.eyebrow')}</p>
+              <h2 className="section-title">{t('home.testimonials.title')}</h2>
+              <p className="section-subtitle">{t('home.testimonials.subtitle')}</p>
             </div>
             {/* Write a review CTA */}
             {user && !myReview && (
@@ -785,17 +760,17 @@ export default function HomePage() {
                 onClick={() => setShowReviewModal(true)}
                 className="btn-primary py-2.5 px-5 text-sm flex items-center gap-2 shrink-0 rounded-xl"
               >
-                <PenLine size={14} /> Write a Review
+                <PenLine size={14} /> {t('home.testimonials.writeReview')}
               </button>
             )}
             {user && myReview && (
               <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl shrink-0">
-                <CheckCircle size={14} /> You reviewed us!
+                <CheckCircle size={14} /> {t('home.testimonials.youReviewed')}
               </div>
             )}
             {!user && (
               <Link to="/login" className="btn-secondary py-2.5 px-5 text-sm flex items-center gap-2 shrink-0 rounded-xl">
-                <PenLine size={14} /> Write a Review
+                <PenLine size={14} /> {t('home.testimonials.writeReview')}
               </Link>
             )}
           </div>
@@ -818,40 +793,40 @@ export default function HomePage() {
             </div>
           ) : platformReviews && platformReviews.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {platformReviews.map((t) => (
-                <div key={t._id} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
+              {platformReviews.map((review) => (
+                <div key={review._id} className="bg-white border border-slate-200 rounded-xl p-6 hover:shadow-md transition-shadow duration-200">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-1">
-                      {[...Array(t.rating)].map((_, j) => (
+                      {[...Array(review.rating)].map((_, j) => (
                         <Star key={j} size={14} className="text-amber-400 fill-amber-400" />
                       ))}
-                      {[...Array(5 - t.rating)].map((_, j) => (
+                      {[...Array(5 - review.rating)].map((_, j) => (
                         <Star key={j} size={14} className="text-slate-200 fill-slate-200" />
                       ))}
                     </div>
                     <div className="flex items-center gap-2">
-                      {t.isFeatured && <span className="text-[9px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">⭐ Featured</span>}
+                      {review.isFeatured && <span className="text-[9px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">⭐ Featured</span>}
                       <span className="text-[10px] font-semibold text-slate-400">
-                        {new Date(t.createdAt).getFullYear()}
+                        {new Date(review.createdAt).getFullYear()}
                       </span>
                     </div>
                   </div>
                   <Quote size={20} className="text-slate-200 mb-3" />
-                  {t.title && <p className="text-sm font-bold text-slate-800 mb-1">{t.title}</p>}
-                  <p className="text-sm text-slate-600 leading-relaxed mb-5 line-clamp-4">{t.review}</p>
-                  {t.usedFor && (
+                  {review.title && <p className="text-sm font-bold text-slate-800 mb-1">{review.title}</p>}
+                  <p className="text-sm text-slate-600 leading-relaxed mb-5 line-clamp-4">{review.review}</p>
+                  {review.usedFor && (
                     <span className="inline-block text-[10px] font-bold text-primary-600 bg-primary-50 border border-primary-100 px-2.5 py-1 rounded-full mb-4">
-                      Used for: {t.usedFor}
+                      {t('home.testimonials.usedFor')} {review.usedFor}
                     </span>
                   )}
                   <div className="flex items-center gap-3 pt-4 border-t border-slate-100">
                     <div className="w-9 h-9 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-sm shrink-0">
-                      {t.user?.name?.[0]?.toUpperCase() || '?'}
+                      {review.user?.name?.[0]?.toUpperCase() || '?'}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-sm font-bold text-slate-900">{t.user?.name || 'Anonymous'}</p>
+                      <p className="text-sm font-bold text-slate-900">{review.user?.name || 'Anonymous'}</p>
                       <p className="text-[11px] text-slate-400 font-medium truncate">
-                        {[t.role, t.location].filter(Boolean).join(' · ') || 'EduOdisha User'}
+                        {[review.role, review.location].filter(Boolean).join(' · ') || 'EduOdisha User'}
                       </p>
                     </div>
                   </div>
@@ -859,25 +834,25 @@ export default function HomePage() {
               ))}
             </div>
           ) : (
-            /* Empty state — invite users to be the first */
+            /* Empty state */
             <div className="bg-white border border-dashed border-slate-300 rounded-2xl py-16 text-center">
               <div className="w-14 h-14 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Star size={24} className="text-primary-400" />
               </div>
-              <h3 className="text-base font-bold text-slate-700 mb-2">No reviews yet</h3>
+              <h3 className="text-base font-bold text-slate-700 mb-2">{t('home.testimonials.noReviews')}</h3>
               <p className="text-sm text-slate-400 mb-6 max-w-xs mx-auto">
-                Be the first to share your experience with EduOdisha!
+                {t('home.testimonials.beFirst')}
               </p>
               {user ? (
                 <button
                   onClick={() => setShowReviewModal(true)}
                   className="btn-primary py-2.5 px-6 inline-flex items-center gap-2 rounded-xl text-sm font-bold"
                 >
-                  <PenLine size={14} /> Write the First Review
+                  <PenLine size={14} /> {t('home.testimonials.writeFirst')}
                 </button>
               ) : (
                 <Link to="/login" className="btn-primary py-2.5 px-6 inline-flex items-center gap-2 rounded-xl text-sm font-bold">
-                  <PenLine size={14} /> Login & Review
+                  <PenLine size={14} /> {t('home.testimonials.loginReview')}
                 </Link>
               )}
             </div>
@@ -898,10 +873,10 @@ export default function HomePage() {
         <Section className="page-section bg-white">
           <div className="container-xl">
             <SectionHeader
-              eyebrow="📰 Insights"
-              title="Latest Articles & Guides"
-              subtitle="Career advice, exam updates, and admission tips for Odisha students."
-              action={{ label: 'View All Articles', href: '/blogs' }}
+              eyebrow={t('home.blogs.eyebrow')}
+              title={t('home.blogs.title')}
+              subtitle={t('home.blogs.subtitle')}
+              action={{ label: t('home.blogs.action'), href: '/blogs' }}
             />
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {blogs.map(blog => (
@@ -947,19 +922,19 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div>
               <h2 className="text-2xl font-display font-bold text-white mb-2">
-                Not sure which college is right for you?
+                {t('home.cta.title')}
               </h2>
               <p className="text-primary-200 text-sm font-medium">
-                Talk to our experienced counselors — free, no spam, just honest guidance.
+                {t('home.cta.subtitle')}
               </p>
             </div>
             <div className="flex items-center gap-3 shrink-0">
               <a href="tel:+917205402554" className="btn-cta py-3 px-6 text-sm gap-2">
                 <Phone size={15} />
-                Call: +91 7205402554
+                {t('home.cta.callBtn')}
               </a>
               <Link to="/colleges" className="btn-secondary py-3 px-6 text-sm bg-white/10 border-white/20 text-white hover:bg-white/20">
-                Browse Colleges
+                {t('home.cta.browseBtn')}
               </Link>
             </div>
           </div>

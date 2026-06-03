@@ -4,12 +4,14 @@ import { Helmet } from 'react-helmet-async';
 import { Search, ChevronRight, GraduationCap } from 'lucide-react';
 import api from '../utils/api.js';
 import ScholarshipCard from '../components/scholarship/ScholarshipCard.jsx';
+import { useLanguage } from '../context/LanguageContext';
 
 const categories = ['Merit', 'SC/ST', 'OBC', 'Minority', 'Disability', 'Girls', 'Post Matric', 'Pre Matric', 'Other'];
 const types = ['Government', 'Private', 'NGO', 'University', 'International'];
 const levels = ['10th', '12th', 'UG', 'PG', 'Diploma', 'PhD', 'Any'];
 
 export default function ScholarshipsPage() {
+  const { t } = useLanguage();
   const [filters, setFilters] = useState({
     category: [],
     type: [],
@@ -48,17 +50,17 @@ export default function ScholarshipsPage() {
 
       <div className="container-xl">
         <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-8">
-          <span>Home</span>
+          <span>{t('common.home')}</span>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-primary-600">Scholarships</span>
+          <span className="text-primary-600">{t('scholarships.breadcrumb')}</span>
         </div>
 
         <div className="mb-10">
           <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
-            Scholarships & Grants
+            {t('scholarships.pageTitle')}
           </h1>
           <p className="text-slate-500 dark:text-slate-400 max-w-3xl">
-            Find and apply for the latest government and private scholarships. Filter by category, level, and eligibility to find the best funding for your education.
+            {t('scholarships.subtitle')}
           </p>
         </div>
 
@@ -66,11 +68,11 @@ export default function ScholarshipsPage() {
           {/* Sidebar Filters */}
           <aside className="space-y-8">
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
-              <h3 className="font-bold text-slate-800 dark:text-white mb-6">Filters</h3>
+              <h3 className="font-bold text-slate-800 dark:text-white mb-6">{t('scholarships.filters')}</h3>
               
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Category</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('scholarships.category')}</h4>
                   <div className="space-y-2">
                     {categories.map(cat => (
                       <label key={cat} className="flex items-center gap-3 cursor-pointer group">
@@ -87,7 +89,7 @@ export default function ScholarshipsPage() {
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Type</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('scholarships.type')}</h4>
                   <div className="space-y-2">
                     {types.map(type => (
                       <label key={type} className="flex items-center gap-3 cursor-pointer group">
@@ -104,7 +106,7 @@ export default function ScholarshipsPage() {
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Level</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('scholarships.level')}</h4>
                   <div className="space-y-2">
                     {levels.map(level => (
                       <label key={level} className="flex items-center gap-3 cursor-pointer group">
@@ -130,7 +132,7 @@ export default function ScholarshipsPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input 
                   type="text"
-                  placeholder="Search scholarships..."
+                  placeholder={t('scholarships.searchPlaceholder')}
                   className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-emerald-100 outline-none transition-all"
                   value={filters.search}
                   onChange={(e) => setFilters({ ...filters, search: e.target.value })}
@@ -153,8 +155,8 @@ export default function ScholarshipsPage() {
                 <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
                   <GraduationCap className="w-10 h-10" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">No scholarships found</h3>
-                <p className="text-slate-500 dark:text-slate-400">Try adjusting your filters or search terms.</p>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">{t('scholarships.noScholarships')}</h3>
+                <p className="text-slate-500 dark:text-slate-400">{t('scholarships.noScholarshipsSubtitle')}</p>
               </div>
             )}
           </div>

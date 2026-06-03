@@ -4,11 +4,13 @@ import { Helmet } from 'react-helmet-async';
 import { Search, ChevronRight, BookOpen } from 'lucide-react';
 import api from '../utils/api.js';
 import CourseCard from '../components/course/CourseCard.jsx';
+import { useLanguage } from '../context/LanguageContext';
 
 const levels = ['Undergraduate', 'Postgraduate', 'Diploma', 'Doctorate', 'Certificate'];
 const streams = ['Engineering', 'Medical', 'Management', 'Arts & Science', 'Law', 'Pharmacy', 'Nursing'];
 
 export default function CoursesPage() {
+  const { t } = useLanguage();
   const [filters, setFilters] = useState({
     level: [],
     stream: [],
@@ -45,17 +47,17 @@ export default function CoursesPage() {
 
       <div className="container-xl">
         <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-8">
-          <span>Home</span>
+          <span>{t('common.home')}</span>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-primary-600">Courses</span>
+          <span className="text-primary-600">{t('courses.breadcrumb')}</span>
         </div>
 
         <div className="mb-10">
           <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
-            Explore Courses
+            {t('courses.pageTitle')}
           </h1>
           <p className="text-slate-500 dark:text-slate-400 max-w-3xl">
-            Find the right course for your career. Discover details about fees, eligibility, and top colleges in Odisha.
+            {t('courses.subtitle')}
           </p>
         </div>
 
@@ -63,11 +65,11 @@ export default function CoursesPage() {
           {/* Sidebar Filters */}
           <aside className="space-y-8">
             <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
-              <h3 className="font-bold text-slate-800 dark:text-white mb-6">Filters</h3>
+              <h3 className="font-bold text-slate-800 dark:text-white mb-6">{t('courses.filters')}</h3>
               
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Level</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('courses.level')}</h4>
                   <div className="space-y-2">
                     {levels.map(level => (
                       <label key={level} className="flex items-center gap-3 cursor-pointer group">
@@ -84,7 +86,7 @@ export default function CoursesPage() {
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Stream</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('courses.stream')}</h4>
                   <div className="space-y-2">
                     {streams.map(stream => (
                       <label key={stream} className="flex items-center gap-3 cursor-pointer group">
@@ -110,7 +112,7 @@ export default function CoursesPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input 
                   type="text"
-                  placeholder="Search courses..."
+                  placeholder={t('courses.searchPlaceholder')}
                   className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
                   value={filters.search}
                   onChange={(e) => setFilters({ ...filters, search: e.target.value })}
@@ -133,8 +135,8 @@ export default function CoursesPage() {
                 <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
                   <BookOpen className="w-10 h-10" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">No courses found</h3>
-                <p className="text-slate-500 dark:text-slate-400">Try adjusting your filters or search terms.</p>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">{t('courses.noCourses')}</h3>
+                <p className="text-slate-500 dark:text-slate-400">{t('courses.noCoursesSubtitle')}</p>
               </div>
             )}
           </div>

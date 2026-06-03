@@ -4,11 +4,13 @@ import { Helmet } from 'react-helmet-async';
 import { Search, ChevronRight, Award } from 'lucide-react';
 import api from '../utils/api.js';
 import ExamCard from '../components/exam/ExamCard.jsx';
+import { useLanguage } from '../context/LanguageContext';
 
 const types = ['National', 'State', 'University'];
 const levels = ['UG', 'PG', 'Diploma', '12th', '10th', 'Any'];
 
 export default function ExamsPage() {
+  const { t } = useLanguage();
   const [filters, setFilters] = useState({
     type: [],
     level: [],
@@ -45,17 +47,17 @@ export default function ExamsPage() {
 
       <div className="container-xl">
         <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-8">
-          <span>Home</span>
+          <span>{t('common.home')}</span>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-primary-600">Entrance Exams</span>
+          <span className="text-primary-600">{t('exams.breadcrumb')}</span>
         </div>
 
         <div className="mb-10">
           <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">
-            Entrance Exams
+            {t('exams.pageTitle')}
           </h1>
           <p className="text-slate-500 max-w-3xl">
-            Stay updated with the latest entrance exams in Odisha and India. Get detailed information about registration dates, eligibility, and syllabus.
+            {t('exams.subtitle')}
           </p>
         </div>
 
@@ -63,11 +65,11 @@ export default function ExamsPage() {
           {/* Sidebar Filters */}
           <aside className="space-y-8">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-              <h3 className="font-bold text-slate-800 mb-6">Filters</h3>
+              <h3 className="font-bold text-slate-800 mb-6">{t('exams.filters')}</h3>
               
               <div className="space-y-6">
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Exam Type</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('exams.examType')}</h4>
                   <div className="space-y-2">
                     {types.map(type => (
                       <label key={type} className="flex items-center gap-3 cursor-pointer group">
@@ -84,7 +86,7 @@ export default function ExamsPage() {
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Level</h4>
+                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('exams.level')}</h4>
                   <div className="space-y-2">
                     {levels.map(level => (
                       <label key={level} className="flex items-center gap-3 cursor-pointer group">
@@ -110,7 +112,7 @@ export default function ExamsPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input 
                   type="text"
-                  placeholder="Search exams (e.g. OJEE, JEE Main)..."
+                  placeholder={t('exams.searchPlaceholder')}
                   className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
                   value={filters.search}
                   onChange={(e) => setFilters({ ...filters, search: e.target.value })}
@@ -133,8 +135,8 @@ export default function ExamsPage() {
                 <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
                   <Award className="w-10 h-10" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">No exams found</h3>
-                <p className="text-slate-500">Try adjusting your filters or search terms.</p>
+                <h3 className="text-xl font-bold text-slate-800 mb-2">{t('exams.noExams')}</h3>
+                <p className="text-slate-500">{t('exams.noExamsSubtitle')}</p>
               </div>
             )}
           </div>

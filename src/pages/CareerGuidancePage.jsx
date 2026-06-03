@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { GraduationCap, BookOpen, Target, Award, ArrowRight, Briefcase, Microscope, Building2, PenTool } from 'lucide-react';
 import api from '../utils/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function CareerGuidancePage() {
+  const { t } = useLanguage();
   const [careerData, setCareerData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('after10');
@@ -57,9 +59,9 @@ export default function CareerGuidancePage() {
         
         <div className="container mx-auto px-4 relative z-10 text-center">
           <GraduationCap className="w-16 h-16 text-primary-400 mx-auto mb-6" />
-          <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-6">Career Guidance</h1>
+          <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-6">{t('career.pageTitle')}</h1>
           <p className="text-primary-100 max-w-2xl mx-auto text-xl leading-relaxed">
-            Not sure which path to take? Explore comprehensive career maps designed for students after 10th and 12th in Odisha.
+            {t('career.subtitle')}
           </p>
         </div>
       </section>
@@ -75,7 +77,7 @@ export default function CareerGuidancePage() {
                 : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
-            After 10th
+            {t('career.after10')}
           </button>
           <button
             onClick={() => setActiveTab('after12')}
@@ -85,7 +87,7 @@ export default function CareerGuidancePage() {
                 : 'text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'
             }`}
           >
-            After 12th
+            {t('career.after12')}
           </button>
         </div>
 
@@ -105,7 +107,7 @@ export default function CareerGuidancePage() {
                 <div>
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <Target className="w-3 h-3 text-primary-500" />
-                    Key Career Paths
+                    {t('career.keyCareerPaths')}
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {value.paths.map(path => (
@@ -119,7 +121,7 @@ export default function CareerGuidancePage() {
                 <div>
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <BookOpen className="w-3 h-3 text-primary-500" />
-                    Recommended Courses
+                    {t('career.recommendedCourses')}
                   </h4>
                   <ul className="grid grid-cols-1 gap-2">
                     {value.courses.map(course => (
@@ -134,7 +136,7 @@ export default function CareerGuidancePage() {
                 <div>
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                     <Award className="w-3 h-3 text-primary-500" />
-                    Top Entrance Exams
+                    {t('career.topExams')}
                   </h4>
                   <div className="flex flex-wrap gap-2">
                     {value.exams.map(exam => (
@@ -148,7 +150,7 @@ export default function CareerGuidancePage() {
                 <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
                   <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
                     <Briefcase className="w-3 h-3 text-primary-500" />
-                    Salary Outlook
+                    {t('career.salaryOutlook')}
                   </h4>
                   <p className="text-slate-800 dark:text-slate-200 font-bold text-sm">
                     {value.salary}
@@ -157,7 +159,7 @@ export default function CareerGuidancePage() {
               </div>
 
               <button className="w-full mt-8 py-4 bg-slate-50 dark:bg-slate-800 hover:bg-primary-600 hover:text-white text-primary-600 font-bold rounded-2xl transition-all flex items-center justify-center gap-2 group/btn">
-                Download Guide <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                {t('career.downloadGuide')} <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
               </button>
             </div>
           ))}
@@ -166,13 +168,13 @@ export default function CareerGuidancePage() {
         {/* Call to Action */}
         <div className="mt-20 p-8 md:p-12 bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="max-w-lg">
-            <h3 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-4">Still Confused About Your Future?</h3>
+            <h3 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-4">{t('career.ctaTitle')}</h3>
             <p className="text-slate-600 dark:text-slate-400">
-              Speak with our expert career counselors for personalized advice tailored to your interests and strengths.
+              {t('career.ctaSubtitle')}
             </p>
           </div>
           <button className="btn-primary py-4 px-10 rounded-2xl text-lg shadow-xl shadow-primary-600/20 whitespace-nowrap">
-            Book Free Counseling
+            {t('career.ctaBtn')}
           </button>
         </div>
       </div>

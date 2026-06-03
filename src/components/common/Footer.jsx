@@ -2,50 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react';
 import api from '../../utils/api';
-
-const FOOTER_LINKS = [
-  {
-    title: 'Explore',
-    links: [
-      { name: 'Top Colleges', href: '/colleges' },
-      { name: 'Popular Courses', href: '/courses' },
-      { name: 'Entrance Exams', href: '/exams' },
-      { name: 'Scholarships', href: '/scholarships' },
-      { name: 'Compare Colleges', href: '/compare' },
-    ],
-  },
-  {
-    title: 'By Stream',
-    links: [
-      { name: 'Engineering', href: '/colleges?category=Engineering' },
-      { name: 'Medical', href: '/colleges?category=Medical' },
-      { name: 'Management', href: '/colleges?category=Management' },
-      { name: 'Arts & Science', href: '/colleges?category=Arts+%26+Science' },
-      { name: 'Law', href: '/colleges?category=Law' },
-      { name: 'Pharmacy', href: '/colleges?category=Pharmacy' },
-      { name: 'Nursing', href: '/colleges?category=Nursing' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { name: 'About Us', href: '/about' },
-      { name: 'Blog', href: '/blogs' },
-      { name: 'Career Guidance', href: '/career-guidance' },
-      { name: 'Contact Us', href: '/contact' },
-      { name: 'Advertise', href: '/advertise' },
-    ],
-  },
-  {
-    title: 'Legal',
-    links: [
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Terms of Service', href: '/terms' },
-      { name: 'Cookie Policy', href: '/cookies' },
-      { name: 'Disclaimer', href: '/disclaimer' },
-    ],
-  },
-];
+import { useLanguage } from '../../context/LanguageContext';
 
 const SOCIAL_LINKS = [
   { label: 'Facebook', href: '#', icon: 'f' },
@@ -56,6 +13,7 @@ const SOCIAL_LINKS = [
 ];
 
 export default function Footer() {
+  const { t } = useLanguage();
   const [stats, setStats] = useState({
     colleges: 10,
     courses: 6,
@@ -86,6 +44,51 @@ export default function Footer() {
     };
   }, []);
 
+  // Build link groups from translations
+  const FOOTER_LINKS = [
+    {
+      title: t('footer.groups.explore'),
+      links: [
+        { name: t('footer.links.topColleges'),    href: '/colleges' },
+        { name: t('footer.links.popularCourses'), href: '/courses' },
+        { name: t('footer.links.entranceExams'),  href: '/exams' },
+        { name: t('footer.links.scholarships'),   href: '/scholarships' },
+        { name: t('footer.links.compareColleges'),href: '/compare' },
+      ],
+    },
+    {
+      title: t('footer.groups.byStream'),
+      links: [
+        { name: t('footer.links.engineering'), href: '/colleges?category=Engineering' },
+        { name: t('footer.links.medical'),     href: '/colleges?category=Medical' },
+        { name: t('footer.links.management'),  href: '/colleges?category=Management' },
+        { name: t('footer.links.artsScience'), href: '/colleges?category=Arts+%26+Science' },
+        { name: t('footer.links.law'),         href: '/colleges?category=Law' },
+        { name: t('footer.links.pharmacy'),    href: '/colleges?category=Pharmacy' },
+        { name: t('footer.links.nursing'),     href: '/colleges?category=Nursing' },
+      ],
+    },
+    {
+      title: t('footer.groups.company'),
+      links: [
+        { name: t('footer.links.aboutUs'),        href: '/about' },
+        { name: t('footer.links.blog'),            href: '/blogs' },
+        { name: t('footer.links.careerGuidance'),  href: '/career-guidance' },
+        { name: t('footer.links.contactUs'),       href: '/contact' },
+        { name: t('footer.links.advertise'),       href: '/advertise' },
+      ],
+    },
+    {
+      title: t('footer.groups.legal'),
+      links: [
+        { name: t('footer.links.privacyPolicy'),  href: '/privacy' },
+        { name: t('footer.links.termsOfService'), href: '/terms' },
+        { name: t('footer.links.cookiePolicy'),   href: '/cookies' },
+        { name: t('footer.links.disclaimer'),     href: '/disclaimer' },
+      ],
+    },
+  ];
+
   return (
     <footer className="bg-slate-900 text-slate-400">
       {/* Stats Bar */}
@@ -94,19 +97,19 @@ export default function Footer() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
             <div className="space-y-1">
               <span className="text-2xl font-black text-white tracking-tight">{stats.colleges}</span>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Verified Colleges</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{t('footer.stats.colleges')}</p>
             </div>
             <div className="space-y-1">
               <span className="text-2xl font-black text-white tracking-tight">{stats.courses}</span>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Professional Courses</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{t('footer.stats.courses')}</p>
             </div>
             <div className="space-y-1">
               <span className="text-2xl font-black text-white tracking-tight">{stats.exams}</span>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Entrance Exams</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{t('footer.stats.exams')}</p>
             </div>
             <div className="space-y-1">
               <span className="text-2xl font-black text-white tracking-tight">{stats.scholarships}</span>
-              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Scholarship Schemes</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{t('footer.stats.scholarships')}</p>
             </div>
           </div>
         </div>
@@ -127,7 +130,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm text-slate-400 mb-6 leading-relaxed max-w-xs">
-              Odisha's most comprehensive education platform. Helping students make informed decisions through verified data and expert counselling.
+              {t('footer.tagline')}
             </p>
 
             {/* Contact mini-cards */}
@@ -173,7 +176,7 @@ export default function Footer() {
               <h3 className="text-white font-bold text-xs uppercase tracking-widest mb-4">{group.title}</h3>
               <ul className="space-y-2.5">
                 {group.links.map(link => (
-                  <li key={link.name}>
+                  <li key={link.href}>
                     <Link
                       to={link.href}
                       className="text-sm text-slate-400 hover:text-white transition-colors font-medium"
@@ -192,16 +195,15 @@ export default function Footer() {
       <div className="border-t border-slate-800">
         <div className="container-xl py-5 flex flex-col md:flex-row items-center justify-center gap-4">
           <p className="text-xs text-slate-500 font-medium">
-            © {new Date().getFullYear()} EduOdisha Technologies Pvt. Ltd. All rights reserved.
+            {t('footer.copyright').replace('{year}', new Date().getFullYear())}
           </p>
 
           <div className="flex items-center gap-4">
-
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-white transition-colors"
             >
-              Back to top <ArrowUpRight size={12} />
+              {t('footer.backToTop')} <ArrowUpRight size={12} />
             </button>
           </div>
         </div>

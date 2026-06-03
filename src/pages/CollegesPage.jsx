@@ -7,20 +7,24 @@ import api from '../utils/api.js';
 import CollegeCard from '../components/college/CollegeCard.jsx';
 import FilterSidebar from '../components/college/FilterSidebar.jsx';
 import { formatLPA } from '../utils/format';
+import { useLanguage } from '../context/LanguageContext';
 
-const SORT_OPTIONS = [
-  { value: '', label: 'Relevance' },
-  { value: 'rating', label: 'Highest Rated' },
-  { value: 'fees_asc', label: 'Fees: Low to High' },
-  { value: 'fees_desc', label: 'Fees: High to Low' },
-  { value: 'nirf', label: 'NIRF Rank' },
-];
+
 
 export default function CollegesPage() {
   const [searchParams] = useSearchParams();
   const [view, setView] = useState('grid');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [sort, setSort] = useState('');
+  const { t } = useLanguage();
+
+  const SORT_OPTIONS = [
+    { value: '', label: t('colleges.sortOptions.relevance') },
+    { value: 'rating', label: t('colleges.sortOptions.highestRated') },
+    { value: 'fees_asc', label: t('colleges.sortOptions.feesLowHigh') },
+    { value: 'fees_desc', label: t('colleges.sortOptions.feesHighLow') },
+    { value: 'nirf', label: t('colleges.sortOptions.nirfRank') },
+  ];
 
   const [filters, setFilters] = useState({
     city: searchParams.get('city') ? [searchParams.get('city')] : [],
@@ -62,17 +66,17 @@ export default function CollegesPage() {
         <div className="container-xl py-6">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-xs font-medium text-slate-400 mb-4">
-            <Link to="/" className="hover:text-primary-600 transition-colors">Home</Link>
+            <Link to="/" className="hover:text-primary-600 transition-colors">{t('common.home')}</Link>
             <ChevronRight size={12} />
-            <span className="text-slate-600 font-semibold">Colleges in Odisha</span>
+            <span className="text-slate-600 font-semibold">{t('colleges.breadcrumb')}</span>
           </nav>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-display font-bold text-slate-900 mb-1">
-                {isLoading ? 'Searching…' : `${total.toLocaleString()} Colleges in Odisha`}
+                {isLoading ? t('colleges.searching') : t('colleges.collegesFound').replace('{count}', total.toLocaleString())}
               </h1>
               <p className="text-sm text-slate-500">
-                Filter by city, stream, type and fees to find your perfect college.
+                {t('colleges.subtitle')}
               </p>
             </div>
           </div>
@@ -147,7 +151,7 @@ export default function CollegesPage() {
                 className="lg:hidden flex items-center gap-2 btn-secondary py-2 text-sm relative"
               >
                 <SlidersHorizontal size={15} />
-                Filters
+                {t('colleges.mobileFilters')}
                 {activeFilterCount > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-primary-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                     {activeFilterCount}
@@ -183,13 +187,13 @@ export default function CollegesPage() {
                 <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Search size={24} className="text-slate-300" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">No colleges found</h3>
-                <p className="text-sm text-slate-500 mb-5">Try adjusting your filters or search term.</p>
+                <h3 className="text-lg font-bold text-slate-800 mb-2">{t('colleges.noColleges')}</h3>
+                <p className="text-sm text-slate-500 mb-5">{t('colleges.noCollegesSubtitle')}</p>
                 <button
                   onClick={() => setFilters({ city: [], type: [], category: [], minFees: '', maxFees: '', search: '' })}
                   className="btn-primary py-2 px-5"
                 >
-                  Clear Filters
+                  {t('colleges.clearFilters')}
                 </button>
               </div>
             )}

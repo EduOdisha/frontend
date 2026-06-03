@@ -3,21 +3,23 @@ import { Link } from 'react-router-dom';
 import { X, Star, MapPin, Building, GraduationCap, IndianRupee, Briefcase, Award } from 'lucide-react';
 import { removeFromCompare } from '../store/slices/compareSlice';
 import { formatLPA } from '../utils/format';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ComparePage() {
   const { colleges } = useSelector((state) => state.compare);
   const dispatch = useDispatch();
+  const { t } = useLanguage();
 
   const parameters = [
-    { label: 'Rating', key: 'rating', icon: Star, getValue: (c) => `${c.rating?.average || '4.0'} / 5` },
-    { label: 'Location', key: 'location', icon: MapPin, getValue: (c) => `${c.location?.city}, Odisha` },
-    { label: 'Affiliation', key: 'affiliation', icon: Award, getValue: (c) => c.affiliation },
-    { label: 'Fees (Approx)', key: 'fees', icon: IndianRupee, getValue: (c) => `₹${c.fees?.min?.toLocaleString()} - ₹${c.fees?.max?.toLocaleString()}` },
-    { label: 'Highest Package', key: 'placements', icon: Briefcase, getValue: (c) => formatLPA(c.placements?.highestPackage) },
-    { label: 'Avg Package', key: 'placements_avg', icon: Briefcase, getValue: (c) => formatLPA(c.placements?.averagePackage) },
-    { label: 'NAAC Grade', key: 'naac', icon: GraduationCap, getValue: (c) => c.naacGrade || 'A+' },
-    { label: 'Hostel', key: 'hostel', icon: Building, getValue: (c) => c.facilities?.hostel ? 'Yes' : 'No' },
-    { label: 'Facilities', key: 'facilities', icon: Building, getValue: (c) => {
+    { label: t('compare.params.rating'),          key: 'rating',        icon: Star,         getValue: (c) => `${c.rating?.average || '4.0'} / 5` },
+    { label: t('compare.params.location'),        key: 'location',      icon: MapPin,       getValue: (c) => `${c.location?.city}, Odisha` },
+    { label: t('compare.params.affiliation'),     key: 'affiliation',   icon: Award,        getValue: (c) => c.affiliation },
+    { label: t('compare.params.fees'),            key: 'fees',          icon: IndianRupee,  getValue: (c) => `₹${c.fees?.min?.toLocaleString()} - ₹${c.fees?.max?.toLocaleString()}` },
+    { label: t('compare.params.highestPackage'),  key: 'placements',    icon: Briefcase,    getValue: (c) => formatLPA(c.placements?.highestPackage) },
+    { label: t('compare.params.avgPackage'),      key: 'placements_avg',icon: Briefcase,    getValue: (c) => formatLPA(c.placements?.averagePackage) },
+    { label: t('compare.params.naac'),            key: 'naac',          icon: GraduationCap,getValue: (c) => c.naacGrade || 'A+' },
+    { label: t('compare.params.hostel'),          key: 'hostel',        icon: Building,     getValue: (c) => c.facilities?.hostel ? 'Yes' : 'No' },
+    { label: t('compare.params.facilities'),      key: 'facilities',    icon: Building,     getValue: (c) => {
       const active = Object.entries(c.facilities || {})
         .filter(([_, v]) => v === true)
         .map(([k, _]) => k);
@@ -32,10 +34,10 @@ export default function ComparePage() {
           <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
             <Building className="w-10 h-10" />
           </div>
-          <h2 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-4">Choose colleges to compare</h2>
-          <p className="text-slate-500 mb-8">Select up to 4 colleges to compare their fees, placements, facilities and more side by side.</p>
+          <h2 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-4">{t('compare.emptyTitle')}</h2>
+          <p className="text-slate-500 mb-8">{t('compare.emptySubtitle')}</p>
           <Link to="/colleges" className="btn-primary inline-flex">
-            Browse Colleges
+            {t('compare.browseColleges')}
           </Link>
         </div>
       </div>
@@ -48,12 +50,12 @@ export default function ComparePage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
             <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-900 dark:text-white mb-2">
-              Compare Colleges
+              {t('compare.pageTitle')}
             </h1>
-            <p className="text-slate-500">Comparison based on the latest available data.</p>
+            <p className="text-slate-500">{t('compare.subtitle')}</p>
           </div>
           <p className="text-sm font-bold text-primary-600 bg-primary-50 dark:bg-primary-900/20 px-4 py-2 rounded-full">
-            {colleges.length} Colleges Selected
+            {t('compare.collegesSelected').replace('{count}', colleges.length)}
           </p>
         </div>
 
@@ -63,7 +65,7 @@ export default function ComparePage() {
               <thead>
                 <tr>
                   <th className="p-8 w-64 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-left align-top">
-                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-4">Parameters</p>
+                    <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-4">{t('compare.parameters')}</p>
                   </th>
                   {colleges.map((college) => (
                     <th key={college._id} className="p-8 min-w-[280px] border-b border-l border-slate-100 dark:border-slate-800 relative group">
