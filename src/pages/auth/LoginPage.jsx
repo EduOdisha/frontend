@@ -48,14 +48,16 @@ export default function LoginPage() {
           backgroundSize: '24px 24px',
         }} />
 
-        <div className="relative z-10">
-          <Link to="/" className="flex items-center gap-2.5 mb-16">
-            <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center border border-white/20">
-              <GraduationCap size={20} className="text-white" />
-            </div>
-            <span className="font-display font-extrabold text-xl text-white">EduOdisha</span>
-          </Link>
+        {/* Logo at top */}
+        <Link to="/" className="relative z-10 flex items-center gap-2.5">
+          <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center border border-white/20">
+            <GraduationCap size={20} className="text-white" />
+          </div>
+          <span className="font-display font-extrabold text-xl text-white">EduOdisha</span>
+        </Link>
 
+        {/* Centered Content */}
+        <div className="relative z-10 my-auto">
           <h2 className="text-3xl font-display font-extrabold text-white mb-3 leading-tight">
             Your educational
             <br />journey starts here.
@@ -74,6 +76,7 @@ export default function LoginPage() {
           </ul>
         </div>
 
+        {/* Footer at bottom */}
         <p className="relative z-10 text-xs text-primary-400 font-medium">
           © {new Date().getFullYear()} EduOdisha · Bhubaneswar, Odisha
         </p>
@@ -115,7 +118,7 @@ export default function LoginPage() {
 
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label htmlFor="login-password" className="text-sm font-medium text-slate-700">Password</label>
+                <label htmlFor="login-password" className="label-base">Password</label>
                 <Link to="/forgot-password" className="text-xs font-semibold text-primary-600 hover:underline">
                   Forgot password?
                 </Link>

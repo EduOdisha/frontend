@@ -60,6 +60,7 @@ export default function App() {
   const dispatch = useDispatch();
 
   const isAdminPath = pathname.startsWith('/admin');
+  const isAuthPath = pathname.startsWith('/login') || pathname.startsWith('/register');
   const isDashboardOrAdmin = isAdminPath || pathname.startsWith('/dashboard');
 
   // Check auth on load
@@ -102,9 +103,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans">
       <Toaster position="top-right" />
-      {!isAdminPath && <Navbar />}
+      {!isAdminPath && !isAuthPath && <Navbar />}
       
-      <main className={`flex-grow ${!isAdminPath ? 'pt-16' : ''}`}>
+      <main className={`flex-grow ${!isAdminPath && !isAuthPath ? 'pt-16' : ''}`}>
         <Suspense fallback={<PageLoading />}>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -145,13 +146,13 @@ export default function App() {
         </Suspense>
       </main>
 
-      {!isDashboardOrAdmin && (
+      {!isDashboardOrAdmin && !isAuthPath && (
         <>
           <CompareWidget />
           <Footer />
         </>
       )}
-      {!isAdminPath && <WhatsAppButton />}
+      {!isAdminPath && !isAuthPath && <WhatsAppButton />}
     </div>
   );
 }

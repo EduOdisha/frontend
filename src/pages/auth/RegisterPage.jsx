@@ -48,14 +48,16 @@ export default function RegisterPage() {
           backgroundSize: '24px 24px',
         }} />
 
-        <div className="relative z-10">
-          <Link to="/" className="flex items-center gap-2.5 mb-16">
-            <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center border border-white/20">
-              <GraduationCap size={20} className="text-white" />
-            </div>
-            <span className="font-display font-extrabold text-xl text-white">EduOdisha</span>
-          </Link>
+        {/* Logo at top */}
+        <Link to="/" className="relative z-10 flex items-center gap-2.5">
+          <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center border border-white/20">
+            <GraduationCap size={20} className="text-white" />
+          </div>
+          <span className="font-display font-extrabold text-xl text-white">EduOdisha</span>
+        </Link>
 
+        {/* Centered Content */}
+        <div className="relative z-10 my-auto">
           <h2 className="text-3xl font-display font-extrabold text-white mb-3 leading-tight">
             Join 1 lakh+
             <br />Odisha students.
@@ -74,6 +76,7 @@ export default function RegisterPage() {
           </ul>
         </div>
 
+        {/* Footer info at bottom */}
         <div className="relative z-10 flex items-center gap-2 text-primary-400 text-xs font-medium">
           <Shield size={14} />
           Your data is safe — we never share it with third parties.

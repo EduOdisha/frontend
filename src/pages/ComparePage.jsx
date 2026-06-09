@@ -64,14 +64,14 @@ export default function ComparePage() {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="p-8 w-64 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800 text-left align-top">
+                  <th className="p-8 w-40 md:w-64 bg-slate-100 dark:bg-slate-800 border-b border-slate-100 dark:border-slate-800 text-left align-top sticky left-0 z-10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
                     <p className="text-xs font-black text-slate-400 uppercase tracking-widest mt-4">{t('compare.parameters')}</p>
                   </th>
                   {colleges.map((college) => (
                     <th key={college._id} className="p-8 min-w-[280px] border-b border-l border-slate-100 dark:border-slate-800 relative group">
                       <button 
                         onClick={() => dispatch(removeFromCompare(college._id))}
-                        className="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-400 hover:bg-rose-500 hover:text-white transition-all opacity-0 group-hover:opacity-100"
+                        className="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-400 hover:bg-rose-500 hover:text-white transition-all lg:opacity-0 lg:group-hover:opacity-100"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -109,7 +109,7 @@ export default function ComparePage() {
                   const Icon = param.icon;
                   return (
                     <tr key={param.key} className="group hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                      <td className="p-6 bg-slate-50/50 dark:bg-slate-800/20 border-b border-slate-100 dark:border-slate-800">
+                      <td className="p-6 bg-slate-50 dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800 sticky left-0 z-10 shadow-[2px_0_5px_rgba(0,0,0,0.05)]">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-lg bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-400 group-hover:text-primary-600 transition-colors">
                             <Icon className="w-4 h-4" />

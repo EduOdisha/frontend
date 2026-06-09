@@ -18,7 +18,7 @@ export default function CompareWidget() {
         exit={{ y: 100, opacity: 0 }}
         className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-4xl"
       >
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-2xl p-4 flex flex-col md:flex-row items-center gap-6">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4 md:gap-6">
           <div className="flex items-center gap-3 shrink-0">
             <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center text-primary-600">
               <GitCompare className="w-5 h-5" />
@@ -44,7 +44,7 @@ export default function CompareWidget() {
                 </div>
                 <button 
                   onClick={() => dispatch(removeFromCompare(college._id))}
-                  className="absolute -top-2 -right-2 bg-rose-500 text-white p-1 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute -top-2 -right-2 bg-rose-500 text-white p-1 rounded-full shadow-lg lg:opacity-0 lg:group-hover:opacity-100 transition-opacity"
                 >
                   <X className="w-3 h-3" />
                 </button>
