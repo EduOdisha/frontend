@@ -9,7 +9,7 @@ const FACILITY_LABELS = {
 export default function FacilitiesTab({ formData, setFormData }) {
   return (
     <div className="space-y-5">
-      <SectionCard icon={Wrench} title="Campus Facilities" subtitle="Toggle available facilities" accent="purple">
+      <SectionCard icon={Wrench} title="Campus Facilities" subtitle="Toggle available facilities" accent="emerald">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {Object.keys(formData.facilities).map(f => (
             <FacilityToggle

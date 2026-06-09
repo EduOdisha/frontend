@@ -11,7 +11,7 @@ export default function OverviewTab({ college }) {
         <StatCard icon={IndianRupee} label="Avg. Fees / yr" value={college.fees?.min ? `₹${college.fees.min.toLocaleString()}` : 'N/A'} />
         <StatCard icon={TrendingUp} label="Avg. Package" value={formatLPA(college.placements?.averagePackage)} color="text-emerald-600" bg="bg-emerald-50" />
         <StatCard icon={Award} label="NIRF Rank" value={college.nirfRanking ? `#${college.nirfRanking}` : 'N/A'} color="text-amber-600" bg="bg-amber-50" />
-        <StatCard icon={Users} label="Total Seats" value={college.courses?.reduce((s, c) => s + (c.seats || 0), 0) || 'N/A'} color="text-purple-600" bg="bg-purple-50" />
+        <StatCard icon={Users} label="Total Seats" value={college.courses?.reduce((s, c) => s + (c.seats || 0), 0) || 'N/A'} color="text-primary-600" bg="bg-primary-50" />
       </div>
 
       {/* About */}

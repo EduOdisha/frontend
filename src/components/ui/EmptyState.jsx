@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * Reusable EmptyState component for search/filter results with zero items.

@@ -180,7 +180,7 @@ function PlatformReviews() {
 
   const featureMutation = useMutation({
     mutationFn: (id) => api.put(`/admin/platform-reviews/${id}/feature`),
-    onSuccess: (_, id) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-platform-reviews'] });
       queryClient.invalidateQueries({ queryKey: ['platform-reviews'] });
       toast.success('Featured status toggled');

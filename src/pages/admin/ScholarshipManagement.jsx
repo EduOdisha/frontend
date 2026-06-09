@@ -5,8 +5,8 @@ import api from '../../utils/api';
 import { Plus, Search, Edit2, Trash2, Eye, CheckCircle, XCircle, AlertCircle, Award } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
-const SCHOLARSHIP_TYPES = ['Government', 'Private', 'NGO', 'University', 'International'];
-const SCHOLARSHIP_CATEGORIES = ['Merit', 'SC/ST', 'OBC', 'Minority', 'Disability', 'Girls', 'Post Matric', 'Pre Matric', 'Other'];
+const SCHOLARSHIP_TYPES = ['Government', 'Private', 'NGO', 'University'];
+const SCHOLARSHIP_CATEGORIES = ['Merit', 'SC/ST', 'OBC', 'Girls', 'Post Matric', 'Pre Matric', 'Other'];
 
 function ScholarshipFormModal({ scholarship, onClose, onSubmit, loading }) {
   const [form, setForm] = useState({
@@ -14,6 +14,7 @@ function ScholarshipFormModal({ scholarship, onClose, onSubmit, loading }) {
     provider: scholarship?.provider || '',
     type: scholarship?.type || 'Government',
     category: scholarship?.category || 'Merit',
+    level: scholarship?.level || ['Any'],
     description: scholarship?.description || '',
     eligibility: typeof scholarship?.eligibility === 'object' ? {
       income: scholarship?.eligibility?.income || '',
@@ -89,6 +90,27 @@ function ScholarshipFormModal({ scholarship, onClose, onSubmit, loading }) {
             <label className="label-base">Description</label>
             <textarea className="input-base" rows={3} value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
           </div>
+          <div>
+            <label className="label-base">Applicable Levels</label>
+            <div className="flex flex-wrap gap-4 mt-1 bg-slate-50 dark:bg-slate-800/40 p-3 rounded-lg border border-slate-100 dark:border-slate-800/80">
+              {['12th', 'Undergraduate (UG)', 'Postgraduate (PG)', 'Diploma', 'Any'].map(lvl => (
+                <label key={lvl} className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.level?.includes(lvl)}
+                    onChange={(e) => {
+                      const nextLevels = e.target.checked
+                        ? [...(form.level || []), lvl]
+                        : (form.level || []).filter(l => l !== lvl);
+                      setForm(f => ({ ...f, level: nextLevels }));
+                    }}
+                    className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                  />
+                  <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{lvl}</span>
+                </label>
+              ))}
+            </div>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="label-base">Eligibility - Family Income</label>
@@ -150,19 +172,17 @@ function ScholarshipFormModal({ scholarship, onClose, onSubmit, loading }) {
 }
 
 export default function ScholarshipManagement() {
-  const [search, setSearch] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [selected, setSelected] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState('');
+  const [showModal, setShowModal] = useState(() => searchParams.get('add') === 'true');
+  const [selected, setSelected] = useState(null);
   const qc = useQueryClient();
 
   useEffect(() => {
     if (searchParams.get('add') === 'true') {
-      setSelected(null);
-      setShowModal(true);
       setSearchParams({}, { replace: true });
     }
-  }, [searchParams]);
+  }, [searchParams, setSearchParams]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-scholarships', search],

@@ -34,7 +34,7 @@ export default function Footer() {
             scholarships: data.data.scholarships ?? 6
           });
         }
-      } catch (err) {
+      } catch {
         // Fallback to defaults already configured in state
       }
     };
@@ -62,9 +62,6 @@ export default function Footer() {
         { name: t('footer.links.engineering'), href: '/colleges?category=Engineering' },
         { name: t('footer.links.medical'),     href: '/colleges?category=Medical' },
         { name: t('footer.links.management'),  href: '/colleges?category=Management' },
-        { name: t('footer.links.artsScience'), href: '/colleges?category=Arts+%26+Science' },
-        { name: t('footer.links.law'),         href: '/colleges?category=Law' },
-        { name: t('footer.links.pharmacy'),    href: '/colleges?category=Pharmacy' },
         { name: t('footer.links.nursing'),     href: '/colleges?category=Nursing' },
       ],
     },
@@ -141,11 +138,11 @@ export default function Footer() {
                 </div>
                 +91 7205402554
               </a>
-              <a href="mailto:hello@eduodisha.in" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
+              <a href="mailto:eduodisha121@gmail.com" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
                 <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 group-hover:border-primary-700 group-hover:text-primary-400 transition-all shrink-0">
                   <Mail size={14} />
                 </div>
-                hello@eduodisha.in
+                eduodisha121@gmail.com
               </a>
               <div className="flex items-center gap-2.5 text-sm text-slate-500">
                 <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">

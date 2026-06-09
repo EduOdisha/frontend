@@ -34,16 +34,16 @@ export default function CareerTab({ formData, handleChange, arrChange, arrAdd, a
       </SectionCard>
 
       {/* Skills */}
-      <SectionCard icon={Star} title="Skills Learned" subtitle="Key skills students gain from this course" accent="purple">
+      <SectionCard icon={Star} title="Skills Learned" subtitle="Key skills students gain from this course" accent="emerald">
         <div className="space-y-3">
           <div className="flex flex-wrap gap-2">
             {formData.skills.map((skill, i) => (
-              <div key={i} className="flex items-center gap-1.5 bg-purple-50 border border-purple-100 rounded-full px-3 py-1.5">
+              <div key={i} className="flex items-center gap-1.5 bg-emerald-50 border border-emerald-100 rounded-full px-3 py-1.5">
                 <Input
                   value={skill}
                   onChange={e => arrChange('skills', i, e.target.value)}
                   placeholder="Skill"
-                  className="border-0 bg-transparent p-0 text-xs font-bold text-purple-700 focus:ring-0 w-20"
+                  className="border-0 bg-transparent p-0 text-xs font-bold text-emerald-700 focus:ring-0 w-20"
                 />
                 <RemoveButton onClick={() => arrRemove('skills', i)} />
               </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
@@ -9,13 +8,17 @@ import { ArrowRight } from 'lucide-react';
  * @param {function} props.onClose - Closure callback
  * @param {string} [props.align] - Alignment CSS class
  */
-export default function MegaMenuPanel({ data, onClose, align = 'left-0' }) {
+export default function MegaMenuPanel({ data, onClose, align = 'left-0', headingColor = 'text-slate-400' }) {
+  const colCount = data.columns?.length || 3;
+  const widthClass = colCount === 4 ? 'w-[960px]' : colCount === 3 ? 'w-[760px]' : 'w-[540px]';
+  const gridClass = colCount === 4 ? 'grid-cols-4' : colCount === 3 ? 'grid-cols-3' : 'grid-cols-2';
+
   return (
-    <div className={`absolute top-full mt-1 w-[760px] bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden animate-slide-down z-50 ${align}`}>
-      <div className="grid grid-cols-3 gap-0 divide-x divide-slate-100 p-6">
+    <div className={`absolute top-full mt-1 ${widthClass} bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden animate-slide-down z-50 ${align}`}>
+      <div className={`grid ${gridClass} gap-0 divide-x divide-slate-100 p-6`}>
         {data.columns.map((col) => (
           <div key={col.heading} className="px-6 first:pl-0 last:pr-0">
-            <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">
+            <p className={`text-[11px] font-bold ${headingColor} uppercase tracking-widest mb-3`}>
               {col.heading}
             </p>
             <ul className="space-y-1">

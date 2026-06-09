@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Clock, BookOpen, GraduationCap, ArrowRight, Heart } from 'lucide-react';
@@ -14,11 +13,7 @@ export default function CourseCard({ course, loading }) {
     typeof id === 'object' ? id._id === course?._id : id === course?._id
   );
 
-  const [isBookmarked, setIsBookmarked] = useState(isCurrentlySaved || false);
-
-  useEffect(() => {
-    setIsBookmarked(isCurrentlySaved || false);
-  }, [isCurrentlySaved, course]);
+  const isBookmarked = isCurrentlySaved || false;
 
   const handleBookmark = async (e) => {
     e.preventDefault();
@@ -28,7 +23,6 @@ export default function CourseCard({ course, loading }) {
     }
     try {
       const { data } = await api.post(`/users/save-course/${course._id}`);
-      setIsBookmarked(data.saved);
       dispatch(updateUserSaved({ savedCourses: data.savedCourses }));
       toast.success(data.saved ? 'Course saved to wishlist' : 'Removed from saved');
     } catch (err) {

@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * Reusable PageHero component for consistent page titles and subheadings.

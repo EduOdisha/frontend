@@ -27,7 +27,7 @@ export default function BasicTab({ formData, handleChange, handleArrayChange, ad
           <div>
             <Label required>Category / Stream</Label>
             <Select name="category" value={formData.category} onChange={handleChange}>
-              {['Engineering', 'Medical', 'Management', 'Arts & Science', 'Law', 'Pharmacy', 'Nursing', 'Polytechnic', 'Other'].map(c => <option key={c}>{c}</option>)}
+              {['Engineering', 'Medical', 'Management', 'Nursing', 'Polytechnic', 'Other'].map(c => <option key={c}>{c}</option>)}
             </Select>
           </div>
           <div className="md:col-span-2">
@@ -53,7 +53,7 @@ export default function BasicTab({ formData, handleChange, handleArrayChange, ad
         </div>
       </SectionCard>
 
-      <SectionCard icon={Star} title="Highlights" subtitle="Key selling points (shown as bullet points)" accent="purple">
+      <SectionCard icon={Star} title="Highlights" subtitle="Key selling points (shown as bullet points)" accent="emerald">
         <div className="space-y-3">
           {formData.highlights.map((h, i) => (
             <div key={i} className="flex items-center gap-2">

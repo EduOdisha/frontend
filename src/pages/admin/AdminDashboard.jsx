@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../../utils/api';
 import {
   Users, School, BookOpen, MessageSquare,
-  TrendingUp, TrendingDown, Clock, ArrowRight,
+  TrendingUp, TrendingDown, ArrowRight,
   Activity, Plus, GraduationCap, FileText, FileEdit, AlertCircle
 } from 'lucide-react';
 
@@ -29,7 +29,7 @@ function StatCard({ name, value, icon: Icon, trend, color }) {
 const STATUS_COLOR = {
   New: 'bg-blue-100 text-blue-700',
   Contacted: 'bg-amber-100 text-amber-700',
-  'In Progress': 'bg-purple-100 text-purple-700',
+  'In Progress': 'bg-emerald-100 text-emerald-700',
   Converted: 'bg-emerald-100 text-emerald-700',
   Closed: 'bg-slate-100 text-slate-600',
 };
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
 
   const stats = [
     { name: 'Total Colleges', value: analytics?.data?.stats?.totalColleges || 0, icon: School, trend: 12, color: 'bg-primary-50 text-primary-600' },
-    { name: 'Total Courses', value: analytics?.data?.stats?.totalCourses || 0, icon: BookOpen, trend: 8, color: 'bg-purple-50 text-purple-600' },
+    { name: 'Total Courses', value: analytics?.data?.stats?.totalCourses || 0, icon: BookOpen, trend: 8, color: 'bg-primary-50 text-primary-600' },
     { name: 'Active Leads', value: analytics?.data?.stats?.totalLeads || 0, icon: MessageSquare, trend: 24, color: 'bg-emerald-50 text-emerald-600' },
     { name: 'Total Users', value: analytics?.data?.stats?.totalUsers || 0, icon: Users, trend: -3, color: 'bg-amber-50 text-amber-600' },
   ];
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
           </Link>
           
           <Link to="/admin/courses?add=true" className="flex flex-col items-center justify-center p-4 rounded-xl border border-slate-200 hover:border-primary-300 hover:bg-slate-50 transition-all text-center group">
-            <div className="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
               <BookOpen size={20} />
             </div>
             <span className="text-xs font-semibold text-slate-700">Add Course</span>

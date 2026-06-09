@@ -56,7 +56,7 @@ export const Switch = ({ checked, onChange }) => (
 export const SectionCard = ({ icon: Icon, title, subtitle, children, accent = 'primary' }) => {
   const colors = {
     primary: 'bg-primary-50 text-primary-600 border-primary-100/50',
-    purple: 'bg-purple-50 text-purple-600 border-purple-100/50',
+    purple: 'bg-emerald-50 text-emerald-600 border-emerald-100/50',
     emerald: 'bg-emerald-50 text-emerald-600 border-emerald-100/50',
     amber: 'bg-amber-50 text-amber-600 border-amber-100/50',
     blue: 'bg-blue-50 text-blue-600 border-blue-100/50',
@@ -132,8 +132,8 @@ export const SalaryBar = ({ label, value, max, color }) => {
   const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
   const gradients = {
     'text-emerald-600': 'from-emerald-400 to-emerald-600',
-    'text-blue-600': 'from-blue-400 to-indigo-600',
-    'text-purple-600': 'from-purple-400 to-purple-600',
+    'text-blue-600': 'from-blue-400 to-emerald-600',
+    'text-purple-600': 'from-emerald-400 to-emerald-600',
   };
   const gradient = gradients[color] || 'from-slate-400 to-slate-600';
   return (

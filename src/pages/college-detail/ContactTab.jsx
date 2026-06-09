@@ -2,6 +2,9 @@ import { MapPin, Globe, Phone, Mail } from 'lucide-react';
 import LeadForm from '../../components/common/LeadForm';
 
 export default function ContactTab({ college }) {
+  const mapSearchQuery = encodeURIComponent(`${college.name}, ${college.location?.city || ''}, ${college.location?.state || 'Odisha'}`);
+  const mapUrl = `https://maps.google.com/maps?q=${mapSearchQuery}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
       <div className="bg-white border border-slate-200 rounded-xl p-6">
@@ -71,6 +74,36 @@ export default function ContactTab({ college }) {
               </div>
             </div>
           )}
+        </div>
+      </div>
+
+      {/* Google Maps Embed Section */}
+      <div className="bg-white border border-slate-200 rounded-xl p-6 md:col-span-2">
+        <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <MapPin className="text-primary-600" size={18} />
+          Campus Location & Directions
+        </h3>
+        <div className="relative rounded-xl overflow-hidden border border-slate-100 shadow-sm h-80 bg-slate-50">
+          <iframe
+            src={mapUrl}
+            className="w-full h-full border-0"
+            allowFullScreen=""
+            loading="lazy"
+            title={`${college.name} Location`}
+          />
+        </div>
+        <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <p className="text-xs text-slate-500 font-medium">
+            Need turn-by-turn navigation? Click the button to open Google Maps directions.
+          </p>
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${mapSearchQuery}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary py-2 px-5 text-xs font-bold rounded-lg shadow-sm whitespace-nowrap self-start sm:self-auto"
+          >
+            Get Directions
+          </a>
         </div>
       </div>
     </div>

@@ -1,29 +1,23 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { Calendar, Clock, ChevronRight, Share2, Globe } from "lucide-react";
 import api from '../../utils/api';
 
 export default function BlogDetailPage() {
   const { slug } = useParams();
-  const [blog, setBlog] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  const fetchBlog = useCallback(async () => {
-    try {
-      setLoading(true);
+  const { data: blog, isLoading: loading } = useQuery({
+    queryKey: ['blog', slug],
+    queryFn: async () => {
       const { data } = await api.get(`/blogs/${slug}`);
-      setBlog(data.data);
-    } catch (error) {
-      console.error('Error fetching blog:', error);
-    } finally {
-      setLoading(false);
+      return data.data;
     }
-  }, [slug]);
+  });
 
   useEffect(() => {
-    fetchBlog();
     window.scrollTo(0, 0);
-  }, [fetchBlog]);
+  }, [slug]);
 
   if (loading) {
     return (

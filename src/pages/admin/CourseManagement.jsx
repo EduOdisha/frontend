@@ -4,9 +4,9 @@ import { useSearchParams } from 'react-router-dom';
 import api from '../../utils/api';
 import {
   Plus, Search, Edit2, Trash2, Eye,
-  CheckCircle, XCircle, AlertCircle,
+  CheckCircle, XCircle,
   GraduationCap, BookOpen, TrendingUp,
-  Star, Filter, X,
+  Star, X,
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import CourseForm from '../../components/admin/CourseForm';
@@ -14,7 +14,7 @@ import CourseForm from '../../components/admin/CourseForm';
 // ─── Badge helpers ──────────────────────────────────────────────────────────
 const LEVEL_COLORS = {
   UG:          'bg-blue-50 text-blue-700 border-blue-200',
-  PG:          'bg-purple-50 text-purple-700 border-purple-200',
+  PG:          'bg-emerald-50 text-emerald-700 border-emerald-200',
   '12th':      'bg-amber-50 text-amber-700 border-amber-200',
   '10th':      'bg-orange-50 text-orange-700 border-orange-200',
   Diploma:     'bg-teal-50 text-teal-700 border-teal-200',
@@ -23,35 +23,29 @@ const LEVEL_COLORS = {
 };
 
 const STREAM_COLORS = {
-  Technology: 'bg-indigo-50 text-indigo-600',
-  Medical:    'bg-emerald-50 text-emerald-600',
-  Commerce:   'bg-amber-50 text-amber-600',
-  Arts:       'bg-pink-50 text-pink-600',
-  Science:    'bg-cyan-50 text-cyan-600',
-  Law:        'bg-violet-50 text-violet-600',
-  Design:     'bg-rose-50 text-rose-600',
-  Vocational: 'bg-orange-50 text-orange-600',
-  Other:      'bg-slate-50 text-slate-500',
+  Engineering:      'bg-emerald-50 text-emerald-600',
+  Medical:          'bg-emerald-50 text-emerald-600',
+  Management:       'bg-amber-50 text-amber-600',
+  Nursing:          'bg-pink-50 text-pink-600',
+  Other:            'bg-slate-50 text-slate-500',
 };
 
 // ─── Main Component ─────────────────────────────────────────────────────────
 const CourseManagement = () => {
+  const [searchParams, setSearchParams]     = useSearchParams();
   const [searchTerm, setSearchTerm]         = useState('');
   const [filterLevel, setFilterLevel]       = useState('');
   const [filterStream, setFilterStream]     = useState('');
-  const [showModal, setShowModal]           = useState(false);
+  const [showModal, setShowModal]           = useState(() => searchParams.get('add') === 'true');
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [searchParams, setSearchParams]     = useSearchParams();
   const queryClient = useQueryClient();
 
   // Auto-open modal if ?add=true
   useEffect(() => {
     if (searchParams.get('add') === 'true') {
-      setSelectedCourse(null);
-      setShowModal(true);
       setSearchParams({}, { replace: true });
     }
-  }, [searchParams]);
+  }, [searchParams, setSearchParams]);
 
   // ── Queries ────────────────────────────────────────────────────────────────
   const { data, isLoading } = useQuery({
@@ -175,7 +169,7 @@ const CourseManagement = () => {
             focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 transition-all appearance-none"
         >
           <option value="">All Streams</option>
-          {['Science', 'Commerce', 'Arts', 'Technology', 'Medical', 'Law', 'Design', 'Vocational', 'Other'].map(s => (
+          {['Engineering', 'Medical', 'Management', 'Nursing', 'Other'].map(s => (
             <option key={s} value={s}>{s}</option>
           ))}
         </select>

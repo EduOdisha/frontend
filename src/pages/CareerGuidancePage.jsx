@@ -1,29 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { GraduationCap, BookOpen, Target, Award, ArrowRight, Briefcase, Microscope, Building2, PenTool } from 'lucide-react';
 import api from '../utils/api';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function CareerGuidancePage() {
   const { t } = useLanguage();
-  const [careerData, setCareerData] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('after10');
 
-  const fetchCareerData = useCallback(async () => {
-    try {
-      setLoading(true);
+  const { data: careerData, isLoading: loading } = useQuery({
+    queryKey: ['careers'],
+    queryFn: async () => {
       const { data } = await api.get('/careers');
-      setCareerData(data.data);
-    } catch (error) {
-      console.error('Error fetching career data:', error);
-    } finally {
-      setLoading(false);
+      return data.data;
     }
-  }, []);
-
-  useEffect(() => {
-    fetchCareerData();
-  }, [fetchCareerData]);
+  });
 
   const getIcon = (title) => {
     const t = title.toLowerCase();

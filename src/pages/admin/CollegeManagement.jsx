@@ -16,18 +16,17 @@ import { toast } from 'react-hot-toast';
 import CollegeForm from '../../components/admin/CollegeForm';
 
 const CollegeManagement = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [selectedCollege, setSelectedCollege] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showModal, setShowModal] = useState(() => searchParams.get('add') === 'true');
+  const [selectedCollege, setSelectedCollege] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
     if (searchParams.get('add') === 'true') {
-      handleAddCollege();
       setSearchParams({}, { replace: true });
     }
-  }, [searchParams]);
+  }, [searchParams, setSearchParams]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-colleges', searchTerm],

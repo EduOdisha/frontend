@@ -56,7 +56,7 @@ export default function FeesSalaryTab({ formData, handleChange }) {
           {[
             { key: 'entry',  label: 'Entry Level', placeholder: '4', color: 'bg-emerald-50 border-emerald-100', textColor: 'text-emerald-700' },
             { key: 'mid',    label: 'Mid Level',   placeholder: '8', color: 'bg-blue-50 border-blue-100',    textColor: 'text-blue-700' },
-            { key: 'senior', label: 'Senior Level', placeholder: '15', color: 'bg-purple-50 border-purple-100', textColor: 'text-purple-700' },
+            { key: 'senior', label: 'Senior Level', placeholder: '15', color: 'bg-emerald-50 border-emerald-100', textColor: 'text-emerald-700' },
           ].map(({ key, label, placeholder, color, textColor }) => (
             <div key={key} className={`rounded-xl p-4 border text-center ${color}`}>
               <p className={`text-[10px] font-bold uppercase tracking-wide mb-2 ${textColor}`}>{label}</p>
@@ -82,7 +82,7 @@ export default function FeesSalaryTab({ formData, handleChange }) {
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide mb-3">Salary Progression</p>
           <SalaryBar label="Entry Level"  value={Number(formData.averageSalary.entry)}  max={maxSalary} color="text-emerald-600" />
           <SalaryBar label="Mid Level"    value={Number(formData.averageSalary.mid)}    max={maxSalary} color="text-blue-600" />
-          <SalaryBar label="Senior Level" value={Number(formData.averageSalary.senior)} max={maxSalary} color="text-purple-600" />
+          <SalaryBar label="Senior Level" value={Number(formData.averageSalary.senior)} max={maxSalary} color="text-emerald-600" />
         </div>
       </SectionCard>
     </div>

@@ -21,7 +21,7 @@ const CourseForm = ({ course, onSubmit, onClose, loading }) => {
     name:            course?.name            || '',
     shortName:       course?.shortName       || '',
     level:           course?.level           || 'UG',
-    stream:          course?.stream          || 'Technology',
+    stream:          course?.stream          || 'Engineering',
     duration:        course?.duration        || '',
     image:           { url: course?.image?.url || '' },
     description:     course?.description     || '',

@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
-  Calendar, Link as LinkIcon, BookOpen, 
+  Calendar, BookOpen, 
   Lightbulb, ChevronRight, Download,
   ExternalLink, Info, CheckCircle2,
-  AlertCircle, Clock, FileText, Bell
+  AlertCircle, Bell
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import api from '../utils/api';
 import LeadForm from '../components/common/LeadForm';
 import { updateUserSaved } from '../store/slices/authSlice';
@@ -31,11 +29,7 @@ export default function ExamDetailPage() {
     typeof id === 'object' ? id._id === exam?._id : id === exam?._id
   );
 
-  const [isReminded, setIsReminded] = useState(isCurrentlyReminded || false);
-
-  useEffect(() => {
-    setIsReminded(isCurrentlyReminded || false);
-  }, [isCurrentlyReminded, exam]);
+  const isReminded = isCurrentlyReminded || false;
 
   const handleReminder = async () => {
     if (!isAuthenticated) {
@@ -44,7 +38,6 @@ export default function ExamDetailPage() {
     }
     try {
       const { data } = await api.post(`/users/exam-reminder/${exam._id}`);
-      setIsReminded(data.reminded);
       dispatch(updateUserSaved({ examReminders: data.examReminders }));
       toast.success(data.reminded ? 'Reminder set successfully' : 'Reminder removed');
     } catch (err) {
@@ -83,7 +76,7 @@ export default function ExamDetailPage() {
             <div className="flex-grow">
               <div className="flex flex-wrap items-center gap-3 mb-3">
                 <span className="badge badge-blue">{exam.type} Exam</span>
-                <span className="badge badge-purple">{exam.level} Level</span>
+                <span className="badge badge-green">{exam.level} Level</span>
                 {exam.isFeatured && <span className="badge badge-orange">Important</span>}
               </div>
               <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-900 dark:text-white mb-2">
@@ -188,7 +181,7 @@ export default function ExamDetailPage() {
             {exam.syllabus?.length > 0 && (
               <section className="card p-8">
                 <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                  <BookOpen className="w-6 h-6 text-purple-500" />
+                  <BookOpen className="w-6 h-6 text-primary-500" />
                   Exam Syllabus & Pattern
                 </h2>
                 <div className="space-y-6">

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import api from '../../utils/api';
-import { Plus, Search, Edit2, Trash2, Eye, CheckCircle, XCircle, AlertCircle, FileText } from 'lucide-react';
+import { Plus, Search, Edit2, Trash2, CheckCircle, XCircle, AlertCircle, FileText } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 function toDateStr(val) {
@@ -14,7 +14,7 @@ function ExamFormModal({ exam, onClose, onSubmit, loading }) {
     name: exam?.name || '',
     shortName: exam?.shortName || exam?.fullName || '',
     type: exam?.type || 'State',
-    level: exam?.level || 'UG',
+    level: exam?.level || 'Undergraduate (UG)',
     conductedBy: exam?.conductedBy || exam?.conductingBody || '',
     description: exam?.description || '',
     eligibility: typeof exam?.eligibility === 'object' ? {
@@ -86,7 +86,7 @@ function ExamFormModal({ exam, onClose, onSubmit, loading }) {
             <div>
               <label className="label-base">Level</label>
               <select className="input-base" value={form.level} onChange={e => setForm(f => ({ ...f, level: e.target.value }))}>
-                {['10th', '12th', 'UG', 'PG', 'Diploma', 'Any'].map(l => <option key={l}>{l}</option>)}
+                {['10th', '12th', 'Undergraduate (UG)', 'Postgraduate (PG)', 'Diploma', 'Any'].map(l => <option key={l}>{l}</option>)}
               </select>
             </div>
             <div>
@@ -192,19 +192,17 @@ function ExamFormModal({ exam, onClose, onSubmit, loading }) {
 }
 
 export default function ExamManagement() {
-  const [search, setSearch] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [selected, setSelected] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState('');
+  const [showModal, setShowModal] = useState(() => searchParams.get('add') === 'true');
+  const [selected, setSelected] = useState(null);
   const qc = useQueryClient();
 
   useEffect(() => {
     if (searchParams.get('add') === 'true') {
-      setSelected(null);
-      setShowModal(true);
       setSearchParams({}, { replace: true });
     }
-  }, [searchParams]);
+  }, [searchParams, setSearchParams]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-exams', search],

@@ -21,8 +21,8 @@ export default function ComparePage() {
     { label: t('compare.params.hostel'),          key: 'hostel',        icon: Building,     getValue: (c) => c.facilities?.hostel ? 'Yes' : 'No' },
     { label: t('compare.params.facilities'),      key: 'facilities',    icon: Building,     getValue: (c) => {
       const active = Object.entries(c.facilities || {})
-        .filter(([_, v]) => v === true)
-        .map(([k, _]) => k);
+        .filter(([, v]) => v === true)
+        .map(([k]) => k);
       return active.slice(0, 3).join(', ') + (active.length > 3 ? '...' : '');
     }},
   ];

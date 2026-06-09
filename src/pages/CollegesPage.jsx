@@ -87,9 +87,7 @@ export default function CollegesPage() {
         <div className="flex gap-7">
           {/* ─── Desktop Sidebar ─── */}
           <aside className="hidden lg:block w-64 shrink-0">
-            <div className="sticky top-24">
-              <FilterSidebar filters={filters} setFilters={setFilters} />
-            </div>
+            <FilterSidebar filters={filters} setFilters={setFilters} />
           </aside>
 
           {/* ─── Main Content ─── */}

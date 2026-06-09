@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/slices/authSlice';
@@ -20,12 +20,9 @@ const collegesMegaMenu = {
     {
       heading: 'By Stream',
       links: [
-        { label: 'Engineering Colleges', href: '/colleges?category=Engineering', icon: '⚙️' },
-        { label: 'Medical Colleges', href: '/colleges?category=Medical', icon: '🏥' },
-        { label: 'Management Colleges', href: '/colleges?category=Management', icon: '📊' },
-        { label: 'Law Colleges', href: '/colleges?category=Law', icon: '⚖️' },
-        { label: 'Pharmacy Colleges', href: '/colleges?category=Pharmacy', icon: '💊' },
-        { label: 'Arts & Science', href: '/colleges?category=Arts+%26+Science', icon: '🎨' },
+        { label: 'Engineering Colleges', href: '/colleges?category=Engineering' },
+        { label: 'Medical Colleges', href: '/colleges?category=Medical' },
+        { label: 'Management Colleges', href: '/colleges?category=Management' },
       ],
     },
     {
@@ -48,6 +45,17 @@ const collegesMegaMenu = {
         { label: 'Autonomous Colleges', href: '/colleges?type=Autonomous' },
       ],
     },
+    {
+      heading: 'Popular Colleges',
+      links: [
+        { label: 'IIT Bhubaneswar', href: '/colleges/iit-bhubaneswar' },
+        { label: 'NIT Rourkela', href: '/colleges/nit-rourkela' },
+        { label: 'KIIT University', href: '/colleges/kiit-university' },
+        { label: 'Ravenshaw University', href: '/colleges/ravenshaw-university' },
+        { label: 'SOA University', href: '/colleges/soa-university' },
+        { label: 'VSSUT Burla', href: '/colleges/vssut-burla' },
+      ],
+    },
   ],
   cta: { label: 'View All Colleges', href: '/colleges' },
 };
@@ -59,16 +67,13 @@ const examsMegaMenu = {
       links: [
         { label: 'OJEE 2025', href: '/exams?search=OJEE' },
         { label: 'JEE Main', href: '/exams?search=JEE+Main' },
-        { label: 'JEE Advanced', href: '/exams?search=JEE+Advanced' },
-        { label: 'BITSAT', href: '/exams?search=BITSAT' },
       ],
     },
     {
       heading: 'Medical',
       links: [
         { label: 'NEET UG', href: '/exams?search=NEET' },
-        { label: 'AIIMS', href: '/exams?search=AIIMS' },
-        { label: 'JIPMER', href: '/exams?search=JIPMER' },
+        { label: 'AIIMS BSc', href: '/exams?search=AIIMS+BSc' },
       ],
     },
     {
@@ -77,7 +82,6 @@ const examsMegaMenu = {
         { label: 'CAT 2025', href: '/exams?search=CAT' },
         { label: 'CUET UG', href: '/exams?search=CUET' },
         { label: 'OPSC Exams', href: '/exams?type=Government+Job' },
-        { label: 'IBPS 2025', href: '/exams?search=IBPS' },
       ],
     },
   ],
@@ -96,6 +100,15 @@ export default function Navbar() {
   const [isLangOpen, setIsLangOpen] = useState(false);
 
   const location = useLocation();
+  const [prevPathname, setPrevPathname] = useState(location.pathname);
+
+  if (location.pathname !== prevPathname) {
+    setPrevPathname(location.pathname);
+    setActiveMega(null);
+    setIsMobileOpen(false);
+    setIsUserOpen(false);
+  }
+
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector(state => state.auth);
   const navRef = useRef(null);
@@ -106,14 +119,8 @@ export default function Navbar() {
     { name: t('navbar.scholarships'), href: '/scholarships' },
     { name: t('navbar.compare'), href: '/compare' },
     { name: t('navbar.blogs'), href: '/blogs' },
+    { name: t('footer.links.aboutUs'), href: '/about' },
   ];
-
-  // Close everything on route change
-  useEffect(() => {
-    setActiveMega(null);
-    setIsMobileOpen(false);
-    setIsUserOpen(false);
-  }, [location.pathname]);
 
   // Close mega menu and user dropdown on outside click
   useOutsideClick(navRef, () => {
@@ -151,7 +158,7 @@ export default function Navbar() {
           }`}
         >
           <div className="container-xl">
-            <div className="flex items-center h-16 gap-4 xl:gap-8">
+            <div className="flex items-center h-16 gap-1 lg:gap-2.5 xl:gap-4">
 
               {/* ─ Logo ─ */}
               <Link to="/" className="flex items-center gap-2.5 shrink-0" aria-label="EduOdisha Home">
@@ -164,14 +171,14 @@ export default function Navbar() {
               </Link>
 
               {/* ─ Desktop Nav ─ */}
-              <div className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 flex-grow justify-center">
+              <div className="hidden lg:flex items-center gap-0.5 flex-grow justify-center">
                 {/* Colleges — Mega */}
                 <div className="relative">
                   <button
                     onMouseEnter={() => setActiveMega('colleges')}
                     onMouseLeave={() => setActiveMega(null)}
                     onClick={() => setActiveMega(activeMega === 'colleges' ? null : 'colleges')}
-                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
+                    className={`flex items-center gap-1 px-1.5 xl:px-2 py-2 rounded-lg text-xs xl:text-[13px] font-semibold whitespace-nowrap transition-all ${
                       isActive('/colleges') || activeMega === 'colleges'
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -185,7 +192,7 @@ export default function Navbar() {
                   </button>
                   {activeMega === 'colleges' && (
                     <div onMouseEnter={() => setActiveMega('colleges')} onMouseLeave={() => setActiveMega(null)}>
-                      <MegaMenuPanel data={collegesMegaMenu} onClose={() => setActiveMega(null)} align="left-0" />
+                      <MegaMenuPanel data={collegesMegaMenu} onClose={() => setActiveMega(null)} align="left-0" headingColor="text-primary-600" />
                     </div>
                   )}
                 </div>
@@ -196,7 +203,7 @@ export default function Navbar() {
                     onMouseEnter={() => setActiveMega('exams')}
                     onMouseLeave={() => setActiveMega(null)}
                     onClick={() => setActiveMega(activeMega === 'exams' ? null : 'exams')}
-                    className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
+                    className={`flex items-center gap-1 px-1.5 xl:px-2 py-2 rounded-lg text-xs xl:text-[13px] font-semibold whitespace-nowrap transition-all ${
                       isActive('/exams') || activeMega === 'exams'
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -210,7 +217,7 @@ export default function Navbar() {
                   </button>
                   {activeMega === 'exams' && (
                     <div onMouseEnter={() => setActiveMega('exams')} onMouseLeave={() => setActiveMega(null)}>
-                      <MegaMenuPanel data={examsMegaMenu} onClose={() => setActiveMega(null)} align="-left-24" />
+                      <MegaMenuPanel data={examsMegaMenu} onClose={() => setActiveMega(null)} align="-left-24" headingColor="text-primary-600" />
                     </div>
                   )}
                 </div>
@@ -220,7 +227,7 @@ export default function Navbar() {
                   <Link
                     key={link.name}
                     to={link.href}
-                    className={`px-3 py-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-all ${
+                    className={`px-1.5 xl:px-2 py-2 rounded-lg text-xs xl:text-[13px] font-semibold whitespace-nowrap transition-all ${
                       isActive(link.href)
                         ? 'text-primary-600 bg-primary-50'
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
@@ -232,7 +239,7 @@ export default function Navbar() {
               </div>
 
               {/* ─ Right Actions ─ */}
-              <div className="flex items-center gap-2 ml-auto">
+              <div className="flex items-center gap-1 xl:gap-1.5 ml-auto shrink-0">
                 {/* Search */}
                 <button
                   onClick={() => setIsSearchOpen(true)}
@@ -246,7 +253,7 @@ export default function Navbar() {
                 {/* Counselling CTA — visible md+ */}
                 <a
                   href="tel:+917205402554"
-                  className="hidden md:flex items-center gap-1.5 btn-cta py-2 px-4 text-xs animate-pulse-subtle"
+                  className="hidden md:flex items-center gap-1 btn-cta py-1.5 px-2 xl:px-3.5 text-[11px] xl:text-xs animate-pulse-subtle whitespace-nowrap"
                 >
                   <Phone size={13} />
                   {t('navbar.freeCounselling')}
@@ -256,7 +263,7 @@ export default function Navbar() {
                 <div className="relative" ref={langRef}>
                   <button
                     onClick={() => setIsLangOpen(!isLangOpen)}
-                    className="flex items-center gap-1.5 p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all font-semibold text-xs uppercase"
+                    className="flex items-center gap-1 p-1 lg:p-1.5 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all font-semibold text-[11px] xl:text-xs uppercase"
                     aria-label="Change Language"
                   >
                     <Languages size={15} />
@@ -325,11 +332,11 @@ export default function Navbar() {
                     )}
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <Link to="/login" className="hidden sm:block text-sm font-semibold text-slate-600 hover:text-slate-900 px-3 py-2 rounded-lg hover:bg-slate-50 transition-all">
+                  <div className="flex items-center gap-1 xl:gap-1.5">
+                    <Link to="/login" className="hidden sm:block text-xs xl:text-[13px] font-semibold text-slate-600 hover:text-slate-900 px-1.5 xl:px-2 py-2 rounded-lg hover:bg-slate-50 transition-all">
                       {t('navbar.login')}
                     </Link>
-                    <Link to="/register" className="btn-primary py-2 px-4 text-xs">
+                    <Link to="/register" className="btn-primary py-1.5 px-2.5 xl:px-3.5 text-[11px] xl:text-xs whitespace-nowrap">
                       {t('navbar.joinFree')}
                     </Link>
                   </div>

@@ -1,13 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import api from '../../utils/api';
-import { Search, Users, Shield, Mail, Phone, Trash2, AlertCircle } from 'lucide-react';
+import { Search, Users, Mail, Phone, Trash2, AlertCircle } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 const ROLE_COLORS = {
   admin: 'bg-red-100 text-red-700',
   user: 'bg-blue-100 text-blue-700',
-  counsellor: 'bg-purple-100 text-purple-700',
+  counsellor: 'bg-emerald-100 text-emerald-700',
 };
 
 export default function UserManagement() {

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   MapPin, Star, Download, Share2, Heart, GitCompare,
   ChevronRight, Calendar, Award, BookOpen,
-  Users, Building, IndianRupee, Briefcase,
+  Building, IndianRupee, Briefcase,
   CheckCircle2, Phone, HelpCircle,
   Image as ImageIcon, MessageSquare, Info
 } from 'lucide-react';
@@ -63,11 +63,7 @@ export default function CollegeDetailPage() {
     typeof id === 'object' ? id._id === college?._id : id === college?._id
   );
 
-  const [isFavorite, setIsFavorite] = useState(isCurrentlySaved || false);
-
-  useEffect(() => {
-    setIsFavorite(isCurrentlySaved || false);
-  }, [isCurrentlySaved, college]);
+  const isFavorite = isCurrentlySaved || false;
 
   const { data: similarColleges } = useQuery({
     queryKey: ['similar-colleges', college?.category],
@@ -97,7 +93,6 @@ export default function CollegeDetailPage() {
     }
     try {
       const { data } = await api.post(`/users/save-college/${college._id}`);
-      setIsFavorite(data.saved);
       dispatch(updateUserSaved({ savedColleges: data.savedColleges }));
       toast.success(data.saved ? 'College saved to wishlist' : 'Removed from saved');
     } catch (err) {
@@ -170,7 +165,7 @@ export default function CollegeDetailPage() {
               {/* Tags */}
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <span className="badge badge-blue">{college.type}</span>
-                <span className="badge badge-purple">{college.category}</span>
+                <span className="badge badge-green">{college.category}</span>
                 {college.naacGrade && college.naacGrade !== 'Not Accredited' && (
                   <span className="badge badge-green">NAAC {college.naacGrade}</span>
                 )}

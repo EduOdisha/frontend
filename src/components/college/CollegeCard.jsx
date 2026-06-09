@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCompare, removeFromCompare } from '../../store/slices/compareSlice';
@@ -8,7 +7,7 @@ import { updateUserSaved } from '../../store/slices/authSlice';
 import { formatLakhs } from '../../utils/format';
 import {
   MapPin, Star, Heart, GitCompare,
-  CheckCircle, IndianRupee, TrendingUp
+  CheckCircle
 } from 'lucide-react';
 
 // Skeleton loader
@@ -40,11 +39,7 @@ export default function CollegeCard({ college, loading }) {
     typeof id === 'object' ? id._id === college?._id : id === college?._id
   );
   
-  const [isBookmarked, setIsBookmarked] = useState(isCurrentlySaved || false);
-
-  useEffect(() => {
-    setIsBookmarked(isCurrentlySaved || false);
-  }, [isCurrentlySaved]);
+  const isBookmarked = isCurrentlySaved || false;
 
   if (loading) return <CollegeCardSkeleton />;
   if (!college) return null;
@@ -73,7 +68,6 @@ export default function CollegeCard({ college, loading }) {
     }
     try {
       const { data } = await api.post(`/users/save-college/${college._id}`);
-      setIsBookmarked(data.saved);
       dispatch(updateUserSaved({ savedColleges: data.savedColleges }));
       toast.success(data.saved ? 'College saved to wishlist' : 'Removed from saved');
     } catch (err) {

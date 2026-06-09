@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Search, Filter, ArrowRight } from 'lucide-react';
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Search } from 'lucide-react';
 import api from '../../utils/api';
 import BlogCard from '../../components/blog/BlogCard';
 
@@ -16,27 +17,17 @@ const CATEGORIES = [
 ];
 
 export default function BlogsPage() {
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const fetchBlogs = useCallback(async () => {
-    try {
-      setLoading(true);
-      const categoryParam = selectedCategory !== 'All' ? `?category=${selectedCategory}` : '';
+  const { data: blogs = [], isLoading: loading } = useQuery({
+    queryKey: ['blogs', selectedCategory],
+    queryFn: async () => {
+      const categoryParam = selectedCategory !== 'All' ? `?category=${encodeURIComponent(selectedCategory)}` : '';
       const { data } = await api.get(`/blogs${categoryParam}`);
-      setBlogs(data.data);
-    } catch (error) {
-      console.error('Error fetching blogs:', error);
-    } finally {
-      setLoading(false);
+      return data.data;
     }
-  }, [selectedCategory]);
-
-  useEffect(() => {
-    fetchBlogs();
-  }, [fetchBlogs]);
+  });
 
   const filteredBlogs = blogs.filter(blog => 
     blog.title.toLowerCase().includes(search.toLowerCase()) ||

@@ -10,9 +10,7 @@ import {
   Calendar,
   Filter,
   MoreHorizontal,
-  CheckCircle2,
   Clock,
-  XCircle,
   ChevronDown
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -44,7 +42,7 @@ const LeadManagement = () => {
     switch (status) {
       case 'new': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400';
       case 'contacted': return 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400';
-      case 'qualified': return 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400';
+      case 'qualified': return 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400';
       case 'converted': return 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400';
       case 'rejected': return 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400';
       default: return 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400';

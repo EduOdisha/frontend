@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, User, Sparkles, Minus, Maximize2 } from 'lucide-react';
+import { MessageSquare, X, Send, Sparkles, Minus, Maximize2 } from 'lucide-react';
 
 const INITIAL_MESSAGES = [
   { role: 'bot', text: "Namaste! I am your EduOdisha Career Assistant. How can I help you find the right college or course in Odisha today?" }

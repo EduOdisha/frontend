@@ -33,9 +33,87 @@ export default function AdminLayout() {
     toast.success('Signed out');
   };
 
-  const isActive = (path) => location.pathname === path;
+  return (
+    <div className="flex min-h-screen bg-slate-50">
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block">
+        <Sidebar
+          sidebarOpen={sidebarOpen}
+          user={user}
+          handleLogout={handleLogout}
+          pathname={location.pathname}
+        />
+      </div>
 
-  const Sidebar = ({ mobile = false }) => (
+      {/* Mobile Sidebar */}
+      {mobileSidebarOpen && (
+        <>
+          <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setMobileSidebarOpen(false)} />
+          <div className="lg:hidden">
+            <Sidebar
+              mobile
+              sidebarOpen={sidebarOpen}
+              setMobileSidebarOpen={setMobileSidebarOpen}
+              user={user}
+              handleLogout={handleLogout}
+              pathname={location.pathname}
+            />
+          </div>
+        </>
+      )}
+
+      {/* Main Area */}
+      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-200 ${sidebarOpen ? 'lg:ml-60' : 'lg:ml-16'}`}>
+        {/* Top Header */}
+        <header className="h-14 bg-white border-b border-slate-200 flex items-center px-5 gap-4 sticky top-0 z-30">
+          {/* Sidebar Toggle (Desktop) */}
+          <button
+            onClick={() => setSidebarOpen(o => !o)}
+            className="hidden lg:flex p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+            aria-label="Toggle sidebar"
+          >
+            <Menu size={18} />
+          </button>
+
+          {/* Mobile Toggle */}
+          <button
+            onClick={() => setMobileSidebarOpen(true)}
+            className="lg:hidden p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
+          >
+            <Menu size={18} />
+          </button>
+
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-1.5 text-sm text-slate-500 font-medium ml-1">
+            <span>Admin</span>
+            <ChevronRight size={13} />
+            <span className="text-slate-800 font-semibold capitalize">
+              {location.pathname.split('/').filter(Boolean).slice(1).join(' / ') || 'Dashboard'}
+            </span>
+          </div>
+
+          <div className="ml-auto flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 text-sm text-slate-500">
+              Welcome, <span className="font-semibold text-slate-800">{user?.name?.split(' ')[0]}</span>
+            </div>
+            <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-sm">
+              {user?.name?.[0]?.toUpperCase() || 'A'}
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 p-5 lg:p-6">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
+
+const Sidebar = ({ mobile = false, sidebarOpen, setMobileSidebarOpen, user, handleLogout, pathname }) => {
+  const isActive = (path) => pathname === path;
+  return (
     <aside className={`
       ${mobile
         ? 'fixed inset-y-0 left-0 z-50 w-64 flex flex-col bg-slate-900'
@@ -122,69 +200,4 @@ export default function AdminLayout() {
       </div>
     </aside>
   );
-
-  return (
-    <div className="flex min-h-screen bg-slate-50">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <Sidebar />
-      </div>
-
-      {/* Mobile Sidebar */}
-      {mobileSidebarOpen && (
-        <>
-          <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={() => setMobileSidebarOpen(false)} />
-          <div className="lg:hidden">
-            <Sidebar mobile />
-          </div>
-        </>
-      )}
-
-      {/* Main Area */}
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-200 ${sidebarOpen ? 'lg:ml-60' : 'lg:ml-16'}`}>
-        {/* Top Header */}
-        <header className="h-14 bg-white border-b border-slate-200 flex items-center px-5 gap-4 sticky top-0 z-30">
-          {/* Sidebar Toggle (Desktop) */}
-          <button
-            onClick={() => setSidebarOpen(o => !o)}
-            className="hidden lg:flex p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
-            aria-label="Toggle sidebar"
-          >
-            <Menu size={18} />
-          </button>
-
-          {/* Mobile Toggle */}
-          <button
-            onClick={() => setMobileSidebarOpen(true)}
-            className="lg:hidden p-1.5 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors"
-          >
-            <Menu size={18} />
-          </button>
-
-          {/* Breadcrumb */}
-          <div className="flex items-center gap-1.5 text-sm text-slate-500 font-medium ml-1">
-            <span>Admin</span>
-            <ChevronRight size={13} />
-            <span className="text-slate-800 font-semibold capitalize">
-              {location.pathname.split('/').filter(Boolean).slice(1).join(' / ') || 'Dashboard'}
-            </span>
-          </div>
-
-          <div className="ml-auto flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2 text-sm text-slate-500">
-              Welcome, <span className="font-semibold text-slate-800">{user?.name?.split(' ')[0]}</span>
-            </div>
-            <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white font-bold text-sm">
-              {user?.name?.[0]?.toUpperCase() || 'A'}
-            </div>
-          </div>
-        </header>
-
-        {/* Page Content */}
-        <main className="flex-1 p-5 lg:p-6">
-          <Outlet />
-        </main>
-      </div>
-    </div>
-  );
-}
+};

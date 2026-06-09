@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
-  Clock, Award, BookOpen, GraduationCap, 
-  IndianRupee, Briefcase, ChevronRight,
-  CheckCircle2, Star, TrendingUp, Users,
-  Building2, ArrowRight, Heart
+  Clock, BookOpen, GraduationCap, 
+  IndianRupee, ChevronRight,
+  CheckCircle2, Star, TrendingUp,
+  ArrowRight, Heart
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import api from '../utils/api';
 import LeadForm from '../components/common/LeadForm';
 import { updateUserSaved } from '../store/slices/authSlice';
@@ -32,11 +30,7 @@ export default function CourseDetailPage() {
     typeof id === 'object' ? id._id === course?._id : id === course?._id
   );
   
-  const [isBookmarked, setIsBookmarked] = useState(isCurrentlySaved || false);
-
-  useEffect(() => {
-    setIsBookmarked(isCurrentlySaved || false);
-  }, [isCurrentlySaved, course]);
+  const isBookmarked = isCurrentlySaved || false;
 
   const handleBookmark = async () => {
     if (!isAuthenticated) {
@@ -45,7 +39,6 @@ export default function CourseDetailPage() {
     }
     try {
       const { data } = await api.post(`/users/save-course/${course._id}`);
-      setIsBookmarked(data.saved);
       dispatch(updateUserSaved({ savedCourses: data.savedCourses }));
       toast.success(data.saved ? 'Course saved to wishlist' : 'Removed from saved');
     } catch (err) {
@@ -83,7 +76,7 @@ export default function CourseDetailPage() {
               <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
                 <div className="flex flex-wrap items-center gap-3">
                   <span className="badge badge-blue">{course.level}</span>
-                  <span className="badge badge-purple">{course.stream}</span>
+                  <span className="badge badge-green">{course.stream}</span>
                   {course.isFeatured && <span className="badge badge-orange">Trending</span>}
                 </div>
                 <button

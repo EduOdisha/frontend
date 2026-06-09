@@ -13,7 +13,7 @@ export default function CurriculumTab({ formData, handleChange, arrChange, arrAd
         <p className="text-[10px] text-slate-400 mt-1 text-right">{formData.description.length}/500 chars</p>
       </SectionCard>
 
-      <SectionCard icon={FileText} title="Detailed Overview" subtitle="Full curriculum/course content shown on detail page" accent="purple">
+      <SectionCard icon={FileText} title="Detailed Overview" subtitle="Full curriculum/course content shown on detail page" accent="emerald">
         <Label>Course Overview</Label>
         <Textarea
           name="overview" value={formData.overview} onChange={handleChange}

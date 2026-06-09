@@ -1,21 +1,56 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
-import { Search, ChevronRight, BookOpen } from 'lucide-react';
+import { Search, ChevronRight, BookOpen, ChevronDown } from 'lucide-react';
 import api from '../utils/api.js';
 import CourseCard from '../components/course/CourseCard.jsx';
 import { useLanguage } from '../context/LanguageContext';
 
-const levels = ['Undergraduate', 'Postgraduate', 'Diploma', 'Doctorate', 'Certificate'];
-const streams = ['Engineering', 'Medical', 'Management', 'Arts & Science', 'Law', 'Pharmacy', 'Nursing'];
+const levelHierarchy = [
+  {
+    id: 'Undergraduate (UG)',
+    label: 'Undergraduate (UG)',
+    subcategories: [
+      { id: 'B.Tech', label: 'B.Tech', type: 'shortName' },
+      { id: 'BCA', label: 'BCA', type: 'shortName' },
+      { id: 'BBA', label: 'BBA', type: 'shortName' },
+      { id: 'B.Sc', label: 'B.Sc', type: 'shortName' },
+      { id: 'Diploma', label: 'Diploma', type: 'level' }
+    ]
+  },
+  {
+    id: 'Postgraduate (PG)',
+    label: 'Postgraduate (PG)',
+    subcategories: [
+      { id: 'MBA', label: 'MBA', type: 'shortName' },
+      { id: 'MCA', label: 'MCA', type: 'shortName' },
+      { id: 'M.Tech', label: 'M.Tech', type: 'shortName' }
+    ]
+  }
+];
+
+const streams = ['Engineering', 'Medical', 'Management', 'Nursing'];
 
 export default function CoursesPage() {
   const { t } = useLanguage();
   const [filters, setFilters] = useState({
     level: [],
     stream: [],
+    shortName: [],
     search: '',
   });
+
+  const [expandedLevels, setExpandedLevels] = useState({
+    'Undergraduate (UG)': false,
+    'Postgraduate (PG)': false,
+  });
+
+  const toggleExpand = (levelId) => {
+    setExpandedLevels(prev => ({
+      ...prev,
+      [levelId]: !prev[levelId]
+    }));
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: ['courses', filters],
@@ -24,6 +59,7 @@ export default function CoursesPage() {
       if (filters.search) params.append('search', filters.search);
       if (filters.level.length) params.append('level', filters.level.join(','));
       if (filters.stream.length) params.append('stream', filters.stream.join(','));
+      if (filters.shortName.length) params.append('shortName', filters.shortName.join(','));
       
       return api.get(`/courses?${params.toString()}`).then(r => r.data);
     },
@@ -36,6 +72,21 @@ export default function CoursesPage() {
         ? current.filter(v => v !== value) 
         : [...current, value];
       return { ...prev, [type]: next };
+    });
+  };
+
+  const hasActiveFilters = 
+    filters.level.length > 0 || 
+    filters.stream.length > 0 || 
+    filters.shortName.length > 0 || 
+    filters.search !== '';
+
+  const handleClearAll = () => {
+    setFilters({
+      level: [],
+      stream: [],
+      shortName: [],
+      search: '',
     });
   };
 
@@ -64,29 +115,73 @@ export default function CoursesPage() {
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Sidebar Filters */}
           <aside className="space-y-8">
-            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
-              <h3 className="font-bold text-slate-800 dark:text-white mb-6">{t('courses.filters')}</h3>
+            <div className="bg-primary-600 text-white rounded-2xl overflow-hidden shadow-sm border border-primary-700">
+              <div className="bg-primary-600 px-6 py-4 border-b border-white/10 flex items-center justify-between text-white">
+                <h3 className="font-bold text-white text-sm">{t('courses.filters')}</h3>
+                {hasActiveFilters && (
+                  <button 
+                    onClick={handleClearAll}
+                    className="text-xs font-bold text-white/95 hover:text-white transition-colors cursor-pointer"
+                  >
+                    Clear All
+                  </button>
+                )}
+              </div>
               
-              <div className="space-y-6">
+              <div className="p-6 space-y-6">
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('courses.level')}</h4>
-                  <div className="space-y-2">
-                    {levels.map(level => (
-                      <label key={level} className="flex items-center gap-3 cursor-pointer group">
-                        <input 
-                          type="checkbox" 
-                          checked={filters.level.includes(level)}
-                          onChange={() => handleFilterChange('level', level)}
-                          className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
-                        />
-                        <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{level}</span>
-                      </label>
-                    ))}
+                  <h4 className="text-xs font-bold text-white/70 uppercase tracking-widest mb-4">{t('courses.level')}</h4>
+                  <div className="space-y-3">
+                    {levelHierarchy.map(item => {
+                      const hasSubs = !!item.subcategories;
+                      const isExpanded = expandedLevels[item.id];
+                      
+                      return (
+                        <div key={item.id} className="space-y-1">
+                          {hasSubs ? (
+                            <button
+                              type="button"
+                              onClick={() => toggleExpand(item.id)}
+                              className="flex items-center justify-between w-full text-left py-1.5 text-sm font-semibold text-white/90 hover:text-white transition-colors group cursor-pointer"
+                            >
+                              <span>{item.label}</span>
+                              <ChevronDown className={`w-4 h-4 text-white/60 group-hover:text-white transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
+                            </button>
+                          ) : (
+                            <label className="flex items-center gap-3 cursor-pointer group w-full py-1">
+                              <input 
+                                type="checkbox" 
+                                checked={filters.level.includes(item.id)}
+                                onChange={() => handleFilterChange('level', item.id)}
+                                className="w-4 h-4 rounded border-white/30 bg-white/10 text-primary-600 focus:ring-2 focus:ring-white/40 cursor-pointer"
+                              />
+                              <span className="text-sm text-white/80 group-hover:text-white transition-colors">{item.label}</span>
+                            </label>
+                          )}
+                          
+                          {hasSubs && isExpanded && (
+                            <div className="pl-7 space-y-2 py-1 border-l border-white/10 ml-2 animate-slide-down">
+                              {item.subcategories.map(sub => (
+                                <label key={sub.id} className="flex items-center gap-3 cursor-pointer group">
+                                  <input 
+                                    type="checkbox" 
+                                    checked={sub.type === 'level' ? filters.level.includes(sub.id) : filters.shortName.includes(sub.id)}
+                                    onChange={() => handleFilterChange(sub.type, sub.id)}
+                                    className="w-3.5 h-3.5 rounded border-white/30 bg-white/10 text-primary-600 focus:ring-2 focus:ring-white/40 cursor-pointer"
+                                  />
+                                  <span className="text-xs text-white/70 group-hover:text-white transition-colors">{sub.label}</span>
+                                </label>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">{t('courses.stream')}</h4>
+                  <h4 className="text-xs font-bold text-white/70 uppercase tracking-widest mb-4">{t('courses.stream')}</h4>
                   <div className="space-y-2">
                     {streams.map(stream => (
                       <label key={stream} className="flex items-center gap-3 cursor-pointer group">
@@ -94,9 +189,9 @@ export default function CoursesPage() {
                           type="checkbox" 
                           checked={filters.stream.includes(stream)}
                           onChange={() => handleFilterChange('stream', stream)}
-                          className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                          className="w-4 h-4 rounded border-white/30 bg-white/10 text-primary-600 focus:ring-2 focus:ring-white/40 cursor-pointer"
                         />
-                        <span className="text-sm text-slate-600 dark:text-slate-400 group-hover:text-slate-900 dark:group-hover:text-white transition-colors">{stream}</span>
+                        <span className="text-sm text-white/80 group-hover:text-white transition-colors">{stream}</span>
                       </label>
                     ))}
                   </div>

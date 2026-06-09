@@ -38,7 +38,7 @@ export default function BasicTab({ formData, handleChange, setFormData }) {
           <div>
             <Label required>Stream</Label>
             <Select name="stream" value={formData.stream} onChange={handleChange}>
-              {['Science', 'Commerce', 'Arts', 'Technology', 'Medical', 'Law', 'Design', 'Vocational', 'Other'].map(s =>
+              {['Engineering', 'Medical', 'Management', 'Nursing', 'Other'].map(s =>
                 <option key={s} value={s}>{s}</option>
               )}
             </Select>

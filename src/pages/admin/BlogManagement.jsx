@@ -103,19 +103,17 @@ function BlogFormModal({ blog, onClose, onSubmit, loading }) {
 }
 
 export default function BlogManagement() {
-  const [search, setSearch] = useState('');
-  const [showModal, setShowModal] = useState(false);
-  const [selected, setSelected] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState('');
+  const [showModal, setShowModal] = useState(() => searchParams.get('add') === 'true');
+  const [selected, setSelected] = useState(null);
   const qc = useQueryClient();
 
   useEffect(() => {
     if (searchParams.get('add') === 'true') {
-      setSelected(null);
-      setShowModal(true);
       setSearchParams({}, { replace: true });
     }
-  }, [searchParams]);
+  }, [searchParams, setSearchParams]);
 
   const { data, isLoading } = useQuery({
     queryKey: ['admin-blogs', search],
@@ -171,11 +169,11 @@ export default function BlogManagement() {
                 <tr key={blog._id}>
                   <td>
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-slate-100">
+                      <div className="w-8 h-8 bg-primary-50 rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-slate-100">
                         {blog.image?.url ? (
                           <img src={blog.image.url} alt={blog.title} className="w-full h-full object-cover" />
                         ) : (
-                          <FileEdit size={14} className="text-purple-600" />
+                          <FileEdit size={14} className="text-primary-600" />
                         )}
                       </div>
                       <div>
@@ -184,7 +182,7 @@ export default function BlogManagement() {
                       </div>
                     </div>
                   </td>
-                  <td><span className="badge badge-purple">{blog.category}</span></td>
+                  <td><span className="badge badge-green">{blog.category}</span></td>
                   <td className="text-sm text-slate-500">{new Date(blog.createdAt).toLocaleDateString('en-IN')}</td>
                   <td>
                     {blog.isPublished

@@ -3,7 +3,7 @@ import { translations } from '../locales/translations.js';
 
 const LanguageContext = createContext(null);
 
-export const SUPPORTED_LANGUAGES = [
+const SUPPORTED_LANGUAGES = [
   { code: 'en', label: 'English', shortLabel: 'EN' },
   { code: 'hi', label: 'हिंदी (Hindi)', shortLabel: 'HI' },
   { code: 'or', label: 'ଓଡ଼ିଆ (Odia)', shortLabel: 'OR' },
@@ -63,6 +63,7 @@ export function LanguageProvider({ children }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (!context) {

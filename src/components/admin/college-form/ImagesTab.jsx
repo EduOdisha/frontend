@@ -44,7 +44,7 @@ export default function ImagesTab({ formData, handleChange, handleArrayChange, a
         </SectionCard>
       </div>
 
-      <SectionCard icon={ImageIcon} title="Campus Gallery" subtitle="Add multiple campus images" accent="purple">
+      <SectionCard icon={ImageIcon} title="Campus Gallery" subtitle="Add multiple campus images" accent="emerald">
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {formData.gallery?.map((img, i) => (

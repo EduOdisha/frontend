@@ -1,6 +1,6 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import { checkAuth } from './store/slices/authSlice';
 
@@ -8,6 +8,7 @@ import { checkAuth } from './store/slices/authSlice';
 import Navbar from './components/common/Navbar';
 import Footer from './components/common/Footer';
 import CompareWidget from './components/common/CompareWidget';
+import WhatsAppButton from './components/common/WhatsAppButton';
 
 // Lazy Loaded Pages
 const HomePage = lazy(() => import('./pages/HomePage'));
@@ -23,6 +24,7 @@ const ScholarshipDetailPage = lazy(() => import('./pages/ScholarshipDetailPage')
 const BlogsPage = lazy(() => import('./pages/blog/BlogsPage'));
 const BlogDetailPage = lazy(() => import('./pages/blog/BlogDetailPage'));
 const CareerGuidancePage = lazy(() => import('./pages/CareerGuidancePage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
 
 // Auth & Dashboard
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'));
@@ -118,6 +120,7 @@ export default function App() {
             <Route path="/blogs" element={<BlogsPage />} />
             <Route path="/blogs/:slug" element={<BlogDetailPage />} />
             <Route path="/career-guidance" element={<CareerGuidancePage />} />
+            <Route path="/about" element={<AboutPage />} />
             
             {/* Auth Routes */}
             <Route path="/login" element={<LoginPage />} />
@@ -148,6 +151,7 @@ export default function App() {
           <Footer />
         </>
       )}
+      {!isAdminPath && <WhatsAppButton />}
     </div>
   );
 }

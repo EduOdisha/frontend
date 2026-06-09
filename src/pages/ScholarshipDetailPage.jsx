@@ -1,10 +1,9 @@
-import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { 
-  Calendar, Award, CheckCircle2, 
+  Award, CheckCircle2, 
   ChevronRight, FileText, IndianRupee,
-  Briefcase, GraduationCap, Clock, 
+  Briefcase, Clock, 
   ExternalLink, Info, AlertCircle,
   MapPin, TrendingUp
 } from 'lucide-react';
@@ -45,7 +44,7 @@ export default function ScholarshipDetailPage() {
             <div className="flex-grow">
               <div className="flex flex-wrap items-center gap-3 mb-3">
                 <span className="badge badge-blue">{scholarship.type}</span>
-                <span className="badge badge-purple">{scholarship.category}</span>
+                <span className="badge badge-green">{scholarship.category}</span>
                 {scholarship.isFeatured && <span className="badge badge-orange">Popular</span>}
               </div>
               <h1 className="text-3xl lg:text-4xl font-display font-bold text-slate-900 dark:text-white mb-2">
@@ -152,7 +151,7 @@ export default function ScholarshipDetailPage() {
             {scholarship.documents?.length > 0 && (
               <section className="card p-8">
                 <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                  <FileText className="w-6 h-6 text-purple-500" />
+                  <FileText className="w-6 h-6 text-primary-500" />
                   Documents Required
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

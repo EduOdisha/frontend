@@ -1,4 +1,3 @@
-import React from 'react';
 import { Phone, Mail, MapPin } from 'lucide-react';
 
 /**
@@ -24,11 +23,11 @@ export default function TopBar({ isScrolled }) {
             <span>+91 7205402554</span>
           </a>
           <a
-            href="mailto:hello@eduodisha.in"
+            href="mailto:eduodisha121@gmail.com"
             className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors text-[11px] font-medium"
           >
             <Mail size={12} className="text-slate-500" />
-            <span>hello@eduodisha.in</span>
+            <span>eduodisha121@gmail.com</span>
           </a>
           <div className="flex items-center gap-1.5 text-slate-400 text-[11px] font-medium">
             <MapPin size={12} className="text-red-500/90" />

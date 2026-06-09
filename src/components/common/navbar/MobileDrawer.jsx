@@ -1,8 +1,7 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import {
   Search, School, BookOpen, FileText, Award,
-  GitCompare, BookMarked, LayoutDashboard, User, LogOut, Phone
+  GitCompare, BookMarked, LayoutDashboard, User, LogOut, Phone, Info
 } from 'lucide-react';
 import { useLanguage } from '../../../context/LanguageContext';
 
@@ -82,6 +81,13 @@ export default function MobileDrawer({
             onClick={onClose}
           >
             <BookMarked size={18} /> {t('navbar.blogs')}
+          </Link>
+          <Link
+            to="/about"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 font-semibold transition-all"
+            onClick={onClose}
+          >
+            <Info size={18} /> {t('footer.links.aboutUs')}
           </Link>
 
           <div className="pt-4 border-t border-slate-100 mt-4 space-y-2">
