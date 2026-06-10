@@ -80,8 +80,8 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://localhost:5002',
-        // target: 'https://backend-eduodisha.onrender.com',
+        // target: 'http://localhost:5002',
+        target: 'https://backend-eduodisha.onrender.com',
         changeOrigin: true,
       },
     },
