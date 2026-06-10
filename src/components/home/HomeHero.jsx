@@ -96,11 +96,10 @@ export default function HomeHero({
                   key={type}
                   type="button"
                   onClick={() => setSearchType(type)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all shrink-0 ${
-                    searchType === type
-                      ? 'bg-primary-600 text-white'
-                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
-                  }`}
+                  className={`px-3 py-1.5 rounded-md text-xs font-semibold capitalize transition-all shrink-0 ${searchType === type
+                    ? 'bg-primary-600 text-white'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
                 >
                   {t(`navbar.${type}`)}
                 </button>
@@ -172,9 +171,8 @@ export default function HomeHero({
                 <button
                   key={idx}
                   onClick={() => setActiveSlide(idx)}
-                  className={`w-1.5 h-1.5 rounded-full transition-all ${
-                    activeSlide === idx ? 'bg-primary-600 w-3' : 'bg-slate-300 dark:bg-slate-700'
-                  }`}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${activeSlide === idx ? 'bg-primary-600 w-3' : 'bg-slate-300 dark:bg-slate-700'
+                    }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
