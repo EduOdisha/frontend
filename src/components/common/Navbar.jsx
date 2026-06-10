@@ -2,9 +2,10 @@ import { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logoutUser } from '../../store/slices/authSlice';
+import { toggleTheme } from '../../store/slices/uiSlice';
 import {
   ChevronDown, GraduationCap, Phone, Languages, User,
-  LogOut, LayoutDashboard, Search, Menu, X
+  LogOut, LayoutDashboard, Search, Menu, X, Sun, Moon
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useLanguage } from '../../context/LanguageContext';
@@ -111,6 +112,7 @@ export default function Navbar() {
 
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector(state => state.auth);
+  const theme = useSelector(state => state.ui.theme);
   const navRef = useRef(null);
   const langRef = useRef(null);
 
@@ -153,8 +155,8 @@ export default function Navbar() {
         <nav
           className={`transition-all duration-200 ${
             isScrolled
-              ? 'bg-white border-b border-slate-200 shadow-sm'
-              : 'bg-white border-b border-slate-100'
+              ? 'bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-sm'
+              : 'bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800'
           }`}
         >
           <div className="container-xl">
@@ -165,7 +167,7 @@ export default function Navbar() {
                 <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
                   <GraduationCap size={18} className="text-white" />
                 </div>
-                <span className="font-display font-extrabold text-lg text-slate-900 tracking-tight">
+                <span className="font-display font-extrabold text-lg text-slate-900 dark:text-white tracking-tight">
                   Edu<span className="text-primary-600">Odisha</span>
                 </span>
               </Link>
@@ -180,8 +182,8 @@ export default function Navbar() {
                     onClick={() => setActiveMega(activeMega === 'colleges' ? null : 'colleges')}
                     className={`flex items-center gap-1 px-1.5 xl:px-2 py-2 rounded-lg text-xs xl:text-[13px] font-semibold whitespace-nowrap transition-all ${
                       isActive('/colleges') || activeMega === 'colleges'
-                        ? 'text-primary-600 bg-primary-50'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                        ? 'text-primary-600 bg-primary-50 dark:bg-primary-950/40'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     {t('navbar.colleges')}
@@ -205,8 +207,8 @@ export default function Navbar() {
                     onClick={() => setActiveMega(activeMega === 'exams' ? null : 'exams')}
                     className={`flex items-center gap-1 px-1.5 xl:px-2 py-2 rounded-lg text-xs xl:text-[13px] font-semibold whitespace-nowrap transition-all ${
                       isActive('/exams') || activeMega === 'exams'
-                        ? 'text-primary-600 bg-primary-50'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                        ? 'text-primary-600 bg-primary-50 dark:bg-primary-950/40'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     {t('navbar.exams')}
@@ -229,8 +231,8 @@ export default function Navbar() {
                     to={link.href}
                     className={`px-1.5 xl:px-2 py-2 rounded-lg text-xs xl:text-[13px] font-semibold whitespace-nowrap transition-all ${
                       isActive(link.href)
-                        ? 'text-primary-600 bg-primary-50'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                        ? 'text-primary-600 bg-primary-50 dark:bg-primary-950/40'
+                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     {link.name}
@@ -244,10 +246,19 @@ export default function Navbar() {
                 <button
                   onClick={() => setIsSearchOpen(true)}
                   id="navbar-search-btn"
-                  className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all"
+                  className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800 transition-all"
                   aria-label="Open search"
                 >
                   <Search size={18} />
+                </button>
+
+                {/* Theme Toggle */}
+                <button
+                  onClick={() => dispatch(toggleTheme())}
+                  className="p-2 rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-100 transition-all dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800"
+                  aria-label="Toggle theme"
+                >
+                  {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
 
                 {/* Counselling CTA — visible md+ */}
@@ -345,7 +356,7 @@ export default function Navbar() {
                 {/* Mobile Hamburger */}
                 <button
                   onClick={() => setIsMobileOpen(!isMobileOpen)}
-                  className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-all"
+                  className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-all"
                   aria-label="Toggle mobile menu"
                 >
                   {isMobileOpen ? <X size={20} /> : <Menu size={20} />}

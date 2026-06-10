@@ -32,9 +32,9 @@ function AnimatedCounter({ value }) {
 
 export default function HomeStats({ stats }) {
   return (
-    <div className="bg-white border-y border-slate-100">
+    <div className="bg-white dark:bg-slate-900 border-y border-slate-100 dark:border-slate-800 transition-colors duration-300">
       <div className="container-xl py-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-slate-100">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-slate-100 dark:divide-slate-800">
           {stats.map((s, i) => (
             <div key={i} className="px-8 first:pl-0 last:pr-0 text-center py-2">
               <div className="stat-value">

@@ -106,7 +106,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
       <Helmet>
         <title>EduOdisha — Odisha's Most Trusted Education Platform</title>
         <meta
@@ -134,7 +134,7 @@ export default function HomePage() {
       <HomeStats stats={stats} />
 
       {/* Featured Colleges */}
-      <Section className="page-section bg-white">
+      <Section className="page-section bg-white dark:bg-slate-950">
         <div className="container-xl">
           <SectionHeader
             eyebrow={t('home.featuredColleges.eyebrow')}
@@ -154,7 +154,7 @@ export default function HomePage() {
       <HomeStreams streams={streams} t={t} />
 
       {/* Popular Exams */}
-      <Section className="page-section bg-white">
+      <Section className="page-section bg-white dark:bg-slate-950">
         <div className="container-xl">
           <SectionHeader
             eyebrow={t('home.exams.eyebrow')}
@@ -164,12 +164,12 @@ export default function HomePage() {
           />
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
-              { name: 'OJEE 2025', type: 'State',      date: 'May 2025', color: 'bg-primary-50 border-primary-200 text-primary-700' },
-              { name: 'JEE Main',  type: 'National',   date: 'Jan & Apr', color: 'bg-amber-50 border-amber-200 text-amber-700' },
-              { name: 'NEET UG',   type: 'Medical',    date: 'May 2025', color: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
-              { name: 'CUET UG',   type: 'Central',    date: 'May 2025', color: 'bg-emerald-50 border-emerald-200 text-emerald-700' },
-              { name: 'CAT 2025',  type: 'Management', date: 'Nov 2025', color: 'bg-rose-50 border-rose-200 text-rose-700' },
-              { name: 'OPSC OAS',  type: 'Govt Job',   date: 'Dec 2025', color: 'bg-slate-50 border-slate-200 text-slate-700' },
+              { name: 'OJEE 2025', type: 'State',      date: 'May 2025', color: 'bg-primary-50 border-primary-200 text-primary-700 dark:bg-primary-950/40 dark:border-primary-900/40 dark:text-primary-400' },
+              { name: 'JEE Main',  type: 'National',   date: 'Jan & Apr', color: 'bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/40 dark:border-amber-900/40 dark:text-amber-400' },
+              { name: 'NEET UG',   type: 'Medical',    date: 'May 2025', color: 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-900/40 dark:text-emerald-400' },
+              { name: 'CUET UG',   type: 'Central',    date: 'May 2025', color: 'bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/40 dark:border-emerald-900/40 dark:text-emerald-400' },
+              { name: 'CAT 2025',  type: 'Management', date: 'Nov 2025', color: 'bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-950/40 dark:border-rose-900/40 dark:text-rose-450' },
+              { name: 'OPSC OAS',  type: 'Govt Job',   date: 'Dec 2025', color: 'bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300' },
             ].map((exam) => (
               <Link
                 key={exam.name}
@@ -194,7 +194,7 @@ export default function HomePage() {
       </Section>
 
       {/* Scholarships */}
-      <Section className="py-16 bg-slate-50">
+      <Section className="py-16 bg-slate-50 dark:bg-slate-900">
         <div className="container-xl">
           <SectionHeader
             eyebrow={t('home.scholarships.eyebrow')}
@@ -208,7 +208,7 @@ export default function HomePage() {
                 <Link
                   key={s._id}
                   to={`/scholarships/${s.slug}`}
-                  className="bg-white border border-slate-200 hover:border-primary-200 rounded-xl p-6 transition-all duration-200 hover:shadow-md group"
+                  className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 rounded-xl p-6 transition-all duration-200 hover:shadow-md group"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <span className="badge badge-green">{s.category}</span>
@@ -218,12 +218,12 @@ export default function HomePage() {
                       </span>
                     )}
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors">
                     {s.name}
                   </h3>
-                  <p className="text-xs text-slate-500 font-medium mb-3">{s.provider}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-3">{s.provider}</p>
                   {s.lastDate && (
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500">
                       <Calendar size={12} />
                       {t('home.scholarships.deadline')} {new Date(s.lastDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </div>
@@ -237,15 +237,15 @@ export default function HomePage() {
                 <Link
                   key={i}
                   to="/scholarships"
-                  className="bg-white border border-slate-200 hover:border-primary-200 rounded-xl p-6 transition-all duration-200 hover:shadow-md group"
+                  className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 hover:border-primary-200 dark:hover:border-primary-800 rounded-xl p-6 transition-all duration-200 hover:shadow-md group"
                 >
                   <div className="flex items-start justify-between mb-3">
                     <span className="badge badge-green">{['Government', 'SC/ST', 'Merit'][i]}</span>
                     <span className="text-sm font-bold text-emerald-600">{['₹10K', '₹25K', '₹15K'][i]}</span>
                   </div>
-                  <h3 className="text-base font-bold text-slate-900 mb-2 group-hover:text-primary-600 transition-colors">{name}</h3>
-                  <p className="text-xs text-slate-500 mb-3">Government of Odisha</p>
-                  <span className="text-xs font-semibold text-primary-600 group-hover:underline">{t('home.scholarships.viewDetails')}</span>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary-600 transition-colors">{name}</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Government of Odisha</p>
+                  <span className="text-xs font-semibold text-primary-600 dark:text-primary-400 group-hover:underline">{t('home.scholarships.viewDetails')}</span>
                 </Link>
               ))}
             </div>
@@ -276,7 +276,7 @@ export default function HomePage() {
 
       {/* Blog Articles */}
       {blogs && blogs.length > 0 && (
-        <Section className="page-section bg-white">
+        <Section className="page-section bg-white dark:bg-slate-950">
           <div className="container-xl">
             <SectionHeader
               eyebrow={t('home.blogs.eyebrow')}
@@ -289,7 +289,7 @@ export default function HomePage() {
                 <Link
                   key={blog._id}
                   to={`/blogs/${blog.slug}`}
-                  className="group bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-xl overflow-hidden transition-all duration-200"
+                  className="group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md rounded-xl overflow-hidden transition-all duration-200"
                 >
                   {blog.image?.url && (
                     <div className="h-44 overflow-hidden">
@@ -303,15 +303,15 @@ export default function HomePage() {
                   )}
                   <div className="p-5">
                     <span className="badge badge-blue mb-3">{blog.category}</span>
-                    <h3 className="text-sm font-bold text-slate-900 line-clamp-2 mb-2 group-hover:text-primary-600 transition-colors">
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                       {blog.title}
                     </h3>
                     {blog.excerpt && (
-                      <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-3">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mb-3">
                         {blog.excerpt}
                       </p>
                     )}
-                    <p className="text-[11px] text-slate-400 font-medium">
+                    <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
                       {new Date(blog.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                     </p>
                   </div>

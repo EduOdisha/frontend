@@ -98,23 +98,23 @@ export default function ExamsPage() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen py-10">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen py-10 transition-colors duration-300">
       <Helmet>
         <title>Upcoming Entrance Exams 2024 - Dates, Syllabus & Pattern | EduOdisha</title>
       </Helmet>
 
       <div className="container-xl">
-        <div className="flex items-center gap-2 text-xs font-medium text-slate-400 mb-8">
+        <div className="flex items-center gap-2 text-xs font-medium text-slate-400 dark:text-slate-500 mb-8">
           <span>{t('common.home')}</span>
           <ChevronRight className="w-3 h-3" />
-          <span className="text-primary-600">{t('exams.breadcrumb')}</span>
+          <span className="text-primary-600 dark:text-primary-400">{t('exams.breadcrumb')}</span>
         </div>
 
         <div className="mb-10">
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
             {t('exams.pageTitle')}
           </h1>
-          <p className="text-slate-500 max-w-3xl">
+          <p className="text-slate-500 dark:text-slate-400 max-w-3xl">
             {t('exams.subtitle')}
           </p>
         </div>
@@ -209,13 +209,13 @@ export default function ExamsPage() {
 
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <div className="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-slate-100 flex items-center gap-4">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 mb-6 shadow-sm border border-slate-100 dark:border-slate-800 flex items-center gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input 
                   type="text"
                   placeholder={t('exams.searchPlaceholder')}
-                  className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-100 bg-slate-50 focus:ring-2 focus:ring-primary-100 outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-2 text-sm rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary-100/10 dark:text-white outline-none transition-all"
                   value={filters.search}
                   onChange={(e) => {
                     setPage(1);
@@ -245,8 +245,8 @@ export default function ExamsPage() {
                       disabled={page === 1}
                       className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all cursor-pointer select-none
                         ${page === 1
-                          ? 'border-slate-200 text-slate-300 pointer-events-none'
-                          : 'border-slate-200 text-slate-600 hover:border-primary-500 hover:text-primary-600 bg-white hover:bg-primary-50/20'
+                          ? 'border-slate-200 dark:border-slate-800 text-slate-300 dark:text-slate-700 pointer-events-none'
+                          : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 bg-white dark:bg-slate-900 hover:bg-primary-50/20 dark:hover:bg-primary-950/20'
                         }`}
                     >
                       <ChevronLeft size={16} />
@@ -259,7 +259,7 @@ export default function ExamsPage() {
                         className={`w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer select-none
                           ${page === p
                             ? 'bg-primary-600 text-white shadow-md shadow-primary-600/10'
-                            : 'border border-slate-200 text-slate-600 hover:border-primary-500 hover:text-primary-600 bg-white hover:bg-primary-50/20'
+                            : 'border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 bg-white dark:bg-slate-900 hover:bg-primary-50/20 dark:hover:bg-primary-950/20'
                           }`}
                       >
                         {p}
@@ -271,8 +271,8 @@ export default function ExamsPage() {
                       disabled={page === data.pages}
                       className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all cursor-pointer select-none
                         ${page === data.pages
-                          ? 'border-slate-200 text-slate-300 pointer-events-none'
-                          : 'border-slate-200 text-slate-600 hover:border-primary-500 hover:text-primary-600 bg-white hover:bg-primary-50/20'
+                          ? 'border-slate-200 dark:border-slate-800 text-slate-300 dark:text-slate-700 pointer-events-none'
+                          : 'border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-primary-500 hover:text-primary-600 dark:hover:text-primary-400 bg-white dark:bg-slate-900 hover:bg-primary-50/20 dark:hover:bg-primary-950/20'
                         }`}
                     >
                       <ChevronRight size={16} />
@@ -281,12 +281,12 @@ export default function ExamsPage() {
                 )}
               </>
             ) : (
-              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-100">
-                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400">
+              <div className="text-center py-20 bg-white dark:bg-slate-900 rounded-3xl border-2 border-dashed border-slate-100 dark:border-slate-800">
+                <div className="w-20 h-20 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-400 dark:text-slate-500">
                   <Award className="w-10 h-10" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-800 mb-2">{t('exams.noExams')}</h3>
-                <p className="text-slate-500">{t('exams.noExamsSubtitle')}</p>
+                <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">{t('exams.noExams')}</h3>
+                <p className="text-slate-500 dark:text-slate-400">{t('exams.noExamsSubtitle')}</p>
               </div>
             )}
           </div>

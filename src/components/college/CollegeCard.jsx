@@ -13,7 +13,7 @@ import {
 // Skeleton loader
 function CollegeCardSkeleton() {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
       <div className="skeleton h-44 w-full" />
       <div className="p-4 space-y-3">
         <div className="skeleton h-3.5 w-20 rounded-full" />
@@ -82,9 +82,9 @@ export default function CollegeCard({ college, loading }) {
   const nirfRank = college.nirfRanking;
 
   return (
-    <div className="group bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col">
+    <div className="group bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col">
       {/* Image */}
-      <div className="relative h-44 overflow-hidden bg-slate-100 shrink-0">
+      <div className="relative h-44 overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0">
         <img
           src={
             college.banner?.url ||
@@ -116,7 +116,7 @@ export default function CollegeCard({ college, loading }) {
         <button
           onClick={handleBookmark}
           aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark college'}
-          className="absolute top-3 right-3 w-8 h-8 bg-white/95 hover:bg-white rounded-lg flex items-center justify-center shadow-sm transition-all"
+          className="absolute top-3 right-3 w-8 h-8 bg-white/95 dark:bg-slate-900/95 hover:bg-white rounded-lg flex items-center justify-center shadow-sm transition-all"
         >
           <Heart
             size={15}
@@ -126,11 +126,11 @@ export default function CollegeCard({ college, loading }) {
 
         {/* Rating */}
         {rating > 0 && (
-          <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-white/95 px-2 py-1 rounded-md shadow-sm">
+          <div className="absolute bottom-3 left-3 flex items-center gap-1 bg-white/95 dark:bg-slate-900/95 px-2 py-1 rounded-md shadow-sm">
             <Star size={12} className="text-amber-400 fill-amber-400" />
-            <span className="text-xs font-bold text-slate-800">{rating.toFixed(1)}</span>
+            <span className="text-xs font-bold text-slate-800 dark:text-white">{rating.toFixed(1)}</span>
             {ratingCount > 0 && (
-              <span className="text-[10px] text-slate-500 font-medium">({ratingCount})</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">({ratingCount})</span>
             )}
           </div>
         )}
@@ -141,7 +141,7 @@ export default function CollegeCard({ college, loading }) {
         {/* Type + Location row */}
         <div className="flex items-center justify-between mb-2">
           <span className="badge badge-blue text-[10px]">{college.category}</span>
-          <div className="flex items-center gap-1 text-slate-400 text-[10px] font-medium">
+          <div className="flex items-center gap-1 text-slate-400 dark:text-slate-500 text-[10px] font-medium">
             <MapPin size={10} />
             <span>{college.location?.city}</span>
           </div>
@@ -152,35 +152,35 @@ export default function CollegeCard({ college, loading }) {
           to={`/colleges/${college.slug}`}
           className="block mb-1"
         >
-          <h3 className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug hover:text-primary-600 transition-colors min-h-[2.5rem]">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug hover:text-primary-600 dark:hover:text-primary-400 transition-colors min-h-[2.5rem]">
             {college.name}
           </h3>
         </Link>
 
         {/* Affiliation */}
         {college.affiliation && (
-          <p className="text-[11px] text-slate-400 font-medium mb-3 line-clamp-1">
+          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium mb-3 line-clamp-1">
             {college.affiliation}
           </p>
         )}
 
         {/* Stats Row */}
-        <div className="grid grid-cols-3 gap-0 border border-slate-100 rounded-lg overflow-hidden mb-3 mt-auto">
+        <div className="grid grid-cols-3 gap-0 border border-slate-100 dark:border-slate-800 rounded-lg overflow-hidden mb-3 mt-auto">
           <div className="text-center py-2.5 px-2">
-            <p className="text-[10px] font-semibold text-slate-400 uppercase mb-0.5">Fees</p>
-            <p className="text-xs font-bold text-slate-800">
+            <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase mb-0.5">Fees</p>
+            <p className="text-xs font-bold text-slate-800 dark:text-white">
               {avgFees ? `₹${(avgFees / 1000).toFixed(0)}K` : 'N/A'}
             </p>
           </div>
-          <div className="text-center py-2.5 px-2 border-x border-slate-100">
-            <p className="text-[10px] font-semibold text-slate-400 uppercase mb-0.5">Pkg</p>
-            <p className="text-xs font-bold text-emerald-600">
+          <div className="text-center py-2.5 px-2 border-x border-slate-100 dark:border-slate-800">
+            <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase mb-0.5">Pkg</p>
+            <p className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
               {formatLakhs(highestLPA)}
             </p>
           </div>
           <div className="text-center py-2.5 px-2">
-            <p className="text-[10px] font-semibold text-slate-400 uppercase mb-0.5">NIRF</p>
-            <p className="text-xs font-bold text-slate-800">
+            <p className="text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase mb-0.5">NIRF</p>
+            <p className="text-xs font-bold text-slate-800 dark:text-white">
               {nirfRank ? `#${nirfRank}` : '—'}
             </p>
           </div>
@@ -199,8 +199,8 @@ export default function CollegeCard({ college, loading }) {
             title={isCompared ? 'Remove from compare' : 'Add to compare'}
             className={`p-2 rounded-lg border transition-all ${
               isCompared
-                ? 'bg-primary-50 border-primary-200 text-primary-600'
-                : 'border-slate-200 text-slate-400 hover:border-slate-300 hover:text-slate-600'
+                ? 'bg-primary-50 dark:bg-primary-950/40 border-primary-200 dark:border-primary-900/40 text-primary-600 dark:text-primary-400'
+                : 'border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-500 hover:border-slate-300 dark:hover:border-slate-700 hover:text-slate-600 dark:hover:text-slate-300'
             }`}
           >
             <GitCompare size={15} />

@@ -28,6 +28,7 @@
   --color-accent-700: #c2410c;
   --color-accent-800: #9a3412;
   --color-accent-900: #7c2d12;
+  --color-accent-950: #431407;
 
   /* ─── Emerald: Positive/Placement stats ─── */
   --color-emerald-50: #ecfdf5;
@@ -36,6 +37,9 @@
   --color-emerald-500: #10b981;
   --color-emerald-600: #059669;
   --color-emerald-700: #047857;
+  --color-emerald-800: #065f46;
+  --color-emerald-900: #064e3b;
+  --color-emerald-950: #022c22;
 
   /* ─── Surfaces ─── */
   --color-surface: #f8f9fc;
@@ -72,7 +76,7 @@
   }
 
   body {
-    @apply font-sans text-slate-700 bg-white;
+    @apply font-sans text-slate-700 bg-white dark:bg-slate-950 dark:text-slate-200;
     font-size: 15px;
     line-height: 1.6;
   }
@@ -83,7 +87,7 @@
   h4,
   h5,
   h6 {
-    @apply font-display text-slate-900 tracking-tight;
+    @apply font-display text-slate-900 tracking-tight dark:text-white;
     line-height: 1.2;
   }
 
@@ -140,11 +144,11 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-slate-300 rounded-full;
+    @apply bg-slate-300 rounded-full dark:bg-slate-700;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-slate-400;
+    @apply bg-slate-400 dark:bg-slate-600;
   }
 }
 
@@ -176,34 +180,34 @@
 
   /* Secondary: white bordered */
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 font-semibold text-sm border border-slate-200 hover:border-slate-300 px-5 py-2.5 rounded-lg transition-all duration-200 shadow-sm cursor-pointer select-none;
+    @apply inline-flex items-center justify-center gap-2 bg-white hover:bg-slate-50 active:bg-slate-100 text-slate-700 font-semibold text-sm border border-slate-200 hover:border-slate-300 px-5 py-2.5 rounded-lg transition-all duration-200 shadow-sm cursor-pointer select-none dark:bg-slate-900 dark:hover:bg-slate-800 dark:text-slate-200 dark:border-slate-800 dark:hover:border-slate-700;
   }
 
   /* Ghost: text only */
   .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer select-none;
+    @apply inline-flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold text-sm px-4 py-2 rounded-lg transition-all duration-200 cursor-pointer select-none dark:text-slate-400 dark:hover:text-white dark:hover:bg-slate-800;
   }
 
   /* ─── Cards ─── */
   .card {
-    @apply bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden;
+    @apply bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden dark:bg-slate-900 dark:border-slate-800;
   }
 
   .card-flat {
-    @apply bg-white rounded-xl border border-slate-200 overflow-hidden;
+    @apply bg-white rounded-xl border border-slate-200 overflow-hidden dark:bg-slate-900 dark:border-slate-800;
   }
 
   .card-inset {
-    @apply bg-slate-50 rounded-xl border border-slate-200 overflow-hidden;
+    @apply bg-slate-50 rounded-xl border border-slate-200 overflow-hidden dark:bg-slate-900/50 dark:border-slate-800;
   }
 
   /* ─── Form Controls ─── */
   .input-base {
-    @apply w-full px-3.5 py-2.5 text-sm text-slate-800 bg-white border border-slate-200 rounded-lg placeholder:text-slate-400 focus:border-primary-500 focus:ring-3 focus:ring-primary-500/10 transition-all duration-150;
+    @apply w-full px-3.5 py-2.5 text-sm text-slate-800 bg-white border border-slate-200 rounded-lg placeholder:text-slate-400 focus:border-primary-500 focus:ring-3 focus:ring-primary-500/10 transition-all duration-150 dark:text-slate-200 dark:bg-slate-900 dark:border-slate-800 dark:focus:border-primary-500 dark:focus:ring-primary-500/20;
   }
 
   .label-base {
-    @apply block text-sm font-medium text-slate-700 mb-1.5;
+    @apply block text-sm font-medium text-slate-700 mb-1.5 dark:text-slate-300;
   }
 
   /* ─── Badges / Chips ─── */
@@ -212,27 +216,27 @@
   }
 
   .badge-blue {
-    @apply bg-primary-50 text-primary-700 border border-primary-100;
+    @apply bg-primary-50 text-primary-700 border border-primary-100 dark:bg-primary-950/40 dark:text-primary-400 dark:border-primary-900/40;
   }
 
   .badge-green {
-    @apply bg-emerald-50 text-emerald-700 border border-emerald-100;
+    @apply bg-emerald-50 text-emerald-700 border border-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/40;
   }
 
   .badge-orange {
-    @apply bg-accent-50 text-accent-700 border border-accent-100;
+    @apply bg-accent-50 text-accent-700 border border-accent-100 dark:bg-accent-950/40 dark:text-accent-400 dark:border-accent-900/40;
   }
 
   .badge-gray {
-    @apply bg-slate-100 text-slate-600 border border-slate-200;
+    @apply bg-slate-100 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700;
   }
 
   .badge-purple {
-    @apply bg-purple-50 text-purple-700 border border-purple-100;
+    @apply bg-purple-50 text-purple-700 border border-purple-100 dark:bg-purple-950/40 dark:text-purple-400 dark:border-purple-900/40;
   }
 
   .badge-amber {
-    @apply bg-amber-50 text-amber-700 border border-amber-100;
+    @apply bg-amber-50 text-amber-700 border border-amber-100 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/40;
   }
 
   /* ─── Tables ─── */
@@ -241,19 +245,19 @@
   }
 
   .table-base thead tr {
-    @apply bg-slate-50 border-b border-slate-200;
+    @apply bg-slate-50 border-b border-slate-200 dark:bg-slate-900/50 dark:border-slate-800;
   }
 
   .table-base th {
-    @apply py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wide;
+    @apply py-3 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wide dark:text-slate-400;
   }
 
   .table-base td {
-    @apply py-3.5 px-4 text-slate-700 border-b border-slate-100;
+    @apply py-3.5 px-4 text-slate-700 border-b border-slate-100 dark:text-slate-300 dark:border-slate-800;
   }
 
   .table-base tbody tr {
-    @apply hover:bg-slate-50 transition-colors;
+    @apply hover:bg-slate-50 transition-colors dark:hover:bg-slate-900/30;
   }
 
   /* ─── Section Header ─── */
@@ -262,25 +266,25 @@
   }
 
   .section-title {
-    @apply text-3xl md:text-4xl font-display font-extrabold text-slate-900 mb-4 tracking-tight;
+    @apply text-3xl md:text-4xl font-display font-extrabold text-slate-900 mb-4 tracking-tight dark:text-white;
   }
 
   .section-subtitle {
-    @apply text-slate-500 text-base md:text-lg leading-relaxed max-w-2xl;
+    @apply text-slate-500 text-base md:text-lg leading-relaxed max-w-2xl dark:text-slate-400;
   }
 
   /* ─── Stat Block ─── */
   .stat-value {
-    @apply text-3xl font-extrabold font-display text-slate-900;
+    @apply text-3xl font-extrabold font-display text-slate-900 dark:text-white;
   }
 
   .stat-label {
-    @apply text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1;
+    @apply text-xs font-semibold text-slate-500 uppercase tracking-wider mt-1 dark:text-slate-400;
   }
 
   /* ─── Divider ─── */
   .divider {
-    @apply border-t border-slate-100;
+    @apply border-t border-slate-100 dark:border-slate-800;
   }
 }
 
@@ -423,4 +427,8 @@
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
 }

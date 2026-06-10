@@ -55,27 +55,27 @@ export default function CollegesPage() {
   const activeFilterCount = [...filters.city, ...filters.type, ...filters.category, filters.minFees, filters.maxFees].filter(Boolean).length;
 
   return (
-    <div className="bg-slate-50 min-h-screen">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen transition-colors duration-300">
       <Helmet>
         <title>Best Colleges in Odisha 2025 — Rankings, Fees & Admissions | EduOdisha</title>
         <meta name="description" content="Compare 500+ verified colleges in Odisha by fees, placements, stream, and city. Find the best engineering, medical, management college with free counselling." />
       </Helmet>
 
       {/* ─── Page Header ─────────────────────────────── */}
-      <div className="bg-white border-b border-slate-200">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <div className="container-xl py-6">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-1.5 text-xs font-medium text-slate-400 mb-4">
-            <Link to="/" className="hover:text-primary-600 transition-colors">{t('common.home')}</Link>
+            <Link to="/" className="hover:text-primary-600 dark:hover:text-primary-400 transition-colors">{t('common.home')}</Link>
             <ChevronRight size={12} />
-            <span className="text-slate-600 font-semibold">{t('colleges.breadcrumb')}</span>
+            <span className="text-slate-600 dark:text-slate-300 font-semibold">{t('colleges.breadcrumb')}</span>
           </nav>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-display font-bold text-slate-900 mb-1">
+              <h1 className="text-2xl font-display font-bold text-slate-900 dark:text-white mb-1">
                 {isLoading ? t('colleges.searching') : t('colleges.collegesFound').replace('{count}', total.toLocaleString())}
               </h1>
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-slate-500 dark:text-slate-400">
                 {t('colleges.subtitle')}
               </p>
             </div>
@@ -93,7 +93,7 @@ export default function CollegesPage() {
           {/* ─── Main Content ─── */}
           <div className="flex-1 min-w-0">
             {/* Toolbar */}
-            <div className="bg-white border border-slate-200 rounded-xl p-3 mb-6 flex flex-wrap items-center gap-3">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 mb-6 flex flex-wrap items-center gap-3">
               {/* Search Input */}
               <div className="relative flex-1 min-w-[200px]">
                 <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
@@ -102,7 +102,7 @@ export default function CollegesPage() {
                   placeholder="Search college name or city…"
                   value={filters.search}
                   onChange={e => setFilters(p => ({ ...p, search: e.target.value }))}
-                  className="w-full pl-9 pr-4 py-2.5 text-sm rounded-lg border border-slate-200 focus:border-primary-400 focus:ring-2 focus:ring-primary-500/10 bg-white outline-none transition-all"
+                  className="w-full pl-9 pr-4 py-2.5 text-sm rounded-lg border border-slate-200 dark:border-slate-700 focus:border-primary-400 focus:ring-2 focus:ring-primary-500/10 bg-white dark:bg-slate-800 text-slate-800 dark:text-white outline-none transition-all"
                 />
                 {filters.search && (
                   <button onClick={() => setFilters(p => ({ ...p, search: '' }))} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
@@ -116,7 +116,7 @@ export default function CollegesPage() {
                 <select
                   value={sort}
                   onChange={e => setSort(e.target.value)}
-                  className="appearance-none pl-8 pr-8 py-2.5 text-sm font-medium text-slate-600 border border-slate-200 rounded-lg bg-white focus:border-primary-400 outline-none cursor-pointer"
+                  className="appearance-none pl-8 pr-8 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-350 border border-slate-200 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-800 focus:border-primary-400 outline-none cursor-pointer"
                 >
                   {SORT_OPTIONS.map(o => (
                     <option key={o.value} value={o.value}>{o.label}</option>
@@ -126,17 +126,17 @@ export default function CollegesPage() {
               </div>
 
               {/* View Toggle */}
-              <div className="flex items-center bg-slate-100 p-1 rounded-lg gap-0.5">
+              <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-lg gap-0.5">
                 <button
                   onClick={() => setView('grid')}
-                  className={`p-1.5 rounded-md transition-all ${view === 'grid' ? 'bg-white shadow-sm text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`p-1.5 rounded-md transition-all ${view === 'grid' ? 'bg-white dark:bg-slate-900 shadow-sm text-primary-600 dark:text-primary-400' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}
                   aria-label="Grid view"
                 >
                   <Grid size={15} />
                 </button>
                 <button
                   onClick={() => setView('list')}
-                  className={`p-1.5 rounded-md transition-all ${view === 'list' ? 'bg-white shadow-sm text-primary-600' : 'text-slate-400 hover:text-slate-600'}`}
+                  className={`p-1.5 rounded-md transition-all ${view === 'list' ? 'bg-white dark:bg-slate-900 shadow-sm text-primary-600 dark:text-primary-400' : 'text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300'}`}
                   aria-label="List view"
                 >
                   <ListIcon size={15} />
@@ -161,8 +161,8 @@ export default function CollegesPage() {
             {/* Results Summary */}
             {!isLoading && (
               <div className="flex items-center justify-between mb-4">
-                <p className="text-sm text-slate-500 font-medium">
-                  Showing <span className="font-bold text-slate-800">{colleges.length}</span> of <span className="font-bold text-slate-800">{total}</span> colleges
+                <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+                  Showing <span className="font-bold text-slate-800 dark:text-white">{colleges.length}</span> of <span className="font-bold text-slate-800 dark:text-white">{total}</span> colleges
                 </p>
               </div>
             )}
@@ -181,12 +181,12 @@ export default function CollegesPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-white border border-slate-200 rounded-xl">
-                <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Search size={24} className="text-slate-300" />
+              <div className="text-center py-20 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
+                <div className="w-16 h-16 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search size={24} className="text-slate-300 dark:text-slate-600" />
                 </div>
-                <h3 className="text-lg font-bold text-slate-800 mb-2">{t('colleges.noColleges')}</h3>
-                <p className="text-sm text-slate-500 mb-5">{t('colleges.noCollegesSubtitle')}</p>
+                <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-2">{t('colleges.noColleges')}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">{t('colleges.noCollegesSubtitle')}</p>
                 <button
                   onClick={() => setFilters({ city: [], type: [], category: [], minFees: '', maxFees: '', search: '' })}
                   className="btn-primary py-2 px-5"
@@ -203,7 +203,7 @@ export default function CollegesPage() {
       {showMobileFilters && (
         <div className="fixed inset-0 z-[60] lg:hidden">
           <div className="absolute inset-0 bg-slate-900/40" onClick={() => setShowMobileFilters(false)} />
-          <div className="absolute right-0 top-0 bottom-0 w-80 bg-white shadow-2xl overflow-y-auto">
+          <div className="absolute right-0 top-0 bottom-0 w-80 bg-white dark:bg-slate-900 shadow-2xl overflow-y-auto">
             <FilterSidebar filters={filters} setFilters={setFilters} onClose={() => setShowMobileFilters(false)} />
           </div>
         </div>
@@ -215,8 +215,8 @@ export default function CollegesPage() {
 // ─── List View Row ────────────────────────────────────────
 function CollegeListRow({ college }) {
   return (
-    <div className="bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md rounded-xl p-4 flex gap-4 transition-all duration-200 group">
-      <div className="w-20 h-20 rounded-lg bg-slate-100 overflow-hidden shrink-0">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md rounded-xl p-4 flex gap-4 transition-all duration-200 group">
+      <div className="w-20 h-20 rounded-lg bg-slate-100 dark:bg-slate-800 overflow-hidden shrink-0">
         <img
           src={college.banner?.url || 'https://images.unsplash.com/photo-1562774053-701939374585?w=200&q=80'}
           alt={college.name}
@@ -227,22 +227,22 @@ function CollegeListRow({ college }) {
       <div className="flex-1 min-w-0">
         <div className="flex items-start justify-between gap-2 mb-1">
           <Link to={`/colleges/${college.slug}`}>
-            <h3 className="text-sm font-bold text-slate-900 group-hover:text-primary-600 transition-colors line-clamp-1">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors line-clamp-1">
               {college.name}
             </h3>
           </Link>
           <span className="badge badge-blue shrink-0">{college.type}</span>
         </div>
-        <p className="text-xs text-slate-500 mb-2">{college.location?.city}, Odisha · {college.affiliation}</p>
+        <p className="text-xs text-slate-500 dark:text-slate-450 mb-2">{college.location?.city}, Odisha · {college.affiliation}</p>
         <div className="flex flex-wrap items-center gap-4 text-xs">
-          <span className="text-slate-600 font-medium">
-            Fees: <strong className="text-slate-800">₹{college.fees?.min?.toLocaleString() || 'N/A'}</strong>
+          <span className="text-slate-600 dark:text-slate-400 font-medium">
+            Fees: <strong className="text-slate-800 dark:text-white">₹{college.fees?.min?.toLocaleString() || 'N/A'}</strong>
           </span>
-          <span className="text-emerald-600 font-medium">
+          <span className="text-emerald-600 dark:text-emerald-400 font-medium">
             Pkg: <strong>{formatLPA(college.placements?.highestPackage)}</strong>
           </span>
           {college.nirfRanking && (
-            <span className="text-slate-600 font-medium">NIRF: <strong>#{college.nirfRanking}</strong></span>
+            <span className="text-slate-600 dark:text-slate-400 font-medium">NIRF: <strong>#{college.nirfRanking}</strong></span>
           )}
         </div>
       </div>

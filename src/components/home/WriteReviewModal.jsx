@@ -52,17 +52,17 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
         initial={{ opacity: 0, scale: 0.95, y: 12 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 12 }}
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
+        className="relative bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100">
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-slate-100 dark:border-slate-800">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Share Your Experience</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Help other students by reviewing EduOdisha</p>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">Share Your Experience</h2>
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">Help other students by reviewing EduOdisha</p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors"
+            className="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-white transition-colors"
           >
             <X size={16} />
           </button>
@@ -71,7 +71,7 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-5">
           {/* Star Rating */}
           <div>
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 block">
               Overall Rating <span className="text-red-500">*</span>
             </label>
             <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
                 onChange={s => setForm(f => ({ ...f, rating: s }))}
                 size={28}
               />
-              <span className="text-sm font-bold text-slate-500 ml-1">
+              <span className="text-sm font-bold text-slate-500 dark:text-slate-400 ml-1">
                 {['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'][form.rating]}
               </span>
             </div>
@@ -88,7 +88,7 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
 
           {/* Used for */}
           <div>
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 block">
               I used EduOdisha for
             </label>
             <div className="flex flex-wrap gap-2">
@@ -100,7 +100,7 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
                   className={`text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all ${
                     form.usedFor === opt
                       ? 'bg-primary-600 text-white border-primary-600'
-                      : 'bg-white text-slate-600 border-slate-200 hover:border-primary-300'
+                      : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary-300 dark:hover:border-primary-500'
                   }`}
                 >
                   {opt}
@@ -111,7 +111,7 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
 
           {/* Title */}
           <div>
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 block">
               Review Title <span className="text-red-500">*</span>
             </label>
             <input
@@ -120,13 +120,13 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
               onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
               placeholder="e.g. Excellent counselling session!"
               maxLength={200}
-              className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400"
+              className="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 bg-white dark:bg-slate-800 text-slate-800 dark:text-white"
             />
           </div>
 
           {/* Review text */}
           <div>
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 block">
               Your Review <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -135,15 +135,15 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
               placeholder="Tell us about your experience with EduOdisha — the counsellors, platform features, scholarships, etc."
               maxLength={2000}
               rows={4}
-              className="w-full px-4 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 resize-none"
+              className="w-full px-4 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 resize-none bg-white dark:bg-slate-800 text-slate-800 dark:text-white"
             />
-            <p className="text-[10px] text-slate-400 mt-1 text-right">{form.review.length}/2000</p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 text-right">{form.review.length}/2000</p>
           </div>
 
           {/* Role + Location */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 block">
                 Your Role
               </label>
               <input
@@ -152,11 +152,11 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
                 onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
                 placeholder="e.g. B.Tech Aspirant"
                 maxLength={100}
-                className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400"
+                className="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 bg-white dark:bg-slate-800 text-slate-800 dark:text-white"
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 block">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider mb-2 block">
                 Location
               </label>
               <input
@@ -165,7 +165,7 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
                 onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
                 placeholder="e.g. Bhubaneswar, Odisha"
                 maxLength={100}
-                className="w-full px-3 py-2.5 text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400"
+                className="w-full px-3 py-2.5 text-sm border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-400 bg-white dark:bg-slate-800 text-slate-800 dark:text-white"
               />
             </div>
           </div>
@@ -183,7 +183,7 @@ export default function WriteReviewModal({ onClose, onSuccess }) {
             )}
           </button>
 
-          <p className="text-[10px] text-slate-400 text-center">
+          <p className="text-[10px] text-slate-400 dark:text-slate-500 text-center">
             Reviews are moderated and appear after approval.
           </p>
         </form>

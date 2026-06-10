@@ -8,6 +8,12 @@ import { store } from './store';
 import { LanguageProvider } from './context/LanguageContext';
 import App from './App';
 import './index.css';
+import { registerSW } from 'virtual:pwa-register';
+
+// Register PWA service worker to enable offline support and auto-updates
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  registerSW({ immediate: true });
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {

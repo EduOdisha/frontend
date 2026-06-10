@@ -29,7 +29,7 @@ export default function CompareWidget() {
             </div>
           </div>
 
-          <div className="flex-grow flex items-center gap-3 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+          <div className="w-full flex-grow flex items-center justify-center md:justify-start gap-3 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
             {colleges.map((college) => (
               <div 
                 key={college._id} 

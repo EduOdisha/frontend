@@ -1,6 +1,6 @@
 import { useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import { checkAuth } from './store/slices/authSlice';
 
@@ -58,6 +58,16 @@ function PageLoading() {
 export default function App() {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
+  const theme = useSelector((state) => state.ui.theme);
+
+  // Sync theme with HTML document class
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   const isAdminPath = pathname.startsWith('/admin');
   const isAuthPath = pathname.startsWith('/login') || pathname.startsWith('/register');
@@ -101,7 +111,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans">
+    <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-200 flex flex-col font-sans transition-colors duration-300">
       <Toaster position="top-right" />
       {!isAdminPath && !isAuthPath && <Navbar />}
       

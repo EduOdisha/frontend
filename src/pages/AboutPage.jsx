@@ -1,6 +1,5 @@
-import { Users, Sparkles, PhoneCall, ChevronRight, MapPin, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Users, Sparkles, PhoneCall, ChevronRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import aboutHeroImg from '../assets/about_hero.png';
 import { ABOUT_CONTENT } from '../locales/aboutTranslations.js';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -21,87 +20,43 @@ export default function AboutPage() {
         </div>
 
         <div className="container-xl relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="max-w-3xl mx-auto text-center flex flex-col items-center space-y-6">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-500/10 text-primary-400 text-xs font-bold uppercase tracking-wider border border-primary-500/20">
+              <Sparkles size={13} className="text-primary-400 animate-pulse" />
+              {content.hero.eyebrow}
+            </div>
             
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-6 text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-500/10 text-primary-400 text-xs font-bold uppercase tracking-wider border border-primary-500/20">
-                <Sparkles size={13} className="text-primary-400 animate-pulse" />
-                {content.hero.eyebrow}
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extrabold text-white tracking-tight leading-[1.1]">
-                {content.hero.title} <br className="hidden md:inline"/>
-                <span className="bg-gradient-to-r from-primary-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
-                  {content.hero.titleAccent}
-                </span>
-              </h1>
-              
-              <p className="text-slate-300 text-base md:text-lg leading-relaxed max-w-2xl font-light">
-                {content.hero.subtitle}
-              </p>
-              
-              <div className="flex flex-wrap gap-4 pt-2">
-                <Link 
-                  to="/colleges" 
-                  className="px-6 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 active:bg-primary-700 text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-primary-500/20 hover:scale-[1.02] flex items-center gap-2"
-                >
-                  Get Started
-                  <ChevronRight size={16} />
-                </Link>
-                <a 
-                  href="#mission" 
-                  className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 hover:border-white/20 font-semibold text-sm transition-all duration-300 backdrop-blur-sm"
-                >
-                  Our Mission
-                </a>
-              </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-extrabold text-white tracking-tight leading-[1.1]">
+              {content.hero.title} <br className="hidden md:inline"/>
+              <span className="bg-gradient-to-r from-primary-400 via-teal-300 to-emerald-400 bg-clip-text text-transparent">
+                {content.hero.titleAccent}
+              </span>
+            </h1>
+            
+            <p className="text-slate-300 text-base md:text-lg leading-relaxed max-w-2xl font-light">
+              {content.hero.subtitle}
+            </p>
+            
+            <div className="flex flex-wrap gap-4 pt-2 justify-center">
+              <Link 
+                to="/colleges" 
+                className="px-6 py-3 rounded-xl bg-primary-600 hover:bg-primary-500 active:bg-primary-700 text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-primary-500/20 hover:scale-[1.02] flex items-center gap-2"
+              >
+                Get Started
+                <ChevronRight size={16} />
+              </Link>
+              <a 
+                href="#mission" 
+                className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10 hover:border-white/20 font-semibold text-sm transition-all duration-300 backdrop-blur-sm"
+              >
+                Our Mission
+              </a>
             </div>
-
-            {/* Right Asset Frame */}
-            <div className="lg:col-span-5 relative flex justify-center">
-              <div className="relative w-full max-w-[420px] aspect-square rounded-3xl p-3 bg-gradient-to-b from-white/10 to-white/5 border border-white/10 shadow-2xl backdrop-blur-md group overflow-hidden">
-                {/* Decorative border highlight */}
-                <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-primary-500/10 via-transparent to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                
-                <img 
-                  src={aboutHeroImg} 
-                  alt="EduOdisha Pathway Illustration" 
-                  className="w-full h-full object-cover rounded-2xl transition-transform duration-700 group-hover:scale-105"
-                />
-
-                {/* Floating Metric Badges */}
-                <div className="absolute -top-3 -right-3 bg-slate-900/90 border border-white/10 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce" style={{ animationDuration: '3s' }}>
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="text-xs font-bold text-white tracking-wide">100% Verified</span>
-                </div>
-                
-                <div className="absolute -bottom-3 -left-3 bg-slate-900/90 border border-white/10 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce" style={{ animationDuration: '4s', animationDelay: '1s' }}>
-                  <MapPin size={14} className="text-primary-400" />
-                  <span className="text-xs font-bold text-white tracking-wide">Odisha Centric</span>
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
 
-      {/* ─── STATISTICS HIGHLIGHT ─── */}
-      <section className="relative z-20 -mt-12 max-w-5xl mx-auto px-4">
-        <div className="backdrop-blur-xl bg-white/70 dark:bg-slate-900/70 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 shadow-2xl py-8 px-6 md:px-12 grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4 text-center">
-          {content.stats.map((stat, idx) => (
-            <div key={idx} className="space-y-1.5 border-r last:border-0 border-slate-200/50 dark:border-slate-800/50 group hover:-translate-y-1 transition-transform duration-300">
-              <div className="text-3xl md:text-4xl font-extrabold font-display bg-gradient-to-r from-primary-600 via-teal-500 to-emerald-500 dark:from-primary-400 dark:via-teal-400 dark:to-emerald-400 bg-clip-text text-transparent tracking-tight">
-                {stat.value}
-              </div>
-              <div className="text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+
 
       {/* ─── MISSION & VISION SECTION ─── */}
       <section id="mission" className="page-section scroll-mt-20">
