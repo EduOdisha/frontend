@@ -110,7 +110,7 @@ export const translations = {
       cta: {
         title: 'Not sure which college is right for you?',
         subtitle: 'Talk to our experienced counselors — free, no spam, just honest guidance.',
-        callBtn: 'Call: +91 7205402554',
+        callBtn: 'Call Us Free',
         browseBtn: 'Browse Colleges',
       },
       streams: {
@@ -371,7 +371,7 @@ export const translations = {
       cta: {
         title: 'नहीं जानते कौन सा कॉलेज सही है?',
         subtitle: 'हमारे अनुभवी परामर्शदाताओं से बात करें — मुफ़्त, कोई स्पैम नहीं, बस ईमानदार मार्गदर्शन।',
-        callBtn: 'कॉल करें: +91 7205402554',
+        callBtn: 'कॉल करें (मुफ़्त)',
         browseBtn: 'कॉलेज देखें',
       },
       streams: {
@@ -632,7 +632,7 @@ export const translations = {
       cta: {
         title: 'ଜାଣି ପାରୁ ନଥିଲେ କେଉଁ କଲେଜ ଠିକ?',
         subtitle: 'ଆମ ଅଭିଜ୍ଞ ପରାମର୍ଶଦାତାଙ୍କ ସହ କଥା ହୁଅନ୍ତୁ — ମାଗଣା, ସ୍ପାମ ନାହିଁ, ଶୁଧୁ ସଚ୍ଚା ମାର୍ଗଦର୍ଶନ।',
-        callBtn: 'ଫୋନ: +91 7205402554',
+        callBtn: 'ଫ୍ରି ଫୋନ କରନ୍ତୁ',
         browseBtn: 'କଲେଜ ଦେଖନ୍ତୁ',
       },
       streams: {

@@ -1,4 +1,5 @@
 import { Phone, Mail, MapPin } from 'lucide-react';
+import config from '../../../config/index.js';
 
 /**
  * TopBar component displays metadata subheader bar at the top of the viewport.
@@ -16,18 +17,18 @@ export default function TopBar({ isScrolled }) {
         {/* Contact details */}
         <div className="flex items-center gap-6">
           <a
-            href="tel:+917205402554"
+            href={`tel:${config.contactPhone}`}
             className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors text-[11px] font-medium"
           >
             <Phone size={12} className="text-slate-500" />
-            <span>+91 7205402554</span>
+            <span>{config.contactPhone}</span>
           </a>
           <a
-            href="mailto:eduodisha121@gmail.com"
+            href={`mailto:${config.contactEmail}`}
             className="flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors text-[11px] font-medium"
           >
             <Mail size={12} className="text-slate-500" />
-            <span>eduodisha121@gmail.com</span>
+            <span>{config.contactEmail}</span>
           </a>
           <div className="flex items-center gap-1.5 text-slate-400 text-[11px] font-medium">
             <MapPin size={12} className="text-red-500/90" />
@@ -40,7 +41,7 @@ export default function TopBar({ isScrolled }) {
           <span>We're on your favourite socials!</span>
           <div className="flex items-center gap-3 text-slate-300">
             <a
-              href="https://facebook.com"
+              href={config.social.facebook}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white transition-colors flex items-center"
@@ -51,7 +52,7 @@ export default function TopBar({ isScrolled }) {
               </svg>
             </a>
             <a
-              href="https://instagram.com"
+              href={config.social.instagram}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white transition-colors flex items-center"
@@ -64,7 +65,7 @@ export default function TopBar({ isScrolled }) {
               </svg>
             </a>
             <a
-              href="https://linkedin.com"
+              href={config.social.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white transition-colors flex items-center"
@@ -75,7 +76,7 @@ export default function TopBar({ isScrolled }) {
               </svg>
             </a>
             <a
-              href="https://youtube.com"
+              href={config.social.youtube}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-white transition-colors flex items-center"

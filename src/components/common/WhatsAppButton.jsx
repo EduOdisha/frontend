@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { useLanguage } from '../../context/LanguageContext';
 import { useLocation } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
+import config from '../../config/index.js';
 
 const WHATSAPP_CONTENT = {
   en: {
@@ -47,9 +48,8 @@ export default function WhatsAppButton() {
   }
 
   const content = WHATSAPP_CONTENT[language] || WHATSAPP_CONTENT.en;
-  const whatsappNumber = "917205402554";
   const encodedMsg = encodeURIComponent(content.message);
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+  const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${encodedMsg}`;
 
   return (
     <div className={`fixed right-6 z-50 flex items-center select-none pointer-events-none transition-all duration-300 ${

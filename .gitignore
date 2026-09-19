@@ -12,6 +12,13 @@ dist
 dist-ssr
 *.local
 
+# Environment variables — contains secrets, never commit
+.env
+.env.production
+.env.staging
+# .env.example is safe to commit (contains no real values)
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

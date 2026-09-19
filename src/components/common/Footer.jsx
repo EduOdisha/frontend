@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone, ArrowUpRight } from 'lucide-react';
 import api from '../../utils/api';
 import { useLanguage } from '../../context/LanguageContext';
+import config from '../../config/index.js';
 
 const SOCIAL_LINKS = [
   { label: 'Facebook', href: '#', icon: 'f' },
@@ -132,17 +133,17 @@ export default function Footer() {
 
             {/* Contact mini-cards */}
             <div className="space-y-3">
-              <a href="tel:+917205402554" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
+              <a href={`tel:${config.contactPhone}`} className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
                 <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 group-hover:border-primary-700 group-hover:text-primary-400 transition-all shrink-0">
                   <Phone size={14} />
                 </div>
-                +91 7205402554
+                {config.contactPhone}
               </a>
-              <a href="mailto:eduodisha121@gmail.com" className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
+              <a href={`mailto:${config.contactEmail}`} className="flex items-center gap-2.5 text-sm text-slate-400 hover:text-white transition-colors group">
                 <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 group-hover:border-primary-700 group-hover:text-primary-400 transition-all shrink-0">
                   <Mail size={14} />
                 </div>
-                eduodisha121@gmail.com
+                {config.contactEmail}
               </a>
               <div className="flex items-center gap-2.5 text-sm text-slate-500">
                 <div className="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">

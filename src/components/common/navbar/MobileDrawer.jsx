@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleTheme } from '../../../store/slices/uiSlice';
+import config from '../../../config/index.js';
 import {
   Search, School, BookOpen, FileText, Award,
   GitCompare, BookMarked, LayoutDashboard, User, LogOut, Phone, Info,
@@ -147,10 +148,10 @@ export default function MobileDrawer({
 
           <div className="pt-4">
             <a
-              href="tel:+917205402554"
+              href={`tel:${config.contactPhone}`}
               className="flex items-center justify-center gap-2 w-full py-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-700"
             >
-              <Phone size={15} /> {t('navbar.freeCounselling')}: +91 7205402554
+              <Phone size={15} /> {t('navbar.freeCounselling')}: {config.contactPhone}
             </a>
           </div>
 

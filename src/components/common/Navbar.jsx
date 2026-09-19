@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import config from '../../config/index.js';
 import { logoutUser } from '../../store/slices/authSlice';
 import { toggleTheme } from '../../store/slices/uiSlice';
 import {
@@ -263,7 +264,7 @@ export default function Navbar() {
 
                 {/* Counselling CTA — visible md+ */}
                 <a
-                  href="tel:+917205402554"
+                  href={`tel:${config.contactPhone}`}
                   className="hidden md:flex items-center gap-1 btn-cta py-1.5 px-2 xl:px-3.5 text-[11px] xl:text-xs animate-pulse-subtle whitespace-nowrap"
                 >
                   <Phone size={13} />

@@ -1,5 +1,7 @@
 import { Users, Sparkles, PhoneCall, ChevronRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import config from '../config/index.js';
 import { ABOUT_CONTENT } from '../locales/aboutTranslations.js';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -203,7 +205,7 @@ export default function AboutPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto relative z-10 shrink-0">
               <a 
-                href="tel:+917205402554" 
+                href={`tel:${config.contactPhone}`}
                 className="btn-cta bg-accent-500 hover:bg-accent-600 active:bg-accent-700 text-white font-bold py-3.5 px-7 rounded-xl shadow-lg shadow-accent-500/30 flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02]"
               >
                 <PhoneCall size={16} />

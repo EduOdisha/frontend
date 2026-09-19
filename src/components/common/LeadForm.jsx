@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { Send, CheckCircle } from 'lucide-react';
 import api from '../../utils/api.js';
+import config from '../../config/index.js';
 
 export default function LeadForm({ source = 'General', collegeId = null, compact = false }) {
   const [formData, setFormData] = useState({
@@ -19,10 +20,9 @@ export default function LeadForm({ source = 'General', collegeId = null, compact
     onSuccess: (response, variables) => {
       toast.success('Thank you! Our counselor will contact you shortly.');
       
-      const whatsappNumber = "917205402554";
       const message = `Hi, I just submitted an inquiry on EduOdisha.\n\n*Name:* ${variables.name}\n*Phone:* ${variables.phone}\n*Email:* ${variables.email || 'N/A'}\n*Course:* ${variables.interestedCourse || 'N/A'}\n*Source:* ${source || 'General'}\n*Message:* ${variables.message || 'N/A'}`;
       const encodedMsg = encodeURIComponent(message);
-      const url = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+      const url = `https://wa.me/${config.whatsappNumber}?text=${encodedMsg}`;
       window.open(url, '_blank');
 
       setFormData({ name: '', phone: '', email: '', interestedCourse: '', preferredCity: '', message: '' });

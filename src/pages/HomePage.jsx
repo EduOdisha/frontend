@@ -7,6 +7,7 @@ import { Phone, Calendar, ChevronRight } from 'lucide-react';
 import api from '../utils/api.js';
 import CollegeCard from '../components/college/CollegeCard.jsx';
 import { useLanguage } from '../context/LanguageContext';
+import config from '../config/index.js';
 
 // Import Modular Sub-components
 import WriteReviewModal from '../components/home/WriteReviewModal';
@@ -335,7 +336,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex items-center gap-3 shrink-0">
-              <a href="tel:+917205402554" className="btn-cta py-3 px-6 text-sm gap-2">
+              <a href={`tel:${config.contactPhone}`} className="btn-cta py-3 px-6 text-sm gap-2">
                 <Phone size={15} />
                 {t('home.cta.callBtn')}
               </a>
